@@ -25,8 +25,8 @@
             <div class="form-group row">
                 <label for="password" class="col-sm-2 col-form-label">Password:</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" name="password" required>
-                    <small id="emailHelp" class="form-text text-muted">Password must include....</small>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" name="password"  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" required>
+                    <small id="emailHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#)</small>
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
             <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Enter your email:</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" required>
+                    <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
             </div>
