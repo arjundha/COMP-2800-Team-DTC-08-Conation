@@ -1,21 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Create an Account</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Create an Account</title>
 </head>
+
 <body>
-    <div class="container" style="text-align: center;">   
-          <div class="flex-md-equal w-100 my-md-3 pl-md-3 joinnow">
-            <h1 class="display-5 font-weight-normal">Let's create an account</h1>
-            <h3 class="display-5 font-weight-normal">Are you a customer or a business owner?</h3>
-            <br>
-            <a class="btn btn-dark btn-lg" href="customer_registration.html" role="button">Customer</a>
-            <a class="btn btn-dark btn-lg" href="business_registration.html" role="button">Business Owner</a>
-          </div>
+
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Co-Nation</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+        data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="services.html">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="registration.html">Register</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+
+  <div class="container" style="text-align: center;">
+    <div class="flex-md-equal w-100 my-md-3 pl-md-3 joinnow">
+      <h1 class="display-5 font-weight-normal">Let's create an account</h1>
+      <h3 class="display-5 font-weight-normal">Are you a customer or a business owner?</h3>
+      <br>
+
+
+    </div>
+  </div>
+
+
+  <div class="row mb-4">
+
+    <div class="col-md-6 mb-4">
+      <!--Card 1-->
+      <div class="card">
+          <div class="view overlay">
+            <img
+              src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+              class="card-img-top">
+          </div>
+        <div class="card-body">
+          <h4 class="card-title">Business Owner</h4>
+          <p class="card-text">Get your well deserved support now from locals who need you!</p>
+          <a class="btn btn-dark btn-lg" href="customer_registration.html" role="button">Business Owner</a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-6 mb-4">
+      <!--Card 2-->
+      <div class="card">
+          <div class="view overlay">
+            <img
+              src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+              class="card-img-top" alt="">
+          </div>
+        <div class="card-body">
+          <h4 class="card-title">Customer</h4>
+          <p class="card-text">Find local businesses you want to support now!</p>
+          <a class="btn btn-dark btn-lg" href="business_registration.html" role="button">Customer</a>
+          <i class="fas fa-play ml-2"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Team 8 2800</p>
+    </div>
+    <!-- /.container -->
+  </footer>
 </body>
+
 </html>
