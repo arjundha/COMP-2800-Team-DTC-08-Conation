@@ -1,6 +1,6 @@
 function checkPasswordMatch() {
-    var password = $("#passwordInput").val();
-    var confirmPassword = $("#passwordConfirm").val();
+    let password = $("#passwordInput").val();
+    let confirmPassword = $("#passwordConfirm").val();
 
     if (password != confirmPassword){
         $("#divCheckPasswordMatch").html("Passwords do not match!");
@@ -12,6 +12,7 @@ function checkPasswordMatch() {
     }
 }
 
+
 function checkPasswordIsValid(input) {
     if (input.value != document.getElementById('passwordInput').value) {
         input.setCustomValidity('Passwords Must be Matching.');
@@ -21,6 +22,7 @@ function checkPasswordIsValid(input) {
     }
 }
 
+
 function finalPasswordCheck() {
     if (document.getElementById('passwordInput').value != document.getElementById('passwordConfirm').value) {
         document.getElementById('passwordInput').setCustomValidity('Passwords Must be Matching.');
@@ -29,6 +31,7 @@ function finalPasswordCheck() {
         document.getElementById('passwordInput').setCustomValidity('');
     }
 }
+
 
 function verifyPasswordsMatch(){
     let password = document.getElementById("passwordInput").value;
@@ -42,5 +45,3 @@ function verifyPasswordsMatch(){
         return true
     }
 }
-
-

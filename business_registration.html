@@ -14,7 +14,7 @@
     <div class="container">
         <h2>The following information will be used to create and maintain your log-in:</h2>
         <br>
-        <form onsubmit="return verifyPasswordsMatch()"> <!-- should POST and the action should be to the database -->
+        <form id="businessForm" onsubmit="return verifyPasswordsMatch()"> <!-- should POST and the action should be to the database -->
             <!-- Create a Username -->
             <div class="form-group row">
                 <label for="username" class="col-sm-2 col-form-label">Username:</label>
@@ -100,7 +100,6 @@
                     <select id="inputProvince" class="form-control" required>
                         <option selected>BC</option>
                         <option>AB</option>
-                        <option>BC</option>
                         <option>MB</option>
                         <option>NB</option>
                         <option>NL</option>
@@ -128,6 +127,25 @@
                 <label for="description">Business Description</label>
                 <small id="emailHelp" class="form-text text-muted">Enter a few short sentences to describe your business</small>
                 <textarea class="form-control" id="descriptionInput" rows="3" placeholder="Description" name="description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="businessTag">Business Category</label>
+                <small id="tagHelp" class="form-text text-muted">Choose the tag that best describes your business</small>
+                <select id="inputTag" class="form-control" required>
+                    <option value="" id="placeholderOption" value="Select" selected disabled>---</option>
+                    <option>Bakery</option>
+                    <option>Café</option>
+                    <option>Clothing</option>
+                    <option>Floral</option>
+                    <option>Electronics</option>
+                    <option>Gifts</option>
+                    <option>Grocery</option>
+                    <option>Medical</option>
+                    <option>Restuarant</option>
+                    <option>Services</option>
+                    <option>Other</option>
+                </select>
             </div>
         
             <!-- Submit to the Database -->
