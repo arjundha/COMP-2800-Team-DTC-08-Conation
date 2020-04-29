@@ -56,12 +56,13 @@ $('document').ready(function(){
     let username_state = false;
     let email_state = false;
 
-    $('#username').on('blur', function(){
-        let username = $('#username').val();
+    $('#usernameInput').on('blur', function(){
+        let username = $('#usernameInput').val();
         if (username == '') {
             username_state = false;
             return;
         }
+
         $.ajax({
             url: 'register.php',
             type: 'post',
@@ -72,22 +73,20 @@ $('document').ready(function(){
             success: function(response){
                 if (response == 'taken' ) {
                     username_state = false;
-                    $('#username').parent().removeClass();
-                    $('#username').parent().addClass("form_error");
-                    $('#username').siblings("span").text('Sorry... Username already taken');
+                    $("#usernameTaken").html("Username is taken.");
+                    $("#usernameFree").html("");
 
                 }else if (response == 'not_taken') {
                     username_state = true;
-                    $('#username').parent().removeClass();
-                    $('#username').parent().addClass("form_success");
-                    $('#username').siblings("span").text('Username available');
+                    $("#usernameTaken").html("");
+                    $("#usernameFree").html("Username is available.");
                 }
             }
         });
     });
 
-    $('#email').on('blur', function(){
-        let email = $('#email').val();
+    $('#emailInput').on('blur', function(){
+        let email = $('#emailInput').val();
 
         if (email == '') {
             email_state = false;
@@ -103,23 +102,19 @@ $('document').ready(function(){
             success: function(response){
                 if (response == 'taken' ) {
                     email_state = false;
-                    $('#email').parent().removeClass();
-                    $('#email').parent().addClass("form_error");
-                    $('#email').siblings("span").text('Sorry... Email already taken');
+                    $("#emailTaken").html("That email is already registered to an account.");
                 }else if (response == 'not_taken') {
                     email_state = true;
-                    $('#email').parent().removeClass();
-                    $('#email').parent().addClass("form_success");
-                    $('#email').siblings("span").text('Email available');
+                    $("#emailTaken").html("");
                 }
             }
         });
     });
    
-    $('#reg_btn').on('click', function(){
-        let username = $('#username').val();
-        let email = $('#email').val();
-        let password = $('#password').val();
+    $('#submitBtn').on('click', function(){
+        let username = $('#usernameInput').val();
+        let email = $('#emailInput').val();
+        let password = $('#passwordInput').val();
         if (username_state == false || email_state == false) {
             $('#error_msg').text('Fix the errors in the form first');
 
@@ -136,9 +131,9 @@ $('document').ready(function(){
                 },
                 success: function(response){
                     alert('user saved');
-                    $('#username').val('');
-                    $('#email').val('');
-                    $('#password').val('');
+                    $('#usernameInput').val('');
+                    $('#emailInput').val('');
+                    $('#passwordInput').val('');
                 }
             });
         }
