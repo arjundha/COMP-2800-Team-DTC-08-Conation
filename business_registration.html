@@ -27,7 +27,7 @@
             <div class="form-group row">
                 <label for="password" class="col-sm-2 col-form-label">Password:</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" onkeyup="checkPasswordMatch()" required>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
                     <small id="emailHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#)</small>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="form-group row">
                 <label for="passwordConfirm" class="col-sm-2 col-form-label">Confirm Password:</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="passwordConfirm" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this)" required>
+                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="passwordConfirm" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this); finalPasswordCheck()" required>
                     <small id="divCheckPasswordMatch" class="form-text text-danger"></small>
                     <small id="divCheckPasswordMatchTrue" class="form-text text-success"></small>
                 </div>
@@ -131,7 +131,7 @@
             </div>
         
             <!-- Submit to the Database -->
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <button type="submit" class="btn btn-dark" onclick="finalPasswordCheck()">Submit</button>
         </form>
     </div>
 </body>

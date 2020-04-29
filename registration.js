@@ -21,6 +21,15 @@ function checkPasswordIsValid(input) {
     }
 }
 
+function finalPasswordCheck() {
+    if (document.getElementById('passwordInput').value != document.getElementById('passwordConfirm').value) {
+        document.getElementById('passwordInput').setCustomValidity('Passwords Must be Matching.');
+    } else {
+        // input is valid -- reset the error message
+        document.getElementById('passwordInput').setCustomValidity('');
+    }
+}
+
 function verifyPasswordsMatch(){
     let password = document.getElementById("passwordInput").value;
     let confirmPassword = document.getElementById("passwordConfirm").value;
