@@ -51,12 +51,13 @@ function verifyPasswordsMatch(){
 }
 
 
-// CHECK IF USERNAME, EMAIL TAKEN ALREADY IN THE DATABASE //
+// CHECK IF USERNAME, EMAIL TAKEN ALREADY IN THE DATABASE // only for customer_registration right now... doenst work cuz dont have database yet
 $('document').ready(function(){
     let username_state = false;
     let email_state = false;
 
     $('#usernameInput').on('blur', function(){
+        console.log("username blur")
         let username = $('#usernameInput').val();
         if (username == '') {
             username_state = false;
@@ -64,7 +65,7 @@ $('document').ready(function(){
         }
 
         $.ajax({
-            url: 'register.php',
+            url: 'customer_registration.html',
             type: 'post',
             data: {
                 'username_check' : 1,
@@ -93,7 +94,7 @@ $('document').ready(function(){
             return;
         }
         $.ajax({
-            url: 'register.php',
+            url: 'customer_registration.html',
             type: 'post',
             data: {
                 'email_check' : 1,
@@ -116,12 +117,12 @@ $('document').ready(function(){
         let email = $('#emailInput').val();
         let password = $('#passwordInput').val();
         if (username_state == false || email_state == false) {
-            $('#error_msg').text('Fix the errors in the form first');
+            $('#error_msg').text('Please complete the forum');
 
         }else{
          // proceed with form submission
             $.ajax({
-                url: 'register.php',
+                url: 'customer_registration.html',
                 type: 'post',
                 data: {
                     'save' : 1,
