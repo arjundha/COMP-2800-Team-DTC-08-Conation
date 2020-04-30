@@ -1,7 +1,12 @@
 <!DOCTYPE html>
+<?php include('process.php'); ?>
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="registration.js"></script>
+    <script src="customer_registration.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -10,12 +15,16 @@
 <body>
     <br>
     <div class="container">
-        <form> <!-- should POST and the action should be to the database -->
+        <h2>The following information will be used to create and maintain your log-in:</h2>
+        <br>
+        <form id="registration" onsubmit="return verifyPasswordsMatch()"> <!-- should POST and the action should be to the database -->
             <!-- Create a Username -->
             <div class="form-group row">
                 <label for="username" class="col-sm-2 col-form-label">Username:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="usernameInput" placeholder="Username" name="username" required>
+                    <small id="usernameTaken" class="form-text text-danger"></small>
+                    <small id="usernameFree" class="form-text text-success"></small>
                 </div>
             </div>
         
@@ -23,15 +32,17 @@
             <div class="form-group row">
                 <label for="password" class="col-sm-2 col-form-label">Password:</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" name="password" required>
-                    <small id="emailHelp" class="form-text text-muted">Password must include....</small>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
+                    <small id="emailHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#)</small>
                 </div>
             </div>
-
+        
             <div class="form-group row">
                 <label for="passwordConfirm" class="col-sm-2 col-form-label">Confirm Password:</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="passwordConfirm" required>
+                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="passwordConfirm" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this); finalPasswordCheck()" required>
+                    <small id="divCheckPasswordMatch" class="form-text text-danger"></small>
+                    <small id="divCheckPasswordMatchTrue" class="form-text text-success"></small>
                 </div>
             </div>
         
@@ -39,8 +50,9 @@
             <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Enter your email:</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" required>
+                    <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address" required>
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <small id="emailTaken" class="form-text text-danger"></small>
                 </div>
             </div>
         
@@ -48,12 +60,31 @@
             <div class="form-group row">
                 <label for="phone" class="col-sm-2 col-form-label">Enter your phone number:</label>
                 <div class="col-sm-10">
-                    <input type="tel" class="form-control" id="phoneInput" placeholder="123-456-7890" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                    <input type="tel" class="form-control" id="phoneInput" placeholder="123-456-7890" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="Enter your phone number as follows: xxx-xxx-xxxx" required>
+                </div>
+            </div>
+
+            <!-- Customer Name -->
+
+            <div class="form-group row">
+                <label for="firstName" class="col-sm-2 col-form-label">First Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" name="firstName" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="lastName" class="col-sm-2 col-form-label">Last Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" name="lastName" required>
                 </div>
             </div>
         
             <!-- Submit to the Database -->
-            <button type="submit" class="btn btn-dark">Submit</button>
+            <div>
+                <button id="submitBtn" type="submit" class="btn btn-dark" onclick="finalPasswordCheck()">Submit</button>
+                <small id="error_msg" class="form-text text-danger"></small>
+            </div>
         </form>
     </div>
 </body>

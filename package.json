@@ -1,0 +1,23 @@
+{
+  "name": "comp-2800-projects-2",
+  "version": "1.0.0",
+  "description": "First Commit",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arjundha/COMP-2800-Projects-2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arjundha/COMP-2800-Projects-2/issues"
+  },
+  "homepage": "https://github.com/arjundha/COMP-2800-Projects-2#readme",
+  "dependencies": {
+    "ejs": "^3.1.2",
+    "express": "^4.17.1"
+  }
+}
