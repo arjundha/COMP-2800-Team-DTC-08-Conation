@@ -49,3 +49,70 @@ function verifyPasswordsMatch(){
         return true
     }
 }
+
+
+function matchFinder(arrayOfNames, newName){
+    for (i = 0; i < arrayOfNames.length; i++){
+        if (arrayOfNames[i] == newName){
+            return true
+        }
+    } 
+    return false
+}
+
+$('document').ready(function(){
+
+    $('#usernameInput').on('blur', function(){
+        console.log("username blur")
+        let takenNames = ["arjun", "chris", "susan", "hudson", "nicholas", "sarah", "Arjun", "Chris", "Hudson", "Nicholas"];
+        let username = $('#usernameInput').val();
+
+        let nameIsTaken = matchFinder(takenNames, username);
+
+        if (username == '') {
+            document.getElementById('usernameInput').setCustomValidity('Username cannot be blank.');
+        }
+
+        else if (nameIsTaken == true ) {
+            $("#usernameTaken").html("Username is taken.");
+            $("#usernameFree").html("");
+            document.getElementById('usernameInput').setCustomValidity('Username is already taken. Please input another username.');
+
+
+        }else if (nameIsTaken == false ) {
+            $("#usernameTaken").html("");
+            $("#usernameFree").html("Username is available.");
+            document.getElementById('usernameInput').setCustomValidity('');
+
+        }
+    })
+})
+
+
+$('document').ready(function(){
+
+    $('#emailInput').on('blur', function(){
+        console.log("email blur")
+        let takenEmail = ["arjun@email.com", "cthompson98@bcit.ca", "hudson.mcmanus@gmail.com", "nlwilson35@gmail.com", "sarah.eslamdoust@gmail.com"];
+        let email = $('#emailInput').val();
+
+        let emailIsTaken = matchFinder(takenEmail, email);
+
+        if (email == '') {
+            document.getElementById('emailInput').setCustomValidity('Email entry cannot be blank.');
+        }
+
+        else if (emailIsTaken == true ) {
+            $("#emailTaken").html("Email is taken.");
+            $("#emailFree").html("");
+            document.getElementById('emailInput').setCustomValidity('Email is already taken. Please input another email.');
+
+
+        }else if (emailIsTaken == false ) {
+            $("#emailTaken").html("");
+            // $("#emailFree").html("Username is available.");
+            document.getElementById('emailInput').setCustomValidity('');
+
+        }
+    })
+})
