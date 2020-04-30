@@ -3,6 +3,10 @@ body {
   background-color: #e8e7e3;
 }
 
+.img-right{
+  float: right;
+}
+
 .carousel-item {
   height: 65vh;
   min-height: 300px;
@@ -27,4 +31,18 @@ body {
   color: #fff;
   background-color: #27393b;
   border-color: #1d2829;
+}
+
+.navbar-nav {
+  margin: 0;
+  padding: 7.5px 15px;
+}
+
+#two-cards {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+#registration-card-photo{
+  height: 550px;
 }

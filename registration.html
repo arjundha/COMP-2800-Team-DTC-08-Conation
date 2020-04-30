@@ -3,12 +3,14 @@
 
 <head>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" href="main.css">
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Create an Account</title>
+  <link rel="stylesheet" href="main.css">
+
+  <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
 </head>
 
 <body>
@@ -37,9 +39,10 @@
     </div>
   </nav>
 
-
   <div class="container" style="text-align: center;">
-    <div class="flex-md-equal w-100 my-md-3 pl-md-3 joinnow">
+    <div class="flex-md-equal w-100 my-md-3 pl-md-3 welcome2">
+      <br>
+
       <h1 class="display-5 font-weight-normal">Let's create an account</h1>
       <h3 class="display-5 font-weight-normal">Are you a customer or a business owner?</h3>
       <br>
@@ -49,15 +52,15 @@
   </div>
 
 
-  <div class="row mb-4">
+  <div class="row mb-4" id="two-cards">
 
     <div class="col-md-6 mb-4">
       <!--Card 1-->
-      <div class="card">
+      <div class="card registerBusiness">
           <div class="view overlay">
             <img
               src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-              class="card-img-top">
+              class="card-img-top" id="registration-card-photo">
           </div>
         <div class="card-body">
           <h4 class="card-title">Business Owner</h4>
@@ -70,11 +73,11 @@
 
     <div class="col-md-6 mb-4">
       <!--Card 2-->
-      <div class="card">
+      <div class="card registerCustomer">
           <div class="view overlay">
             <img
               src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-              class="card-img-top" alt="">
+              class="card-img-top" alt="" id="registration-card-photo">
           </div>
         <div class="card-body">
           <h4 class="card-title">Customer</h4>
@@ -98,6 +101,8 @@
     </div>
     <!-- /.container -->
   </footer>
+  <script src="animations.js"></script>
+
 </body>
 
 </html>

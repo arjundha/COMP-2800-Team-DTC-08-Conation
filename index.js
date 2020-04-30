@@ -4,7 +4,6 @@ const fs = require('fs');
 const readline = require('readline');
 const http = require('http');
 
-
 app.get("/", function(req, res){
     res.render("index.html")
   })
