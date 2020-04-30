@@ -70,6 +70,8 @@ $('document').ready(function(){
         let nameIsTaken = matchFinder(takenNames, username);
 
         if (username == '') {
+            $("#usernameTaken").html("This field cannot be blank.");
+            $("#usernameFree").html("");
             document.getElementById('usernameInput').setCustomValidity('Username cannot be blank.');
         }
 
@@ -99,6 +101,8 @@ $('document').ready(function(){
         let emailIsTaken = matchFinder(takenEmail, email);
 
         if (email == '') {
+            $("#emailTaken").html("This field cannot be blank");
+            $("#emailFree").html("");
             document.getElementById('emailInput').setCustomValidity('Email entry cannot be blank.');
         }
 
