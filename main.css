@@ -3,6 +3,10 @@ body {
   background-color: #e8e7e3;
 }
 
+.img-right{
+  float: right;
+}
+
 .carousel-item {
   height: 65vh;
   min-height: 300px;
