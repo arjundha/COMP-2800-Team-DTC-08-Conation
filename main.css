@@ -28,3 +28,13 @@ body {
   background-color: #27393b;
   border-color: #1d2829;
 }
+
+.navbar-nav {
+  margin: 0;
+  padding: 7.5px 15px;
+}
+
+#two-cards {
+  margin-right: 0px;
+  margin-left: 0px;
+}
