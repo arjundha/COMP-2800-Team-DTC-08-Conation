@@ -29,6 +29,9 @@ app.get('/business_registration', (req, res) => {
 app.get('/business', (req, res) => {
 	res.render('business');
 });
+app.get('/update_business_info', (req, res) => {
+	res.render('update_business_info');
+});
 
 app.set('views', path.join(__dirname, 'views'));
 
