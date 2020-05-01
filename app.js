@@ -26,6 +26,10 @@ app.get('/business_registration', (req, res) => {
 	res.render('business_registration');
 });
 
+app.get('/business', (req, res) => {
+	res.render('business');
+});
+
 app.set('views', path.join(__dirname, 'views'));
 
 app.listen(8080, function () {
