@@ -44,6 +44,8 @@ body {
 }
 
 #registration-card-photo{
-  height: 550px;
+  /* height: 550px; */
+  height: 50%;
+
 }
 

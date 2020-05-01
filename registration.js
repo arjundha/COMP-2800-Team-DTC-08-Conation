@@ -50,7 +50,7 @@ function verifyPasswordsMatch(){
     }
 }
 
-
+// Obsolete function, I found out there is a .includes() in JavaScript so using that now instead
 function matchFinder(arrayOfNames, newName){
     for (i = 0; i < arrayOfNames.length; i++){
         if (arrayOfNames[i] == newName){
@@ -67,7 +67,7 @@ $('document').ready(function(){
         let takenNames = ["arjun", "chris", "susan", "hudson", "nicholas", "sarah", "Arjun", "Chris", "Hudson", "Nicholas"];
         let username = $('#usernameInput').val();
 
-        let nameIsTaken = matchFinder(takenNames, username);
+        let nameIsTaken = takenNames.includes(username);
 
         if (username == '') {
             $("#usernameTaken").html("This field cannot be blank.");
@@ -98,7 +98,7 @@ $('document').ready(function(){
         let takenEmail = ["arjun@email.com", "cthompson98@bcit.ca", "hudson.mcmanus@gmail.com", "nlwilson35@gmail.com", "sarah.eslamdoust@gmail.com"];
         let email = $('#emailInput').val();
 
-        let emailIsTaken = matchFinder(takenEmail, email);
+        let emailIsTaken = takenEmail.includes(email)
 
         if (email == '') {
             $("#emailTaken").html("This field cannot be blank");
