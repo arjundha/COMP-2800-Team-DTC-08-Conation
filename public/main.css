@@ -27,6 +27,14 @@ body {
   border-color: #354f52;
 }
 
+.footer-bottom {
+  position: absolute;
+    height: 20px;
+    margin-bottom: 0;
+    bottom: 0;
+    width: 100%;
+}
+
 .btn-main:hover {
   color: #fff;
   background-color: #27393b;
