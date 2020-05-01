@@ -18,31 +18,30 @@
     <link href="main.css" rel="stylesheet">
 </head>
 <body style="background-color: #52796f">
-    <!-- Navigation -->
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <!-- Responsive SIGNED IN Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.html">CoNation</a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                    data-targer="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                    aria-label="Toggle navigation">
+            <a href="main.html" class="navbar-brand">Conation</a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#signedInNavBar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <div class="collapse navbar-collapse" id="signedInNavBar">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a href="#" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About Us</a>
+                        <a href="#" class="nav-link">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">FAQ</a>
+                        <a href="#" class="nav-link">FAQ</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Username</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Settings</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            USERNAME
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="update_business_info.html">Settings</a> <!-- Only for business right now, needs to be dependent on user type -->
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#">Log Out</a>
                         </div>
@@ -62,21 +61,23 @@
                     <div class="card-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-lg-3">
-                                    <nav class="navbar-nav ml-auto">
-                                        <ul class="nav nav-tabs flex-column">
-                                            <li class="nav-item">
-                                                <a class="nav-link" data-toggle="tab" href="#profile">Profile Information</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" data-toggle="tab" href="#business">Business Information</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
+                                <div class="col-md-3">
+                                    <ul class="nav nav-pills navbar-danger flex-lg-column mb-3 nav-fill" id="settingsTabs" role="tablist" aria-orientation="horizontal">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="profileTab" data-toggle="pill" href="#profileSettings" role="tab" aria-controls="profileSettings" aria-selected="true">
+                                                Profile Information
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="businessTab" data-toggle="pill" href="#businessSettings" role="tab" aria-controls="businessSettings" aria-selected="false">
+                                                Business Information
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div class="col-lg-8">
-                                    <div class="tab-content">
-                                        <div id="profile" class="tab-pane fade show active">
+                                <div class="col-md-8">
+                                    <div class="tab-content" id="settingsTabsContent">
+                                        <div class="tab-pane fade show active" id="profileSettings" role="tabpanel" aria-labelledby="profileTab">
                                             <h3>Profile Information</h3>
                                             <form id="profileUpdate" action="#">
                                                 <br>
@@ -151,7 +152,8 @@
                                                 <input id="submitPasswordChange" type="submit" class="btn btn-main float-right" value="Update Password">
                                             </form>
                                         </div>
-                                        <div id="business" class="tab-pane fade">
+
+                                        <div class="tab-pane fade" id="businessSettings" role="tabpanel" aria-labelledby="businessTab">
                                             <h3>Business Information</h3>
                                             <form id="businessUpdate" action="#">
                                                 <br>
@@ -213,13 +215,13 @@
                                                         <option>Gifts</option>
                                                         <option>Grocery</option>
                                                         <option>Medical</option>
-                                                        <option>Restuarant</option>
+                                                        <option>Restaurant</option>
                                                         <option>Services</option>
                                                         <option>Other</option>
                                                     </select>
                                                 </div>
-                                                    <!-- Submit -->
-                                                    <input id="submitBusinessChange" type="submit" class="btn btn-main float-right" value="Save Changes">
+                                                <!-- Submit -->
+                                                <input id="submitBusinessChange" type="submit" class="btn btn-main float-right" value="Save Changes">
                                             </form>
                                         </div>
                                     </div>
