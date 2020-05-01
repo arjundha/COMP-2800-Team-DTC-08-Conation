@@ -38,14 +38,14 @@ window.sr = ScrollReveal();
         viewFactor: 0.2
       })
       
-      sr.reveal('.registerBusiness', {
+      sr.reveal('.registerCustomer', {
         duration: 3000,
         origin:'left',
         distance:'300px',
         viewFactor: 0.2
       })
       
-      sr.reveal('.registerCustomer', {
+      sr.reveal('.registerBusiness', {
         duration: 3000,
         origin:'right',
         distance:'300px',
