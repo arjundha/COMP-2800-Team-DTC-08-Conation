@@ -17,32 +17,31 @@
     <!-- Custom styles for this template -->
     <link href="main.css" rel="stylesheet">
 </head>
-<body>
-
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+<body style="background-color: #52796f">
+    <!-- Responsive SIGNED IN Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.html">CoNation</a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                    data-targer="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                    aria-label="Toggle navigation">
+            <a href="main.html" class="navbar-brand">Conation</a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#signedInNavBar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <div class="collapse navbar-collapse" id="signedInNavBar">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a href="#" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About Us</a>
+                        <a href="#" class="nav-link">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">FAQ</a>
+                        <a href="#" class="nav-link">FAQ</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Username</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Settings</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            USERNAME
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="update_business_info.html">Settings</a> <!-- Only for business right now, needs to be dependent on user type -->
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#">Log Out</a>
                         </div>
@@ -52,8 +51,8 @@
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
+    <div class="my-5 container d-none d-md-block">
+        <div class="row justify-content-between">
             <div class="col-md-2">
                 <div class="card">
                     <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS5joTSfhtGz3w7AD8Gbq_MG1x54hpYdEQHYsTSNvIsaBQCa8h1&usqp=CAU" alt="image to go here">
@@ -70,15 +69,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="card">
-                    <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS5joTSfhtGz3w7AD8Gbq_MG1x54hpYdEQHYsTSNvIsaBQCa8h1&usqp=CAU" alt="image to go here">
-                    <div class="card-body">
-                        <p>Some text here</p>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-md-2">
                 <div class="card">
                     <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS5joTSfhtGz3w7AD8Gbq_MG1x54hpYdEQHYsTSNvIsaBQCa8h1&usqp=CAU" alt="image to go here">
