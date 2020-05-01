@@ -13,8 +13,9 @@
     <title>Customer Registration</title>
 </head>
 <body>
+    <%- include('partials/navbar-no-user') %>
     <br>
-    <div class="container">
+    <div class="container" style="padding-top: 40px;">
         <h2>The following information will be used to create and maintain your log-in:</h2>
         <br>
         <form id="registration" onsubmit="return verifyPasswordsMatch()"> <!-- should POST and the action should be to the database -->

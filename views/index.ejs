@@ -17,39 +17,17 @@
   <script src="main.js"></script>
 
   <!-- Bootstrap core CSS -->
-  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
   <!-- Custom styles for this template -->
-  <link href="main.css" rel="stylesheet">
+  <link href="main.css" rel="stylesheet" type="text/css">
 
   <!-- CSS Animations -->
-  <link href="animate.css" rel="stylesheet">
+  <link href="animate.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-
-  <!-- Navigation -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Co-Nation</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#about">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="login.html">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="registration.html">Register</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <%- include('partials/navbar-no-user') %>
 
   <header>
     <div id="webpage-big-picture">
@@ -109,7 +87,7 @@
         </p>
       </div>
       <div class="col-lg-6 enterRight">
-        <img class="img-fluid rounded img-right" src="src/images/Conation_logo.png" alt="">
+        <img class="img-fluid rounded img-right" src="src/images/Conation_logo.png" alt="conation logo">
       </div>
     </div>
     <!-- /.row -->
