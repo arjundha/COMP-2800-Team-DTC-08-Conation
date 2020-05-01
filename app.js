@@ -33,6 +33,10 @@ app.get('/update_business_info', (req, res) => {
 	res.render('update_business_info');
 });
 
+app.get('/main', (req, res) => {
+	res.render('main');
+});
+
 app.set('views', path.join(__dirname, 'views'));
 
 app.listen(8080, function () {
