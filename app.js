@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express()
+const path = require('path');
 
 var fs = require('fs');
 var myCss = {
@@ -16,6 +17,12 @@ app.get("/", function (req, res) {
     myCss: myCss
   });
 })
+
+app.get('/login', (req, res) => {
+	res.render('login');
+});
+
+app.set('views', path.join(__dirname, 'views'));
 
 app.listen(8080, function () {
   console.log("Server running. Visit: localhost:8080 in your browser 🚀");
