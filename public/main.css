@@ -1,0 +1,49 @@
+body {
+  padding-top: 56px;
+  background-color: #e8e7e3;
+}
+
+.img-right {
+  float: right;
+}
+
+.carousel-item {
+  height: 65vh;
+  min-height: 300px;
+  background: no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.portfolio-item {
+  margin-bottom: 30px;
+}
+
+.btn-main {
+  color: #fff;
+  background-color: #354f52;
+  border-color: #354f52;
+}
+
+.btn-main:hover {
+  color: #fff;
+  background-color: #27393b;
+  border-color: #1d2829;
+}
+
+.navbar-nav {
+  margin: 0;
+  padding: 7.5px 15px;
+}
+
+#two-cards {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+#registration-card-photo {
+  /* height: 550px; */
+  height: 50%;
+}
