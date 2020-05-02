@@ -3,7 +3,7 @@ body {
   background-color: #e8e7e3;
 }
 
-.img-right{
+.img-right {
   float: right;
 }
 
@@ -27,14 +27,6 @@ body {
   border-color: #354f52;
 }
 
-.footer-bottom {
-  position: absolute;
-    height: 20px;
-    margin-bottom: 0;
-    bottom: 0;
-    width: 100%;
-}
-
 .btn-main:hover {
   color: #fff;
   background-color: #27393b;
@@ -51,9 +43,7 @@ body {
   margin-left: 0px;
 }
 
-#registration-card-photo{
+#registration-card-photo {
   /* height: 550px; */
   height: 50%;
-
 }
-
