@@ -32,6 +32,10 @@ app.get('/business_registration', (req, res) => {
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration'  });
 });
 
+app.get('/about', (req, res) => {
+	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us'  });
+});
+
 app.get('/business', (req, res) => {
 	res.render('conation/business', { layout: 'layoutLoggedIn', title: 'SEND NAME OF BUSINESS HERE (USE REQ?)'  });
 });
@@ -42,6 +46,8 @@ app.get('/update_business_info', (req, res) => {
 app.get('/main', (req, res) => {
 	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
 });
+
+
 
 app.set('views', path.join(__dirname, 'views'));
 
