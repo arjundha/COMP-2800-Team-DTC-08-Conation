@@ -1,6 +1,9 @@
 const express = require("express")
+const favicon = require("serve-favicon");
 const app = express()
 const path = require('path');
+
+app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
 
 app.set('view engine', 'ejs');
 
