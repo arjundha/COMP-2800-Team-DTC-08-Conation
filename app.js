@@ -33,14 +33,14 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/business', (req, res) => {
-	res.render('conation/business'), { layout: 'layoutLoggedIn', title: 'SEND NAME OF BUSINESS HERE (USE REQ?)'  };
+	res.render('conation/business', { layout: 'layoutLoggedIn', title: 'SEND NAME OF BUSINESS HERE (USE REQ?)'  });
 });
 app.get('/update_business_info', (req, res) => {
 	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile'  });
 });
 
 app.get('/main', (req, res) => {
-	res.render('conation/main'), { layout: 'layoutLoggedIn', title: 'Conation'  };
+	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
 });
 
 app.set('views', path.join(__dirname, 'views'));
