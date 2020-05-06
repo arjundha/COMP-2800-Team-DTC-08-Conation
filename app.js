@@ -47,6 +47,9 @@ app.get('/main', (req, res) => {
 	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
 });
 
+app.get('/map', (req, res) =>{
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map'})
+})
 
 
 app.set('views', path.join(__dirname, 'views'));
