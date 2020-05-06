@@ -1,10 +1,16 @@
-const express = require("express")
+const express = require("express");
 const favicon = require("serve-favicon");
-const app = express()
+const app = express();
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts")
 const mysql = require("mysql");
 const bodyParser = require('body-parser');
+
+app.use(ejsLayouts)
+app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + "/public"));
+app.use(express.urlencoded({extended: true}));
 
 // Connect to database
 const db = mysql.createConnection({
@@ -13,7 +19,6 @@ const db = mysql.createConnection({
     password : 'root',
     database : 'conation'
 });
-
 db.connect((err) => {
     if (err) {
         throw err;
@@ -21,26 +26,34 @@ db.connect((err) => {
     console.log('MySql Connected');
 });
 
-app.use(ejsLayouts)
-
-app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
-
-app.set('view engine', 'ejs');
-
-app.use(express.static(__dirname + "/public"));
-
+// Reading from the database
 app.get("/db_test", (req, res) => {
-	let query = "SELECT * FROM businesses";
+	// SQL code goes here
+	let query = "SELECT * FROM businesses;";
 	db.query(query, (err, result) => {
 		if (err) {
-			res.redirect('/');
+			res.redirect("/db_test");
 		}
-		res.render("conation/db_test", {layout: "layoutLoggedOut", title: "Conation", businesses: result})});
+		res.render("conation/db_test", 
+			{layout: "layoutLoggedOut", 
+			title: "Conation", 
+			// Result holds the rows returned by the SQL query, now you can call businesses.forEach
+			businesses: result})});
 });
 
-// app.post("/db_test", (req, res) => {
-// 	let query = "INSERT INTO businesses (`name`, `description`, `address`, city, province, category) VALUES ('"
-// })
+// Writing to the database
+app.post("/db_test", (req, res) => {
+	let input = req.body;
+	// SQL code goes here, using name values from the form
+	let query = "INSERT INTO businesses (`name`, `description`, `address`, city, province, category) VALUES ('" +
+		input.name + "', '" + input.description + "', '" + input.address + "', '" + input.city + "', '" + input.province + "', '" + input.category + "');";
+	db.query(query, (err, result) => {
+		if (err) {
+			return res.status(500).send(err);
+		}
+		// Redirect URL on success
+		res.redirect('/db_test');});
+});
 
 app.get("/", function (req, res) {
   res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
