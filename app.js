@@ -3,6 +3,23 @@ const favicon = require("serve-favicon");
 const app = express()
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts")
+const mysql = require("mysql");
+const bodyParser = require('body-parser');
+
+// Connect to database
+const db = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : 'root',
+    database : 'conation'
+});
+
+db.connect((err) => {
+    if (err) {
+        throw err;
+    }
+    console.log('MySql Connected');
+});
 
 app.use(ejsLayouts)
 
@@ -11,6 +28,19 @@ app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")))
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname + "/public"));
+
+app.get("/db_test", (req, res) => {
+	let query = "SELECT * FROM businesses";
+	db.query(query, (err, result) => {
+		if (err) {
+			res.redirect('/');
+		}
+		res.render("conation/db_test", {layout: "layoutLoggedOut", title: "Conation", businesses: result})});
+});
+
+// app.post("/db_test", (req, res) => {
+// 	let query = "INSERT INTO businesses (`name`, `description`, `address`, city, province, category) VALUES ('"
+// })
 
 app.get("/", function (req, res) {
   res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
@@ -47,4 +77,4 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.listen(8080, function () {
   console.log("Server running. Visit: localhost:8080 in your browser 🚀");
-})
+});
