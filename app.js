@@ -1,6 +1,6 @@
 // Dependencies
 const express = require("express");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const favicon = require("serve-favicon");
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
