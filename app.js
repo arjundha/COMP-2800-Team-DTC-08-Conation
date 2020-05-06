@@ -57,6 +57,13 @@ app.get('/main', (req, res) => {
 	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
 });
 
+app.get('/map', (req, res) =>{
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map'})
+})
+
+
+app.set('views', path.join(__dirname, 'views'));
+
 app.listen(8080, function () {
   console.log("Server running. Visit: localhost:8080 in your browser 🚀");
 })
