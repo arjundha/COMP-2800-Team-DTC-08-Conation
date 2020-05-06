@@ -11,7 +11,7 @@ CREATE TABLE customers (
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(75) UNIQUE NOT NULL,
     phone VARCHAR(15) NOT NULL,
-    created DATE NOT NULL DEFAULT (CURRENT_DATE),
+    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     amount_donated DECIMAL(12,2) NOT NULL DEFAULT 0
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE business_owners (
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(75) UNIQUE NOT NULL,
     phone VARCHAR(15) NOT NULL,
-    created DATE NOT NULL DEFAULT (CURRENT_DATE),
+    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     business_id INTEGER,
         FOREIGN KEY (business_id) REFERENCES businesses(id)
 );
