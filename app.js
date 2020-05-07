@@ -76,6 +76,12 @@ app.post("/login", (req, res) => {
 
 });
 
+app.get('/getEmails', (req, res) => {
+	let email = pool.query('SELECT email FROM customers')
+	console.log(email)
+
+})
+
 app.get('/registration', (req, res) => {
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration'  });
 });
