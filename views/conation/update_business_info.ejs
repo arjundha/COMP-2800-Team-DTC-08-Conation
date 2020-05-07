@@ -27,7 +27,7 @@
                                 <div class="tab-content" id="settingsTabsContent">
                                     <div class="tab-pane fade show active" id="profileSettings" role="tabpanel" aria-labelledby="profileTab">
                                         <h3>Profile Information</h3>
-                                        <form id="profileUpdate" action="#">
+                                        <form id="profileUpdate" action="/updateBusinessProfile" method="post">
                                             <br>
                                             <!-- Username (Disabled) -->
                                             <div class="form-group row">
@@ -77,7 +77,7 @@
 
                                         <br><br><hr><br>
                                         <!-- Update Password Form -->
-                                        <form id="passwordUpdate" action="#">
+                                        <form id="passwordUpdate" action="/updateBusinessPassword" method="post">
                                             <h5>Update Password</h5>
                                             <br>
                                             <!-- New Password -->
@@ -103,27 +103,27 @@
                                     <!-- Business Information Settings -->
                                     <div class="tab-pane fade" id="businessSettings" role="tabpanel" aria-labelledby="businessTab">
                                         <h3>Business Information</h3>
-                                        <form id="businessUpdate" action="#">
+                                        <form id="businessUpdate" action="/updateBusinessInfo" method="post">
                                             <br>
                                             <div class="form-group">
                                                 <label for="inputAddress">Address</label>
-                                                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                                                <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="inputAddress2">Address Line 2</label>
-                                                <input type="text" class="form-control" id="address2" placeholder="Apartment, studio, or floor">
+                                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
                                                     <label for="inputCity">City</label>
-                                                    <input type="text" class="form-control" id="city" required>
+                                                    <input type="text" class="form-control" id="city" name="city" required>
                                                 </div>
 
                                                 <div class="form-group col-md-4">
                                                     <label for="inputProvince">Province or Territory</label>
-                                                    <select id="province" class="form-control" required>
+                                                    <select id="province" class="form-control" name="province" required>
                                                         <option selected>BC</option>
                                                         <option>AB</option>
                                                         <option>MB</option>
@@ -142,7 +142,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="postal">Postal Code</label>
-                                                    <input type="text" class="form-control" id="inputPostal" required>
+                                                    <input type="text" class="form-control" id="inputPostal" name="postal" required>
                                                 </div>
 
                                             </div>
@@ -157,7 +157,7 @@
                                             <div class="form-group">
                                                 <label for="businessTag">Category</label>
                                                 <small id="tagHelp" class="form-text text-muted">Choose the tag that best describes your business</small>
-                                                <select id="category" class="form-control" required>
+                                                <select id="category" class="form-control" name="category" required>
                                                     <option value="" id="placeholderOption" value="Select" selected disabled>---</option>
                                                     <option>Bakery</option>
                                                     <option>Café</option>
