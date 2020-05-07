@@ -14,7 +14,7 @@ app.use(ejsLayouts);
 app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
 app.set('views', path.join(__dirname, 'views'));
 
-// Database connection
+
 const pool = mysql.createPool({
 	host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
 	user: 'conationadmin',
@@ -182,39 +182,39 @@ app.get('/map', (req, res) => {
 	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
 })
 
-
 app.set('views', path.join(__dirname, 'views'));
+
 app.post('/updateBusinessProfile', (req, res) => {
-	pool.execute(`UPDATE business_owners 
-							SET first_name = ${req.body.firstName},
-								last_name = ${req.body.lastName},
-								email = ${req.body.email},
-								phone = ${req.body.phone}
-							WHERE username = ${req.body.username}`) // SHOULD BE ID BASED?
-		.then(data => res.json({ success: true }))
-		.catch(error => res.json({ success: false }));
+
+	// Hard-coded username needs to be changed to pull from session
+	pool.query(`UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`, (err, result) => {
+		if (err) { console.log(err) };
+		if (result) { 
+			console.log(result);
+			res.redirect("/update_business_info");
+		};
+	});
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
-	pool.execute(`UPDATE business_owners 
-							SET password = ${req.body.password}
-							WHERE username = ${req.body.username}`) // SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
-		.then(data => res.json({ success: true }))
-		.catch(error => res.json({ success: false }));
+	// SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
+	pool.query(`UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`, (err, result) => {
+		if (err) { console.log(err) };
+		if (result) { 
+			console.log(result);
+			res.redirect("/update_business_info");
+		};
+	});
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
-	pool.execute(`UPDATE businesses
-							SET address = ${req.body.address},
-								address2 = ${req.body.address2},
-								city = ${req.body.city},
-								province = ${req.body.province},
-								postal = ${req.body.postal},
-								category = ${req.body.category},
-								description = ${req.body.description}
-							WHERE business_id = ${req.body.username}`) // SHOULD BE ID BASED?
-		.then(data => res.json({ success: true }))
-		.catch(error => res.json({ success: false }));
+	pool.query(`UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`, (err, result) => {
+		if (err) { console.log(err) };
+		if (result) { 
+			console.log(result);
+			res.redirect("/update_business_info");
+		};
+	}) // SHOULD BE ID BASED?
 });
 
 
