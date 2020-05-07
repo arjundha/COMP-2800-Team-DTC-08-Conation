@@ -59,7 +59,6 @@ app.get('/main', (req, res) => {
 });
 
 app.post('/updateBusinessProfile', (req, res) => {
-	console.log("I did it");
 	pool.execute(`UPDATE business_owners 
 							SET first_name = ${req.body.firstName},
 								last_name = ${req.body.lastName},
