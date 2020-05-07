@@ -55,6 +55,7 @@ app.post("/login", (req, res) => {
 						if (err) {
 							console.log(err)
 							res.redirect('/login')
+
 						}
 
 						if (result[0].password == input_password) {
@@ -77,6 +78,16 @@ app.post("/login", (req, res) => {
 		}
 	});
 });
+
+app.get('/getEmails', (req, res) => {
+	console.log("Hello")
+	pool.query('SELECT email FROM customers', function (err, result) {
+		console.log(result.length)
+		console.log(result)
+		res.json(result)
+	})
+
+})
 
 app.get('/registration', (req, res) => {
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
