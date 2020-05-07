@@ -97,7 +97,7 @@ app.get('/customer_registration', (req, res) => {
 	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
 });
 
-app.post('customer_registration', (req, res) => {
+app.post('/customer_registration', (req, res) => {
 	input = req.body
 	username = input.username
 	password1 = input.password
@@ -107,38 +107,22 @@ app.post('customer_registration', (req, res) => {
 	firstName = input.firstName
 	lastName = input.lastName
 
-	pool.query(`SELECT email FROM customers WHERE email ='${email}'`, function (err, result) {
-
-		if (!result[0]) {
-			console.log("Good email")
-			// Write to DB
-
-			// SQL code goes here, using name values from the form
-			let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${password1}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
-			db.query(query, (err, result) => {
-				if (err) {
-					return res.status(500).send(err);
-				}
-				// Redirect URL on success
-				console.log(result)
-				res.render("conation/login",
-								{
-									layout: "layoutLoggedOut",
-									title: "Conation",
-									// Result holds the rows returned by the SQL query, now you can call customers.forEach
-									firstName: firstName
-								})
-			});
-			res.redirect('/login')
-		} else {
-			console.log("Email already exists")
-			res.redirect('/customer_registration')
-
-
+	// SQL code goes here, using name values from the form
+	let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${password1}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			return res.status(500).send(err);
+			console.log(err)
 		}
-
+		// Redirect URL on success
+		console.log(result)
+		res.render("conation/login",
+			{
+				layout: "layoutLoggedOut",
+				title: "Conation",
+			})
 	});
-
+	res.redirect('/login')
 
 })
 
