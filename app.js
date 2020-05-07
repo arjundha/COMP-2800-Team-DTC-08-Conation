@@ -14,9 +14,9 @@ app.use(express.urlencoded({extended: true}));
 
 // Connect to database
 const db = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
+    host     : 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
+    user     : 'conationadmin',
+    password : 'secret1234',
     database : 'conation'
 });
 db.connect((err) => {
