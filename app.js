@@ -30,6 +30,52 @@ app.get('/login', (req, res) => {
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In'  });
 });
 
+app.post("/login", (req, res) => {
+	// SQL code goes here
+	input = req.body
+	input_email = input.email
+	input_password = input.password
+
+	// Check if user exists
+	console.log(input_email)
+	pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
+		if (err) {
+			console.log(err)
+			console.log("That email does not exist")
+			res.redirect('/login')
+		}
+		//You will get an array. if no users found it will return.
+
+		if (result[0].email.length > 0) {
+			pool.query(`SELECT password FROM customers WHERE email ='${input_email}'`, function (err, result) {
+				console.log(result)
+
+				if (err) {
+					console.log(err)
+					res.redirect('/login')
+				} 
+
+				if (result[0].password == input_password){
+					res.render("conation/main",
+					{
+						layout: "layoutLoggedIn",
+						title: "Conation",
+						// Result holds the rows returned by the SQL query, now you can call customers.forEach
+						customers: result
+					})
+
+				}else {
+					console.log("Passwords do not match")
+					res.redirect("/login")
+				}
+
+			});
+		}
+	});
+
+
+});
+
 app.get('/registration', (req, res) => {
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration'  });
 });
