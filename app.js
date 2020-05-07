@@ -6,42 +6,29 @@ const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 
 // Set stuff here
-const 	app = express();
-		app.use(express.urlencoded({extended: true}));
-		app.use(express.static(__dirname + "/public"));
-		app.set("view engine", "ejs");
-		app.use(ejsLayouts);
-		app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
-		app.set('views', path.join(__dirname, 'views'));
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
+app.set("view engine", "ejs");
+app.use(ejsLayouts);
+app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
+app.set('views', path.join(__dirname, 'views'));
 
-// Database connection
-const pool = mysql.createPool({
-		host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
-		user: 'conationadmin',
-		database: 'conation',
-		password: 'secret1234'
-	}).promise();
 
-// Connect to database
-const db = mysql.createConnection({
-	host     : 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
-	user     : 'conationadmin',
-	password : 'secret1234',
-	database : 'conation'
-});
-db.connect((err) => {
-	if (err) {
-		throw err;
-	}
-	console.log('MySql Connected');
-});
+const pool = mysql.createPool({
+	host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
+	user: 'conationadmin',
+	database: 'conation',
+	password: 'secret1234'
+}).promise();
+
 
 app.get("/", function (req, res) {
-  res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
+	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
 
 app.get('/login', (req, res) => {
-	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In'  });
+	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
 });
 
 app.post("/login", (req, res) => {
@@ -55,40 +42,40 @@ app.post("/login", (req, res) => {
 	pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
 		if (err) {
 			console.log(err)
-			
+
 			res.redirect('/login')
-		} else{
-			if (!result[0]){
+		} else {
+			if (!result[0]) {
 				console.log("That email does not exist")
 				res.redirect('/login')
 			} else {
 				if (result[0].email.length > 0) {
 					pool.query(`SELECT password FROM customers WHERE email ='${input_email}'`, function (err, result) {
-						console.log(result)
-		
+
 						if (err) {
 							console.log(err)
 							res.redirect('/login')
-						} 
-		
-						if (result[0].password == input_password){
+
+						}
+
+						if (result[0].password == input_password) {
 							res.render("conation/login",
-							{
-								layout: "layoutLoggedIn",
-								title: "Conation",
-								// Result holds the rows returned by the SQL query, now you can call customers.forEach
-								customers: result
-							})
-		
-						}else {
+								{
+									layout: "layoutLoggedIn",
+									title: "Conation",
+									// Result holds the rows returned by the SQL query, now you can call customers.forEach
+									customers: result
+								})
+
+						} else {
 							console.log("Passwords do not match")
 							res.redirect("/login")
 						}
-		
+
 					});
 				}
 			}
-		}	
+		}
 	});
 });
 
@@ -103,27 +90,72 @@ app.get('/getEmails', (req, res) => {
 })
 
 app.get('/registration', (req, res) => {
-	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration'  });
+	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
 });
 
 app.get('/customer_registration', (req, res) => {
-	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration'  });
+	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
 });
 
+app.post('customer_registration', (req, res) => {
+	input = req.body
+	username = input.username
+	password1 = input.password
+	password2 = input.password2
+	email = input.email
+	phone = input.phone
+	firstName = input.firstName
+	lastName = input.lastName
+
+	pool.query(`SELECT email FROM customers WHERE email ='${email}'`, function (err, result) {
+
+		if (!result[0]) {
+			console.log("Good email")
+			// Write to DB
+
+			// SQL code goes here, using name values from the form
+			let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${password1}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+			db.query(query, (err, result) => {
+				if (err) {
+					return res.status(500).send(err);
+				}
+				// Redirect URL on success
+				console.log(result)
+				res.render("conation/login",
+								{
+									layout: "layoutLoggedOut",
+									title: "Conation",
+									// Result holds the rows returned by the SQL query, now you can call customers.forEach
+									firstName: firstName
+								})
+			});
+			res.redirect('/login')
+		} else {
+			console.log("Email already exists")
+			res.redirect('/customer_registration')
+
+
+		}
+
+	});
+
+
+})
+
 app.get('/business_registration', (req, res) => {
-	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration'  });
+	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
 
 app.get('/about', (req, res) => {
-	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us'  });
+	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
 });
 
 app.get('/business', (req, res) => {
 	res.render('conation/business', {
-			layout: 'layoutLoggedIn',
-			title: 'fake name',
-			businessName: 'fake name here',
-			description: 'teiahtukjha'
+		layout: 'layoutLoggedIn',
+		title: 'fake name',
+		businessName: 'fake name here',
+		description: 'teiahtukjha'
 	});
 });
 
@@ -140,7 +172,7 @@ app.get('/business/:id', (req, res) => {
 });
 
 app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile'  });
+	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
 });
 
 app.get('/main', (req, res) => {
@@ -150,53 +182,53 @@ app.get('/main', (req, res) => {
 			console.log(err);
 		}
 		res.render("conation/main", {
-					layout: 'layoutLoggedIn',
-					title: 'conation',
-					businesses: result
+			layout: 'layoutLoggedIn',
+			title: 'conation',
+			businesses: result
 		})
 	});
 });
 
-app.get('/map', (req, res) =>{
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map'})
+app.get('/map', (req, res) => {
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
 })
 
-
 app.set('views', path.join(__dirname, 'views'));
+
 app.post('/updateBusinessProfile', (req, res) => {
-	pool.execute(`UPDATE business_owners 
-							SET first_name = ${req.body.firstName},
-								last_name = ${req.body.lastName},
-								email = ${req.body.email},
-								phone = ${req.body.phone}
-							WHERE username = ${req.body.username}`) // SHOULD BE ID BASED?
-		.then(data => res.json( {success : true} ))
-		.catch(error => res.json( {success : false} ));
+
+	// Hard-coded username needs to be changed to pull from session
+	pool.query(`UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`, (err, result) => {
+		if (err) { console.log(err) };
+		if (result) { 
+			console.log(result);
+			res.redirect("/update_business_info");
+		};
+	});
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
-	pool.execute(`UPDATE business_owners 
-							SET password = ${req.body.password}
-							WHERE username = ${req.body.username}`) // SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
-		.then(data => res.json( {success : true} ))
-		.catch(error => res.json( {success : false} ));
+	// SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
+	pool.query(`UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`, (err, result) => {
+		if (err) { console.log(err) };
+		if (result) { 
+			console.log(result);
+			res.redirect("/update_business_info");
+		};
+	});
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
-	pool.execute(`UPDATE businesses
-							SET address = ${req.body.address},
-								address2 = ${req.body.address2},
-								city = ${req.body.city},
-								province = ${req.body.province},
-								postal = ${req.body.postal},
-								category = ${req.body.category},
-								description = ${req.body.description}
-							WHERE business_id = ${req.body.username}`) // SHOULD BE ID BASED?
-		.then(data => res.json( {success : true} ))
-		.catch(error => res.json( {success : false} ));
+	pool.query(`UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`, (err, result) => {
+		if (err) { console.log(err) };
+		if (result) { 
+			console.log(result);
+			res.redirect("/update_business_info");
+		};
+	}) // SHOULD BE ID BASED?
 });
 
 
 app.listen(8080, function () {
-  console.log("Server running. Visit: localhost:8080 in your browser 🚀");
+	console.log("Server running. Visit: localhost:8080 in your browser 🚀");
 });
