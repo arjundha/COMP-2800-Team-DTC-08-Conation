@@ -144,15 +144,17 @@ app.get('/business', (req, res) => {
 });
 
 app.get('/business/:id', (req, res) => {
-	pool.execute("SELECT * FROM businesses WHERE id =" + req.params.id)
-		.then(([Data, Metadata]) => {
+	pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
 			res.render("conation/business", {
-				layout: 'layoutLoggedIn',
-				title: Data[0].name,
-				businessName: Data[0].name,
-				description: Data[0].description
-			})
-		}).catch(error => console.log(error));
+						layout: 'layoutLoggedIn',
+						title: result[0].name,
+						businessName: result[0].name,
+						description: result[0].description
+					});
+	});
 });
 
 app.get('/update_business_info', (req, res) => {
@@ -182,34 +184,35 @@ app.set('views', path.join(__dirname, 'views'));
 app.post('/updateBusinessProfile', (req, res) => {
 
 	// Hard-coded username needs to be changed to pull from session
-	pool.query(`UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`, (err, result) => {
-		if (err) { console.log(err) };
-		if (result) {
-			console.log(result);
-			res.redirect("/update_business_info");
-		};
+	let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.redirect("/update_business_info");
 	});
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
-	// SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
-	pool.query(`UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`, (err, result) => {
-		if (err) { console.log(err) };
-		if (result) {
-			console.log(result);
-			res.redirect("/update_business_info");
-		};
+	// Hard-coded username needs to be changed to pull from session, password needs hashing
+	let query = `UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.redirect("/update_business_info");
 	});
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
-	pool.query(`UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`, (err, result) => {
-		if (err) { console.log(err) };
-		if (result) {
-			console.log(result);
-			res.redirect("/update_business_info");
-		};
-	}) // SHOULD BE ID BASED?
+	// Hard-coded ID needs to be changed to pull from session
+	let query = `UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.redirect("/update_business_info");
+	})
 });
 
 
