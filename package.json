@@ -4,7 +4,8 @@
   "description": "First Commit",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "favicon": "0.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
+    "nodemon": "^2.0.3",
     "php": "0.0.1",
     "serve-favicon": "^2.5.0"
   }
