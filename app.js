@@ -72,7 +72,7 @@ app.post("/login", (req, res) => {
 						} 
 		
 						if (result[0].password == input_password){
-							res.render("conation/main",
+							res.render("conation/login",
 							{
 								layout: "layoutLoggedIn",
 								title: "Conation",
@@ -93,8 +93,12 @@ app.post("/login", (req, res) => {
 });
 
 app.get('/getEmails', (req, res) => {
-	let email = pool.query('SELECT email FROM customers')
-	console.log(email)
+	console.log("Hello")
+	pool.query('SELECT email FROM customers', function (err, result) {
+		console.log(result.length)
+		console.log(result)
+		res.json(result)
+	})
 
 })
 

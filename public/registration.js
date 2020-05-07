@@ -93,14 +93,15 @@ $('document').ready(function(){
 
 $('document').ready(function(){
     $.ajax('/getEmails')
-    console.log("ajax")
     .done(function(data) {
-        
-        console.log(data);  
+        console.log(data[0].email);  
+        let takenEmail = [];
+        for (i = 0; i < data.length; i++){
+            takenEmail.push(data[i].email)
+        }
 
         $('#emailInput').on('blur', function(){
             console.log("email blur")
-            let takenEmail = ["arjun@email.com", "cthompson98@bcit.ca", "hudson.mcmanus@gmail.com", "nlwilson35@gmail.com", "sarah.eslamdoust@gmail.com"];
             let email = $('#emailInput').val();
 
             let emailIsTaken = takenEmail.includes(email)
@@ -119,7 +120,7 @@ $('document').ready(function(){
 
             }else if (emailIsTaken == false ) {
                 $("#emailTaken").html("");
-                // $("#emailFree").html("Username is available.");
+                // $("#emailFree").html("Email is available.");
                 document.getElementById('emailInput').setCustomValidity('');
 
             }
