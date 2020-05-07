@@ -22,6 +22,20 @@ const pool = mysql.createPool({
 		password: 'secret1234'
 	}).promise();
 
+// Connect to database
+const db = mysql.createConnection({
+	host     : 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
+	user     : 'conationadmin',
+	password : 'secret1234',
+	database : 'conation'
+});
+db.connect((err) => {
+	if (err) {
+		throw err;
+	}
+	console.log('MySql Connected');
+});
+
 app.get("/", function (req, res) {
   res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
@@ -47,7 +61,24 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/business', (req, res) => {
-	res.render('conation/business', { layout: 'layoutLoggedIn', title: 'SEND NAME OF BUSINESS HERE (USE REQ?)'  });
+	res.render('conation/business', {
+			layout: 'layoutLoggedIn',
+			title: 'fake name',
+			businessName: 'fake name here',
+			description: 'teiahtukjha'
+	});
+});
+
+app.get('/business/:id', (req, res) => {
+	pool.execute("SELECT * FROM businesses WHERE id =" + req.params.id)
+		.then(([Data, Metadata]) => {
+			res.render("conation/business", {
+				layout: 'layoutLoggedIn',
+				title: Data[0].name,
+				businessName: Data[0].name,
+				description: Data[0].description
+			})
+		}).catch(error => console.log(error));
 });
 
 app.get('/update_business_info', (req, res) => {
@@ -55,7 +86,17 @@ app.get('/update_business_info', (req, res) => {
 });
 
 app.get('/main', (req, res) => {
-	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
+	let query = "SELECT * FROM businesses";
+	db.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/main", {
+					layout: 'layoutLoggedIn',
+					title: 'conation',
+					businesses: result
+		})
+	});
 });
 
 app.post('/updateBusinessProfile', (req, res) => {
