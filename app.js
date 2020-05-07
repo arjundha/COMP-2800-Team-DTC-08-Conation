@@ -97,7 +97,7 @@ app.get('/customer_registration', (req, res) => {
 	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
 });
 
-app.post('customer_registration', (req, res) => {
+app.post('/customer_registration', (req, res) => {
 	input = req.body
 	username = input.username
 	password1 = input.password
@@ -107,38 +107,22 @@ app.post('customer_registration', (req, res) => {
 	firstName = input.firstName
 	lastName = input.lastName
 
-	pool.query(`SELECT email FROM customers WHERE email ='${email}'`, function (err, result) {
-
-		if (!result[0]) {
-			console.log("Good email")
-			// Write to DB
-
-			// SQL code goes here, using name values from the form
-			let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${password1}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
-			db.query(query, (err, result) => {
-				if (err) {
-					return res.status(500).send(err);
-				}
-				// Redirect URL on success
-				console.log(result)
-				res.render("conation/login",
-								{
-									layout: "layoutLoggedOut",
-									title: "Conation",
-									// Result holds the rows returned by the SQL query, now you can call customers.forEach
-									firstName: firstName
-								})
-			});
-			res.redirect('/login')
-		} else {
-			console.log("Email already exists")
-			res.redirect('/customer_registration')
-
-
+	// SQL code goes here, using name values from the form
+	let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${password1}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			return res.status(500).send(err);
+			console.log(err)
 		}
-
+		// Redirect URL on success
+		console.log(result)
+		res.render("conation/login",
+			{
+				layout: "layoutLoggedOut",
+				title: "Conation",
+			})
 	});
-
+	res.redirect('/login')
 
 })
 
@@ -177,7 +161,7 @@ app.get('/update_business_info', (req, res) => {
 
 app.get('/main', (req, res) => {
 	let query = "SELECT * FROM businesses";
-	db.query(query, (err, result) => {
+	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
 		}
@@ -200,7 +184,7 @@ app.post('/updateBusinessProfile', (req, res) => {
 	// Hard-coded username needs to be changed to pull from session
 	pool.query(`UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`, (err, result) => {
 		if (err) { console.log(err) };
-		if (result) { 
+		if (result) {
 			console.log(result);
 			res.redirect("/update_business_info");
 		};
@@ -211,7 +195,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 	// SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
 	pool.query(`UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`, (err, result) => {
 		if (err) { console.log(err) };
-		if (result) { 
+		if (result) {
 			console.log(result);
 			res.redirect("/update_business_info");
 		};
@@ -221,7 +205,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 app.post('/updateBusinessInfo', (req, res) => {
 	pool.query(`UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`, (err, result) => {
 		if (err) { console.log(err) };
-		if (result) { 
+		if (result) {
 			console.log(result);
 			res.redirect("/update_business_info");
 		};
