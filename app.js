@@ -1,16 +1,30 @@
+// Dependencies
 const express = require("express");
+const mysql = require("mysql2");
 const favicon = require("serve-favicon");
-const app = express();
 const path = require('path');
-const ejsLayouts = require("express-ejs-layouts")
-const mysql = require("mysql");
+const ejsLayouts = require("express-ejs-layouts");
 const bodyParser = require('body-parser');
 
-app.use(ejsLayouts)
-app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
-app.set('view engine', 'ejs');
-app.use(express.static(__dirname + "/public"));
-app.use(express.urlencoded({extended: true}));
+// Set stuff here
+const 	app = express();
+		app.use(express.urlencoded({extended: true}));
+		app.use(express.static(__dirname + "/public"));
+		app.set("view engine", "ejs");
+		app.use(ejsLayouts);
+		app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
+		app.set('views', path.join(__dirname, 'views'));
+
+// Database connection
+const pool = mysql.createPool({
+		host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
+		user: 'conationadmin',
+		database: 'conation',
+		password: 'secret1234'
+	}).promise();
+
+	
+// === Database Testing ===
 
 // Connect to database
 const db = mysql.createConnection({
@@ -55,6 +69,8 @@ app.post("/db_test", (req, res) => {
 		res.redirect('/db_test');});
 });
 
+// === Database Testing ===
+
 app.get("/", function (req, res) {
   res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
@@ -75,16 +91,25 @@ app.get('/business_registration', (req, res) => {
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration'  });
 });
 
+app.get('/about', (req, res) => {
+	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us'  });
+});
+
 app.get('/business', (req, res) => {
-	res.render('conation/business'), { layout: 'layoutLoggedIn', title: 'SEND NAME OF BUSINESS HERE (USE REQ?)'  };
+	res.render('conation/business', { layout: 'layoutLoggedIn', title: 'SEND NAME OF BUSINESS HERE (USE REQ?)'  });
 });
 app.get('/update_business_info', (req, res) => {
 	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile'  });
 });
 
 app.get('/main', (req, res) => {
-	res.render('conation/main'), { layout: 'layoutLoggedIn', title: 'Conation'  };
+	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
 });
+
+app.get('/map', (req, res) =>{
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map'})
+})
+
 
 app.set('views', path.join(__dirname, 'views'));
 
