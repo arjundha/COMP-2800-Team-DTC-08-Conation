@@ -1,45 +1,45 @@
 $(document).ready(function() {
-    $('#businessProfileChange').on('click', postBusinessProfileChange);
-    $('#businessPasswordChange').on('click', postBusinessPasswordChange);
-    $('#businessInfoChange').on('click', postBusinessInfoChange);
+    $('#businessProfileChange').on('click', postBusinessProfileChange());
+    $('#businessPasswordChange').on('click', postBusinessPasswordChange());
+    $('#businessInfoChange').on('click', postBusinessInfoChange());
 
 });
 
 function postBusinessProfileChange() {
-  $.ajax({
-    url: '/updateBusinessProfile',
-    method: 'POST',
-    data: {
-        username: $('#username').val(), // This doesn't need to be here, but since we don't have sessions yet...
-        firstName: $('#firstName').val(),
-        lastName: $('#lastName').val(),
-        email: $('#email').val(),
-        phone: $('#phone').val()
-    }
-  }).done(function(data) {
-    alert(data.success);
-  }).fail(function(error) {
-    console.log(error);
-  });
+    $.ajax({
+        url: '/updateBusinessProfile',
+        method: 'POST',
+        data: {
+            username: $('#username').val(), // This doesn't need to be here, but since we don't have sessions yet...
+            firstName: $('#firstName').val(),
+            lastName: $('#lastName').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val()
+        }
+        }).done(function(data) {
+        alert(data.success);
+        }).fail(function(error) {
+        console.log(error);
+        });
 }
 
 function postBusinessPasswordChange() {
-  $.ajax({
-    url: '/updateBusinessPassword',
-    method: 'POST',
-    data: {
-        username: $('#username').val(), // SHOULD BE ID BASED
-        password: $('#passwordConfirm').val() // PASSWORD NEEDS HASHING
-    }
-  }).done(function(data) {
-    alert(data.success);
-  }).fail(function(error) {
-    console.log(error);
-  });
+    $.ajax({
+        url: '/updateBusinessPassword',
+        method: 'POST',
+        data: {
+            username: $('#username').val(), // SHOULD BE ID BASED
+            password: $('#passwordConfirm').val() // PASSWORD NEEDS HASHING
+        }
+    }).done(function(data) {
+        alert(data.success);
+    }).fail(function(error) {
+        console.log(error);
+    });
 }
 
 function postBusinessInfoChange() {
-  $.ajax({
+    $.ajax({
     url: '/updateBusinessInfo',
     method: 'POST',
     data: {

@@ -58,9 +58,8 @@ app.get('/main', (req, res) => {
 	res.render('conation/main', { layout: 'layoutLoggedIn', title: 'conation'  });
 });
 
-app.post('updateBusinessProfile', (req, res) => {
+app.post('/updateBusinessProfile', (req, res) => {
 	console.log("I did it");
-
 	pool.execute(`UPDATE business_owners 
 							SET first_name = ${req.body.firstName},
 								last_name = ${req.body.lastName},
@@ -71,7 +70,7 @@ app.post('updateBusinessProfile', (req, res) => {
 		.catch(error => res.json( {success : false} ));
 });
 
-app.post('updateBusinessPassword', (req, res) => {
+app.post('/updateBusinessPassword', (req, res) => {
 	pool.execute(`UPDATE business_owners 
 							SET password = ${req.body.password}
 							WHERE username = ${req.body.username}`) // SHOULD BE ID BASED AND PASSWORD NEEDS HASHING.
@@ -79,7 +78,7 @@ app.post('updateBusinessPassword', (req, res) => {
 		.catch(error => res.json( {success : false} ));
 });
 
-app.post('updateBusinessInfo', (req, res) => {
+app.post('/updateBusinessInfo', (req, res) => {
 	pool.execute(`UPDATE businesses
 							SET address = ${req.body.address},
 								address2 = ${req.body.address2},
