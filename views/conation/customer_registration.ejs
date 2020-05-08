@@ -3,16 +3,16 @@
     <h2>The following information will be used to create and maintain your log-in:</h2>
     <br>
     <form id="registration" action="/customer_registration" method="POST"> <!-- should POST and the action should be to the database -->
-        <!-- Create a Username -->
+        <!-- Enter email -->
         <div class="form-group row">
-            <label for="username" class="col-sm-2 col-form-label">Username:</label>
+            <label for="email" class="col-sm-2 col-form-label">Enter your email:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="usernameInput" placeholder="Username" name="username" required>
-                <small id="usernameTaken" class="form-text text-danger"></small>
-                <small id="usernameFree" class="form-text text-success"></small>
+                <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address. Ex. sample@email.com" required>
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <small id="emailTaken" class="form-text text-danger"></small>
             </div>
         </div>
-    
+
         <!-- Create a Password -->
         <div class="form-group row">
             <label for="password" class="col-sm-2 col-form-label">Password:</label>
@@ -28,16 +28,6 @@
                 <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="passwordConfirm" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this); finalPasswordCheck()" required>
                 <small id="divCheckPasswordMatch" class="form-text text-danger"></small>
                 <small id="divCheckPasswordMatchTrue" class="form-text text-success"></small>
-            </div>
-        </div>
-    
-        <!-- Enter email -->
-        <div class="form-group row">
-            <label for="email" class="col-sm-2 col-form-label">Enter your email:</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address. Ex. sample@email.com" required>
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                <small id="emailTaken" class="form-text text-danger"></small>
             </div>
         </div>
     
