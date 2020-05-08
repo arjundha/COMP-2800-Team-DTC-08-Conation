@@ -58,20 +58,25 @@
 
 <!-- Filter Bar -->
 <div class="container">
-    <div class="row">
-        <div class="col-sm-12 justify-content-between">
-            <h1>This is where the filters will go.</h1>
+    <div class="row my-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="form-inline p-3" action="/main" method="post">
+                    <input class="form-control mr-sm-2" type="search" id="search" name="search" placeholder="Search...">
+                    <input class="btn btn-dark" type="submit" value="Search">
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Business Listings -->
 <div class="container">
-    <div class="row">
+    <% businesses.forEach((business) => { %>
+    <div class="row my-3">
         <div class="col-sm-12">
-            <% businesses.forEach((business) => { %>
             <div class="card">
-                <div class="card-header"> <%= business.name %> </div>
+                <div class="card-header"> <%= business.name %> | <%= business.category %></div>
                 <div class="card-body">
                     <p>
                         <%= business.description %>
@@ -81,8 +86,8 @@
                     <a href='/business/<%= business.id %>' class="btn btn-main float-right">Learn More!</a>
                 </div>
             </div>
-            <% }); %>
         </div>
     </div>
+    <% }); %>
 </div>
 
