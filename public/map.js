@@ -6,7 +6,7 @@ geocoder = new google.maps.Geocoder();
 // jQuery for the AJAX call to fill map with locations
 $('document').ready(function(){
   initMap();
-  addMarker({coords: {lat: 48.427502, lng: -123.367264}, content: '<h3>TEST</h3>'})
+  addMarker({coords: {lat: 48.427502, lng: -123.367264}, content: '<h3>TEST</h3>'});
 
   $.ajax('/getBusinesses')
   .done(function(data) {
@@ -127,10 +127,10 @@ function addMarker(props){
 
 // Get lat long from address
 function codeAddress(obj) {
-  console.log("STARTING FUNCTION")
+  console.log("STARTING FUNCTION");
   geocoder.geocode({ 'address': obj.address, 'componentRestrictions':{'country':'CA'}}, function (results, status) {
       if (status == 'OK') {
-        console.log("STATUS OK")
+        console.log("STATUS OK");
           //     var marker = new google.maps.Marker({
           //     position: results[0].geometry.location,
           //     map: map,

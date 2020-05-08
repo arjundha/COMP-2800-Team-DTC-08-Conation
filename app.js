@@ -4,6 +4,7 @@ const mysql = require("mysql2");
 const favicon = require("serve-favicon");
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
+const bcrypt = require('bcrypt');
 
 // Set stuff here
 const app = express();
@@ -13,6 +14,7 @@ app.set("view engine", "ejs");
 app.use(ejsLayouts);
 app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
 app.set('views', path.join(__dirname, 'views'));
+
 
 
 const pool = mysql.createPool({
@@ -38,8 +40,7 @@ app.post("/login", (req, res) => {
 	input_password = input.password
 
 	// Check if user exists
-	console.log(input_email)
-	pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
+	pool.query(`SELECT email FROM customers WHERE email ='${input_email}' UNION SELECT email FROM business_owners WHERE email ='${input_email}'`, function (err, result) {
 		if (err) {
 			console.log(err)
 
@@ -50,28 +51,30 @@ app.post("/login", (req, res) => {
 				res.redirect('/login')
 			} else {
 				if (result[0].email.length > 0) {
-					pool.query(`SELECT password FROM customers WHERE email ='${input_email}'`, function (err, result) {
-
+					pool.query(`SELECT password FROM customers WHERE email ='${input_email}' UNION SELECT password FROM business_owners WHERE email ='${input_email}'`, function (err, result) {
 						if (err) {
 							console.log(err)
 							res.redirect('/login')
 
-						}
-
-						if (result[0].password == input_password) {
-							res.render("conation/login",
-								{
-									layout: "layoutLoggedIn",
-									title: "Conation",
-									// Result holds the rows returned by the SQL query, now you can call customers.forEach
-									customers: result
-								})
-
 						} else {
-							console.log("Passwords do not match")
-							res.redirect("/login")
-						}
+							console.log(result)
+							bcrypt.compare(input_password, result[0].password, function (err, result) {
+								if (result) {
+									pool.query(`SELECT first_name, last_name, email FROM customers WHERE email ='${input_email}'`, function (err, result) {
+										if (err) {
+											console.log(err)
+											res.redirect('/login')
 
+										} else {
+											res.redirect("/main")
+										}
+									})
+								} else {
+									console.log("Passwords do not match")
+									res.redirect("/login")
+								}
+							});
+						}
 					});
 				}
 			}
@@ -89,7 +92,7 @@ app.get('/getEmails', (req, res) => {
 
 app.get('/getBusinesses', (req, res) => {
 	console.log("Business");
-	pool.query('SELECT * FROM businesses', function (err, result){
+	pool.query('SELECT * FROM businesses', function (err, result) {
 		console.log("Getting data")
 		console.log(result)
 		res.json(result);
@@ -106,7 +109,6 @@ app.get('/customer_registration', (req, res) => {
 
 app.post('/customer_registration', (req, res) => {
 	input = req.body
-	username = input.username
 	password1 = input.password
 	password2 = input.password2
 	email = input.email
@@ -114,28 +116,108 @@ app.post('/customer_registration', (req, res) => {
 	firstName = input.firstName
 	lastName = input.lastName
 
-	// SQL code goes here, using name values from the form
-	let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${password1}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
-	pool.query(query, (err, result) => {
+
+	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
-			return res.status(500).send(err);
 			console.log(err)
+			return res.status(500).send(err);
+		} else {
+			if (result[0]) {
+				console.log(result)
+				console.log("That email already exists")
+				res.redirect('/customer_registration')
+			} else {
+				// Hash Password
+				let hashedPassword = bcrypt.hashSync(password1, 10);
+
+				// SQL code goes here, using name values from the form
+				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+				pool.query(query, (err, result) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).send(err);
+					}
+					// Redirect URL on success
+					console.log(result)
+					res.render("conation/login",
+						{
+							layout: "layoutLoggedOut",
+							title: "Conation",
+						})
+				});
+				res.redirect('/login')
+
+			}
 		}
-		// Redirect URL on success
-		console.log(result)
-		res.render("conation/login",
-			{
-				layout: "layoutLoggedOut",
-				title: "Conation",
-			})
-	});
-	res.redirect('/login')
+	})
+
+
 
 })
 
 app.get('/business_registration', (req, res) => {
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
+
+app.post('/business_registration', (req, res) => {
+	input = req.body
+	password1 = input.password
+	password2 = input.password2
+	email = input.email
+	phone = input.phone
+	firstName = input.firstName
+	lastName = input.lastName
+	businessName = input.businessName
+	address = input.address
+	address2 = input.address2
+	city = input.city
+	prov = input.prov
+	postalCode = input.zip
+	description = input.description
+	tag = input.tag
+
+	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
+		if (err) {
+			console.log(err)
+			return res.status(500).send(err);
+		} else {
+			if (result[0]) {
+				console.log(result)
+				console.log("That email already exists")
+				res.redirect('/business_registration')
+			} else {
+				// Hash Password
+				let hashedPassword = bcrypt.hashSync(password1, 10);
+
+				// SQL code goes here, using name values from the form
+				let ownerInfo = `INSERT INTO business_owners (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}','${email}', '${phone}');`;
+				pool.query(ownerInfo, (err, result) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).send(err);
+					} else {
+						let businessInfo = `INSERT INTO businesses (name, description, address, city, province, category, postal_code, address_2) VALUES ('${businessName}', '${description}', '${address}', '${city}', '${prov}', '${tag}', '${postalCode}', '${address2}')`
+						pool.query(businessInfo, (err, result) => {
+							if (err) {
+								console.log(err)
+								return res.status(500).send(err);
+							} else {
+								res.render("conation/login",
+									{
+										layout: "layoutLoggedOut",
+										title: "Conation",
+									});
+							}
+						})
+					}
+				});
+			}
+		}
+	});
+
+
+
+})
 
 app.get('/about', (req, res) => {
 	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
@@ -155,12 +237,12 @@ app.get('/business/:id', (req, res) => {
 		if (err) {
 			console.log(err);
 		}
-			res.render("conation/business", {
-						layout: 'layoutLoggedIn',
-						title: result[0].name,
-						businessName: result[0].name,
-						description: result[0].description
-					});
+		res.render("conation/business", {
+			layout: 'layoutLoggedIn',
+			title: result[0].name,
+			businessName: result[0].name,
+			description: result[0].description
+		});
 	});
 });
 
@@ -186,7 +268,7 @@ app.get('/map', (req, res) => {
 	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
 })
 
-app.set('views', path.join(__dirname, 'views'));
+
 
 app.post('/updateBusinessProfile', (req, res) => {
 
