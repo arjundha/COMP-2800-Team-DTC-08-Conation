@@ -1,16 +1,20 @@
+// Needed to define Global Variables otherwise the Map would not make markers from database
 let map;
 let geocoder;
 geocoder = new google.maps.Geocoder();
 
+// jQuery for the AJAX call to fill map with locations
 $('document').ready(function(){
   initMap();
   addMarker({coords: {lat: 48.427502, lng: -123.367264}, content: '<h3>TEST</h3>'});
 
   $.ajax('/getBusinesses')
   .done(function(data) {
-      for (i = 0; i < 2; i++){
-        console.log(data[i]);
-        codeAddress(data[i]);
+      for (i = 0; i < 10; i++){
+        // console.log(data[i]);
+        // NEEDS to be timed out otherwise it will fail after three tags
+        codeAddress(data[i])
+        // setTimeout(codeAddress(data[i]), 8000);
       }
       
   })
@@ -20,15 +24,16 @@ $('document').ready(function(){
 
 })
   
-
+// Map initializier
 function initMap() {
     // initalize map
     map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 48.427502, lng: -123.367264},
-    zoom: 15
-    });
+      center: {lat: 49.289031, lng: -123.1297058}, // Default starting location
+      // center: {lat: 48.427502, lng: -123.367264}, // Default starting location
+      zoom: 15
+      });
 
-    // Array of markers NEED TO BE CREATED FROM DATABASE
+    // Array of test markers
     let markers = [
     {
       coords:{lat:48.4271342,lng:-123.3695606},
@@ -44,16 +49,18 @@ function initMap() {
         `
 
     },
-    {
-        // coords:{lat:42.7762,lng:-71.0773}
-        // content: `
-        // <h3><=Business Name></h3>
-        // <p>Description</p>
-        // <p>Hours of operation</p>
-        // <p>Website or link to business page</p>
-
-    }
     ];
+
+
+      // Create the search box and link it to the UI element.
+      let input = document.getElementById('pac-input');
+      let searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      // Bias the SearchBox results towards current map's viewport.
+      map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+      });
 
     // Loop through markers
     for(var i = 0;i < markers.length;i++){
@@ -61,27 +68,28 @@ function initMap() {
       addMarker(markers[i]);
     }
 
+    // Browser asks for location
     let infoWindow = new google.maps.InfoWindow;
 
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          let pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('You are near here!');
-            infoWindow.open(map);
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('You are near here!');
+          infoWindow.open(map);
+          map.setCenter(pos);
+        }, function() {
+          handleLocationError(true, infoWindow, map.getCenter());
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -118,6 +126,7 @@ function addMarker(props){
   }
 }
 
+// Get lat long from address
 function codeAddress(obj) {
   console.log("STARTING FUNCTION");
   geocoder.geocode({ 'address': obj.address, 'componentRestrictions':{'country':'CA'}}, function (results, status) {
@@ -128,18 +137,22 @@ function codeAddress(obj) {
           //     map: map,
           // });
           let description = contentMaker(obj);
+          console.log(results[0].geometry.location.lat())
+          console.log(results[0].geometry.location.lng())
+          // console.log(typeof(results[0].geometry.location.lng()))
           addMarker({coords: results[0].geometry.location, content: description});
       } else {
-          alert('Geocode was not successful for the following reason: ' + status);
+          console.log('Geocode was not successful for the following reason: ' + status);
       }
   });
 }
 
-
+// Create tag contents from business info
 function contentMaker(obj){
   title = obj.name;
   description = obj.description;
+  address = obj.address;
 
-  return "<h3>" + title + "</h3><p>" + description + "</p>"
+  return "<h3>" + title + "</h3><p><i>" + description + "</i></p><p>" + address + "</p>"
 
 }
