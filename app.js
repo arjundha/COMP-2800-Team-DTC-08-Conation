@@ -67,20 +67,9 @@ app.post("/login", (req, res) => {
 										res.redirect('/login')
 
 									} else {
-										res.render("conation/login",
-											{
-												layout: "layoutLoggedIn",
-												title: "Conation",
-												user_info: result
-											});
-
+										res.redirect("/main")
 									}
 								})
-								res.render("conation/login",
-									{
-										layout: "layoutLoggedIn",
-										title: "Conation",
-									});
 							} else {
 								console.log("Passwords do not match")
 								res.redirect("/login")
@@ -153,6 +142,47 @@ app.post('/customer_registration', (req, res) => {
 app.get('/business_registration', (req, res) => {
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
+
+app.post('/business_registration', (req, res) => {
+	input = req.body
+	username = input.username
+	password1 = input.password
+	password2 = input.password2
+	email = input.email
+	phone = input.phone
+	firstName = input.firstName
+	lastName = input.lastName
+	businessName = input.businessName
+	address = input.address
+	address2 = input.address2
+	city = input.city
+	prov = input.prov
+	zip = input.zip
+	description = input.description
+	tag = input.tag
+
+
+	// Hash Password
+	let hashedPassword = bcrypt.hashSync(password1, 10);
+
+	// SQL code goes here, using name values from the form
+	let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			return res.status(500).send(err);
+			console.log(err)
+		}
+		// Redirect URL on success
+		console.log(result)
+		res.render("conation/login",
+			{
+				layout: "layoutLoggedOut",
+				title: "Conation",
+			})
+	});
+	res.redirect('/login')
+
+})
 
 app.get('/about', (req, res) => {
 	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
