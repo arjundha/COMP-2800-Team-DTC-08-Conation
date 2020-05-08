@@ -10,10 +10,11 @@ $('document').ready(function(){
 
   $.ajax('/getBusinesses')
   .done(function(data) {
-      for (i = 0; i < 2; i++){
+      for (i = 0; i < 10; i++){
         // console.log(data[i]);
         // NEEDS to be timed out otherwise it will fail after three tags
-        setTimeout(codeAddress(data[i]), 500);
+        codeAddress(data[i])
+        // setTimeout(codeAddress(data[i]), 8000);
       }
       
   })
@@ -136,9 +137,9 @@ function codeAddress(obj) {
           //     map: map,
           // });
           let description = contentMaker(obj);
-          console.log(results)
-          console.log(results[0])
-          console.log(results[0].geometry.location)
+          console.log(results[0].geometry.location.lat())
+          console.log(results[0].geometry.location.lng())
+          // console.log(typeof(results[0].geometry.location.lng()))
           addMarker({coords: results[0].geometry.location, content: description});
       } else {
           console.log('Geocode was not successful for the following reason: ' + status);

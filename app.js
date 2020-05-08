@@ -175,6 +175,8 @@ app.post('/business_registration', (req, res) => {
 	postalCode = input.zip
 	description = input.description
 	tag = input.tag
+	lat = input.lat
+	long = input.long
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
