@@ -40,7 +40,7 @@ app.post("/login", (req, res) => {
 	input_password = input.password
 
 	// Check if user exists
-	pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
+	pool.query(`SELECT email FROM customers WHERE email ='${input_email}' UNION SELECT email FROM business_owners WHERE email ='${input_email}'`, function (err, result) {
 		if (err) {
 			console.log(err)
 
@@ -51,30 +51,30 @@ app.post("/login", (req, res) => {
 				res.redirect('/login')
 			} else {
 				if (result[0].email.length > 0) {
-					pool.query(`SELECT password FROM customers WHERE email ='${input_email}'`, function (err, result) {
-
+					pool.query(`SELECT password FROM customers WHERE email ='${input_email}' UNION SELECT password FROM business_owners WHERE email ='${input_email}'`, function (err, result) {
 						if (err) {
 							console.log(err)
 							res.redirect('/login')
 
+						} else {
+							console.log(result)
+							bcrypt.compare(input_password, result[0].password, function (err, result) {
+								if (result) {
+									pool.query(`SELECT first_name, last_name, email FROM customers WHERE email ='${input_email}'`, function (err, result) {
+										if (err) {
+											console.log(err)
+											res.redirect('/login')
+
+										} else {
+											res.redirect("/main")
+										}
+									})
+								} else {
+									console.log("Passwords do not match")
+									res.redirect("/login")
+								}
+							});
 						}
-
-						bcrypt.compare(input_password, result[0].password, function (err, result) {
-							if (result) {
-								pool.query(`SELECT username, first_name, last_name, email FROM customers WHERE email ='${input_email}'`, function (err, result) {
-									if (err) {
-										console.log(err)
-										res.redirect('/login')
-
-									} else {
-										res.redirect("/main")
-									}
-								})
-							} else {
-								console.log("Passwords do not match")
-								res.redirect("/login")
-							}
-						});
 					});
 				}
 			}
@@ -109,7 +109,6 @@ app.get('/customer_registration', (req, res) => {
 
 app.post('/customer_registration', (req, res) => {
 	input = req.body
-	username = input.username
 	password1 = input.password
 	password2 = input.password2
 	email = input.email
@@ -117,25 +116,42 @@ app.post('/customer_registration', (req, res) => {
 	firstName = input.firstName
 	lastName = input.lastName
 
-	// Hash Password
-	let hashedPassword = bcrypt.hashSync(password1, 10);
 
-	// SQL code goes here, using name values from the form
-	let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
-	pool.query(query, (err, result) => {
+	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
-			return res.status(500).send(err);
 			console.log(err)
+			return res.status(500).send(err);
+		} else {
+			if (result[0]) {
+				console.log(result)
+				console.log("That email already exists")
+				res.redirect('/customer_registration')
+			} else {
+				// Hash Password
+				let hashedPassword = bcrypt.hashSync(password1, 10);
+
+				// SQL code goes here, using name values from the form
+				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+				pool.query(query, (err, result) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).send(err);
+					}
+					// Redirect URL on success
+					console.log(result)
+					res.render("conation/login",
+						{
+							layout: "layoutLoggedOut",
+							title: "Conation",
+						})
+				});
+				res.redirect('/login')
+
+			}
 		}
-		// Redirect URL on success
-		console.log(result)
-		res.render("conation/login",
-			{
-				layout: "layoutLoggedOut",
-				title: "Conation",
-			})
-	});
-	res.redirect('/login')
+	})
+
+
 
 })
 
@@ -145,7 +161,6 @@ app.get('/business_registration', (req, res) => {
 
 app.post('/business_registration', (req, res) => {
 	input = req.body
-	username = input.username
 	password1 = input.password
 	password2 = input.password2
 	email = input.email
@@ -157,30 +172,50 @@ app.post('/business_registration', (req, res) => {
 	address2 = input.address2
 	city = input.city
 	prov = input.prov
-	zip = input.zip
+	postalCode = input.zip
 	description = input.description
 	tag = input.tag
 
-
-	// Hash Password
-	let hashedPassword = bcrypt.hashSync(password1, 10);
-
-	// SQL code goes here, using name values from the form
-	let query = `INSERT INTO customers (username, password, first_name, last_name, email, phone) VALUES ('${username}', '${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
-	pool.query(query, (err, result) => {
+	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
-			return res.status(500).send(err);
 			console.log(err)
+			return res.status(500).send(err);
+		} else {
+			if (result[0]) {
+				console.log(result)
+				console.log("That email already exists")
+				res.redirect('/business_registration')
+			} else {
+				// Hash Password
+				let hashedPassword = bcrypt.hashSync(password1, 10);
+
+				// SQL code goes here, using name values from the form
+				let ownerInfo = `INSERT INTO business_owners (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}','${email}', '${phone}');`;
+				pool.query(ownerInfo, (err, result) => {
+					if (err) {
+						console.log(err)
+						return res.status(500).send(err);
+					} else {
+						let businessInfo = `INSERT INTO businesses (name, description, address, city, province, category, postal_code, address_2) VALUES ('${businessName}', '${description}', '${address}', '${city}', '${prov}', '${tag}', '${postalCode}', '${address2}')`
+						pool.query(businessInfo, (err, result) => {
+							if (err) {
+								console.log(err)
+								return res.status(500).send(err);
+							} else {
+								res.render("conation/login",
+									{
+										layout: "layoutLoggedOut",
+										title: "Conation",
+									});
+							}
+						})
+					}
+				});
+			}
 		}
-		// Redirect URL on success
-		console.log(result)
-		res.render("conation/login",
-			{
-				layout: "layoutLoggedOut",
-				title: "Conation",
-			})
 	});
-	res.redirect('/login')
+
+
 
 })
 

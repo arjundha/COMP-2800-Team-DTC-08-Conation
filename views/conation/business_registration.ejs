@@ -2,8 +2,9 @@
 <div class="container" style="padding-top: 40px;">
     <h2>The following information will be used to create and maintain your log-in:</h2>
     <br>
-    <form id="businessForm" action="/customer_registration" method="POST"> <!-- should POST and the action should be to the database -->
-        <!-- Enter email -->
+
+    <form id="businessForm" action="/business_registration" method="POST"> <!-- should POST and the action should be to the database -->
+        <!-- Create a Username -->
         <div class="form-group row">
             <label for="email" class="col-sm-2 col-form-label">Enter your email:</label>
             <div class="col-sm-10">
@@ -12,7 +13,6 @@
                 <small id="emailTaken" class="form-text text-danger"></small>
             </div>
         </div>
-
         <!-- Create a Password -->
         <div class="form-group row">
             <label for="password" class="col-sm-2 col-form-label">Password:</label>
