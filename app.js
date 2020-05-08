@@ -80,13 +80,20 @@ app.post("/login", (req, res) => {
 });
 
 app.get('/getEmails', (req, res) => {
-	console.log("Hello")
+	console.log("Hello");
 	pool.query('SELECT email FROM customers', function (err, result) {
-		console.log(result.length)
-		console.log(result)
-		res.json(result)
+		res.json(result);
 	})
 
+})
+
+app.get('/getBusinesses', (req, res) => {
+	console.log("Business");
+	pool.query('SELECT * FROM businesses', function (err, result){
+		console.log("Getting data")
+		console.log(result)
+		res.json(result);
+	})
 })
 
 app.get('/registration', (req, res) => {
