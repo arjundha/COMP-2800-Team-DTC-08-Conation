@@ -235,7 +235,7 @@ app.get('/map', (req, res) => {
 
 
 app.post('/businessSearch', (req, res) => {
-	let query = `SELECT * FROM businesses WHERE name LIKE %'${req.body.search}'%;`;
+	let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
