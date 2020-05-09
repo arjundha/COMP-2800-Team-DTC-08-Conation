@@ -248,7 +248,7 @@ app.post('/businessSearch', (req, res) => {
 });
 
 app.post('/businessType', (req, res) => {
-	let query = `SELECT * FROM businesses ORDER BY category DESC;`;
+	let query = `SELECT * FROM businesses ORDER BY category ASC, name ASC;`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
