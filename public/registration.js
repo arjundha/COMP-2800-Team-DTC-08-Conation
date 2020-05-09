@@ -92,31 +92,42 @@ $('document').ready(function(){
 
 
 $('document').ready(function(){
-
-    $('#emailInput').on('blur', function(){
-        console.log("email blur")
-        let takenEmail = ["arjun@email.com", "cthompson98@bcit.ca", "hudson.mcmanus@gmail.com", "nlwilson35@gmail.com", "sarah.eslamdoust@gmail.com"];
-        let email = $('#emailInput').val();
-
-        let emailIsTaken = takenEmail.includes(email)
-
-        if (email == '') {
-            $("#emailTaken").html("This field cannot be blank");
-            $("#emailFree").html("");
-            document.getElementById('emailInput').setCustomValidity('Email entry cannot be blank.');
+    $.ajax('/getEmails')
+    .done(function(data) {
+        console.log(data[0].email);  
+        let takenEmail = [];
+        for (i = 0; i < data.length; i++){
+            takenEmail.push(data[i].email)
         }
 
-        else if (emailIsTaken == true ) {
-            $("#emailTaken").html("Email is taken.");
-            $("#emailFree").html("");
-            document.getElementById('emailInput').setCustomValidity('Email is already taken. Please input another email.');
+        $('#emailInput').on('blur', function(){
+            console.log("email blur")
+            let email = $('#emailInput').val();
+
+            let emailIsTaken = takenEmail.includes(email)
+
+            if (email == '') {
+                $("#emailTaken").html("This field cannot be blank");
+                $("#emailFree").html("");
+                document.getElementById('emailInput').setCustomValidity('Email entry cannot be blank.');
+            }
+
+            else if (emailIsTaken == true ) {
+                $("#emailTaken").html("Email is taken.");
+                $("#emailFree").html("");
+                document.getElementById('emailInput').setCustomValidity('Email is already taken. Please input another email.');
 
 
-        }else if (emailIsTaken == false ) {
-            $("#emailTaken").html("");
-            // $("#emailFree").html("Username is available.");
-            document.getElementById('emailInput').setCustomValidity('');
+            }else if (emailIsTaken == false ) {
+                $("#emailTaken").html("");
+                // $("#emailFree").html("Email is available.");
+                document.getElementById('emailInput').setCustomValidity('');
 
-        }
+            }
+        })
+    
+    })
+    .fail(function(error){
+        console.log(error);
     })
 })

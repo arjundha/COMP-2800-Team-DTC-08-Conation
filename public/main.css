@@ -38,6 +38,10 @@ body {
   padding: 7.5px 15px;
 }
 
+.center{
+  text-align: center;
+}
+
 #two-cards {
   margin-right: 0px;
   margin-left: 0px;
@@ -46,4 +50,23 @@ body {
 #registration-card-photo {
   /* height: 550px; */
   height: 50%;
+}
+
+#SarahBody {
+  background-color: #52796f
+}
+
+.carousel-conation{
+  height: 30vh;
+}
+
+.carousel-two{
+  height: 300pt;
+}
+
+.item-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 300px;
 }
