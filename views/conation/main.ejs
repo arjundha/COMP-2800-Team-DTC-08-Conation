@@ -70,6 +70,31 @@
     </div>
 </div>
 
+<nav class="navbar navbar-expand-sm">
+    <div class="container">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#filterOptions" aria-controls="filterOptions" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="filterOptions">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/main">Type</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">Open</a>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline p-3" action="/businessSearch" method="post">
+                        <input class="form-control mr-sm-2" type="search" id="search" name="search" placeholder="Search...">
+                        <input class="btn btn-dark" type="submit" value="Search">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <!-- Business Listings -->
 <div class="container">
     <% businesses.forEach((business) => { %>
