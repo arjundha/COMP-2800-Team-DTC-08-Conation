@@ -57,7 +57,7 @@
 </div>
 
 <!-- Filter Bar -->
-<div class="container">
+<!--<div class="container">
     <div class="row my-3">
         <div class="col-sm-12">
             <div class="card">
@@ -68,10 +68,9 @@
             </div>
         </div>
     </div>
-</div>
-
-<nav class="navbar navbar-expand-sm">
-    <div class="container">
+</div>-->
+<div class="container">
+    <nav class="navbar navbar-expand-sm">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#filterOptions" aria-controls="filterOptions" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -80,10 +79,14 @@
         <div class="collapse navbar-collapse" id="filterOptions">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/main">Type</a>
+                    <form class="form-inline p-3" action="/businessType" method="post">
+                        <input class="btn btn-dark" type="submit" value="Type" name="type">
+                    </form>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/about">Open</a>
+                    <form class="form-inline p-3" action="/businessOpenNow" method="post">
+                        <input class="btn btn-dark" type="submit" value="Open Now" name="openNow">
+                    </form>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline p-3" action="/businessSearch" method="post">
@@ -93,8 +96,8 @@
                 </li>
             </ul>
         </div>
-    </div>
-</nav>
+    </nav>
+</div>
 <!-- Business Listings -->
 <div class="container">
     <% businesses.forEach((business) => { %>

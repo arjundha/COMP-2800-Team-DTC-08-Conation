@@ -233,7 +233,6 @@ app.get('/map', (req, res) => {
 	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
 });
 
-
 app.post('/businessSearch', (req, res) => {
 	let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
 	pool.query(query, (err, result) => {
@@ -247,6 +246,34 @@ app.post('/businessSearch', (req, res) => {
 		});
 	});
 });
+
+app.post('/businessType', (req, res) => {
+	let query = `SELECT * FROM businesses ORDER BY category DESC;`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/main", {
+			layout: 'layoutLoggedIn',
+			title: 'conation',
+			businesses: result
+		});
+	});
+});
+
+/*app.post('/businessOpenNow', (req, res) => {
+	let query = `SELECT * FROM businesses WHERE`; // INSERT CODE TO CHECK IF OPEN
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/main", {
+			layout: 'layoutLoggedIn',
+			title: 'conation',
+			businesses: result
+		});
+	});
+});*/
 
 app.post('/updateBusinessProfile', (req, res) => {
 
