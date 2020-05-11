@@ -85,7 +85,8 @@ app.get('/getEmails', (req, res) => {
 // Used to display map information
 app.get('/getBusinesses', (req, res) => {
 	console.log("Business");
-	pool.query('SELECT * FROM businesses', function (err, result) {
+	// SELECT `name`, description, lat, `long`, mon, tue, wed, thu, fri, sat sun FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;
+	pool.query('SELECT `name`, description, address, city, province, category, postal_code, lat, lng , mon, tue, wed, thu, fri, sat sun FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;', function (err, result) {
 		console.log("Getting data")
 		console.log(result)
 		res.json(result);
@@ -151,7 +152,7 @@ app.post("/login", (req, res) => {
 });
 
 
-// REGISTRATION //
+// CUSTOMER REGISTRATION //
 
 app.post('/customer_registration', (req, res) => {
 	input = req.body
@@ -199,6 +200,8 @@ app.post('/customer_registration', (req, res) => {
 
 
 })
+
+// CUSTOMER REGISTRATION //
 
 
 app.post('/business_registration', (req, res) => {
