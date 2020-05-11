@@ -1,13 +1,20 @@
-// Dependencies
+// ------------------------- //
+//       DEPENDENCIES        //
+// ------------------------- //
+
 const express = require("express");
 const mysql = require("mysql2");
 const favicon = require("serve-favicon");
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
-
-// Set stuff here
 const app = express();
+
+
+// ------------------------- //
+//        MIDDLEWARE         //
+// ------------------------- //
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
@@ -16,6 +23,9 @@ app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")))
 app.set('views', path.join(__dirname, 'views'));
 
 
+// ------------------------- //
+//        CONNECTION         //
+// ------------------------- //
 
 const pool = mysql.createPool({
 	host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
@@ -25,6 +35,11 @@ const pool = mysql.createPool({
 }).promise();
 
 
+// ------------------------- //
+//    SIMPLE PAGE RENDERS    //
+// ------------------------- //
+
+
 app.get("/", function (req, res) {
 	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
@@ -32,6 +47,59 @@ app.get("/", function (req, res) {
 app.get('/login', (req, res) => {
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
 });
+
+app.get('/registration', (req, res) => {
+	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
+});
+
+app.get('/customer_registration', (req, res) => {
+	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
+});
+
+app.get('/business_registration', (req, res) => {
+	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
+});
+
+app.get('/about', (req, res) => {
+	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
+});
+
+app.get('/map', (req, res) => {
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
+});
+
+
+// ------------------------- //
+//  SIMPLE DATABASE QUERIES  //
+// ------------------------- //
+
+// Get Emails for validation
+app.get('/getEmails', (req, res) => {
+	console.log("Hello");
+	pool.query('SELECT email FROM customers', function (err, result) {
+		res.json(result);
+	})
+
+})
+
+// Used to display map information
+app.get('/getBusinesses', (req, res) => {
+	console.log("Business");
+	pool.query('SELECT * FROM businesses', function (err, result) {
+		console.log("Getting data")
+		console.log(result)
+		res.json(result);
+	})
+})
+
+
+
+// ------------------------- //
+// COMPLEX DATABASE QUERIES  //
+// ------------------------- //
+
+
+// LOGIN //
 
 app.post("/login", (req, res) => {
 	// SQL code goes here
@@ -82,30 +150,8 @@ app.post("/login", (req, res) => {
 	});
 });
 
-app.get('/getEmails', (req, res) => {
-	console.log("Hello");
-	pool.query('SELECT email FROM customers', function (err, result) {
-		res.json(result);
-	})
 
-})
-
-app.get('/getBusinesses', (req, res) => {
-	console.log("Business");
-	pool.query('SELECT * FROM businesses', function (err, result) {
-		console.log("Getting data")
-		console.log(result)
-		res.json(result);
-	})
-})
-
-app.get('/registration', (req, res) => {
-	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
-});
-
-app.get('/customer_registration', (req, res) => {
-	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
-});
+// REGISTRATION //
 
 app.post('/customer_registration', (req, res) => {
 	input = req.body
@@ -115,7 +161,6 @@ app.post('/customer_registration', (req, res) => {
 	phone = input.phone
 	firstName = input.firstName
 	lastName = input.lastName
-
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
@@ -155,9 +200,6 @@ app.post('/customer_registration', (req, res) => {
 
 })
 
-app.get('/business_registration', (req, res) => {
-	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
-});
 
 app.post('/business_registration', (req, res) => {
 	input = req.body
@@ -176,7 +218,8 @@ app.post('/business_registration', (req, res) => {
 	description = input.description
 	tag = input.tag
 	lat = input.lat
-	long = input.long
+	lng = input.long
+	console.log(lat, lng)
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
@@ -198,7 +241,7 @@ app.post('/business_registration', (req, res) => {
 						console.log(err)
 						return res.status(500).send(err);
 					} else {
-						let businessInfo = `INSERT INTO businesses (name, description, address, city, province, category, postal_code, address_2) VALUES ('${businessName}', '${description}', '${address}', '${city}', '${prov}', '${tag}', '${postalCode}', '${address2}')`
+						let businessInfo = `INSERT INTO businesses (name, description, address, city, province, category, postal_code, address_2, lat, lng) VALUES ('${businessName}', '${description}', '${address}', '${city}', '${prov}', '${tag}', '${postalCode}', '${address2}', '${lat}', '${lng}')`
 						pool.query(businessInfo, (err, result) => {
 							if (err) {
 								console.log(err)
@@ -221,9 +264,7 @@ app.post('/business_registration', (req, res) => {
 
 })
 
-app.get('/about', (req, res) => {
-	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
-});
+
 
 app.get('/business', (req, res) => {
 	res.render('conation/business', {
@@ -266,9 +307,6 @@ app.get('/main', (req, res) => {
 	});
 });
 
-app.get('/map', (req, res) => {
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
-});
 
 app.post('/businessSearch', (req, res) => {
 	let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
