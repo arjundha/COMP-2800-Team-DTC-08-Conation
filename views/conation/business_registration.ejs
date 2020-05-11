@@ -4,7 +4,7 @@
     <br>
 
     <form id="businessForm" action="/business_registration" method="POST"> <!-- should POST and the action should be to the database -->
-        <!-- Create a Username -->
+        <!-- Enter Email -->
         <div class="form-group row">
             <label for="email" class="col-sm-2 col-form-label">Enter your email:</label>
             <div class="col-sm-10">
@@ -66,6 +66,18 @@
             <label for="inputAddress">Address</label>
             <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" required>
         </div>
+        <!-- THESE ARE HIDDEN -->
+        <!-- lat -->
+        <!-- style="display: none;" -->
+            <div class="form-group" style="display: none;">
+                <label for="lat">lat</label>
+                <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" required>
+            </div>
+            <!-- long -->
+            <div class="form-group" style="display: none;">
+                <label for="lat">long</label>
+                <input type="text" class="form-control" id="long" placeholder="long" name="long" required>
+            </div>
 
         <div class="form-group">
             <label for="inputAddress2">Address 2</label>
@@ -128,6 +140,7 @@
                 <option>Other</option>
             </select>
         </div>
+        
     
         <!-- Submit to the Database -->
         <button id="submitBtn" type="submit" class="btn btn-dark float-right" onclick="finalPasswordCheck()">Submit</button>
@@ -136,10 +149,6 @@
     </form>
 </div>
 <br>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOG3EpPiavwq5xcbGYHnX9efVUwtPeDcw"></script>
 <script src="registration.js"></script>
-<!-- <script src="business_registration.js"></script> -->
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  </body>
+

@@ -6,11 +6,13 @@ geocoder = new google.maps.Geocoder();
 // jQuery for the AJAX call to fill map with locations
 $('document').ready(function(){
   initMap();
-  addMarker({coords: {lat: 48.427502, lng: -123.367264}, content: '<h3>TEST</h3>'});
+  addMarker({ coords: {lat: 80.9999793, lng: -135.0007473},
+              iconImage: "https://img.icons8.com/color/48/000000/santa.png",
+              content: contentMaker({name: "Santa's Workshop", description: "An emporium full of toys and elves", address: "North Pole"})});
 
   $.ajax('/getBusinesses')
   .done(function(data) {
-      for (i = 0; i < 10; i++){
+      for (i = 0; i < data.length; i++){
         // console.log(data[i]);
         // NEEDS to be timed out otherwise it will fail after three tags
         codeAddress(data[i])
@@ -111,6 +113,7 @@ function addMarker(props){
   // Check for customicon
   if(props.iconImage){
     // Set icon image
+
     marker.setIcon(props.iconImage);
   }
 
@@ -129,22 +132,26 @@ function addMarker(props){
 // Get lat long from address
 function codeAddress(obj) {
   console.log("STARTING FUNCTION");
-  geocoder.geocode({ 'address': obj.address, 'componentRestrictions':{'country':'CA'}}, function (results, status) {
-      if (status == 'OK') {
-        console.log("STATUS OK");
-          //     var marker = new google.maps.Marker({
-          //     position: results[0].geometry.location,
-          //     map: map,
-          // });
-          let description = contentMaker(obj);
-          console.log(results[0].geometry.location.lat())
-          console.log(results[0].geometry.location.lng())
-          // console.log(typeof(results[0].geometry.location.lng()))
-          addMarker({coords: results[0].geometry.location, content: description});
-      } else {
-          console.log('Geocode was not successful for the following reason: ' + status);
-      }
-  });
+  // geocoder.geocode({ 'address': obj.address, 'componentRestrictions':{'country':'CA'}}, function (results, status) {
+  //     if (status == 'OK') {
+  //       console.log("STATUS OK");
+  //         //     var marker = new google.maps.Marker({
+  //         //     position: results[0].geometry.location,
+  //         //     map: map,
+  //         // });
+  //         let description = contentMaker(obj);
+  //         console.log(results[0].geometry.location.lat())
+  //         console.log(results[0].geometry.location.lng())
+  //         // console.log(typeof(results[0].geometry.location.lng()))
+  //         addMarker({coords: results[0].geometry.location, content: description});
+  //     } else {
+  //         console.log('Geocode was not successful for the following reason: ' + status);
+  //     }
+  // });
+  let description = contentMaker(obj);
+  addMarker({coords: {lat: obj.lat, lng: obj.lng}, content: description});
+
+
 }
 
 // Create tag contents from business info
@@ -152,6 +159,7 @@ function contentMaker(obj){
   title = obj.name;
   description = obj.description;
   address = obj.address;
+  
 
   return "<h3>" + title + "</h3><p><i>" + description + "</i></p><p>" + address + "</p>"
 
