@@ -388,6 +388,6 @@ app.post('/updateBusinessInfo', (req, res) => {
 });
 
 
-app.listen(8080, function () {
-	console.log("Server running. Visit: localhost:8080 in your browser 🚀");
-});
+var port = process.env.port || 8080;
+
+app.listen(port);
