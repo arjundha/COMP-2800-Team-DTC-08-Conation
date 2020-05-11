@@ -9,36 +9,36 @@
             <li data-target="#donationSlides" data-slide-to="4"></li>
         </ol>
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="d-block w-100" src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="First slide">
+            <div class="carousel-item carousel-two active">
+                <img class="d-block w-100 item-img" src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="First slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Example Thing</h5>
                     <p>More Info</p>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Second slide">
+            <div class="carousel-item carousel-two">
+                <img class="d-block w-100 item-img" src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Second slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Example Thing</h5>
                     <p>More Info</p>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="src/images/sarahInGhana.jpg" alt="Third slide">
+            <div class="carousel-item carousel-two">
+                <img class="d-block w-100 item-img" src="src/images/sarahInGhana.jpg" alt="Third slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Example Thing</h5>
                     <p>More Info</p>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Fourth slide">
+            <div class="carousel-item carousel-two">
+                <img class="d-block w-100 item-img" src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Fourth slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Example Thing</h5>
                     <p>More Info</p>
                 </div>
             </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Fifth slide">
+            <div class="carousel-item carousel-two">
+                <img class="d-block w-100 item-img" src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Fifth slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Example Thing</h5>
                     <p>More Info</p>
@@ -57,21 +57,54 @@
 </div>
 
 <!-- Filter Bar -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 justify-content-between">
-            <h1>This is where the filters will go.</h1>
+<!--<div class="container">
+    <div class="row my-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="form-inline p-3" action="/businessSearch" method="post">
+                    <input class="form-control mr-sm-2" type="search" id="search" name="search" placeholder="Search...">
+                    <input class="btn btn-dark" type="submit" value="Search">
+                </form>
+            </div>
         </div>
     </div>
+</div>-->
+<div class="container">
+    <nav class="navbar navbar-expand-sm">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#filterOptions" aria-controls="filterOptions" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="filterOptions">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="form-inline p-3" action="/businessType" method="post">
+                        <input class="btn btn-dark" type="submit" value="Type" name="type">
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline p-3" action="/businessOpenNow" method="post">
+                        <input class="btn btn-dark" type="submit" value="Open Now" name="openNow">
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline p-3" action="/businessSearch" method="post">
+                        <input class="form-control mr-sm-2" type="search" id="search" name="search" placeholder="Search...">
+                        <input class="btn btn-dark" type="submit" value="Search">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </div>
-
 <!-- Business Listings -->
 <div class="container">
-    <div class="row">
+    <% businesses.forEach((business) => { %>
+    <div class="row my-3">
         <div class="col-sm-12">
-            <% businesses.forEach((business) => { %>
             <div class="card">
-                <div class="card-header"> <%= business.name %> </div>
+                <div class="card-header"> <%= business.name %> | <%= business.category %></div>
                 <div class="card-body">
                     <p>
                         <%= business.description %>
@@ -81,8 +114,8 @@
                     <a href='/business/<%= business.id %>' class="btn btn-main float-right">Learn More!</a>
                 </div>
             </div>
-            <% }); %>
         </div>
     </div>
+    <% }); %>
 </div>
 
