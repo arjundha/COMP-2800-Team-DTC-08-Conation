@@ -159,6 +159,7 @@ function contentMaker(obj){
   title = obj.name;
   description = obj.description;
   address = obj.address;
+  
 
   return "<h3>" + title + "</h3><p><i>" + description + "</i></p><p>" + address + "</p>"
 
