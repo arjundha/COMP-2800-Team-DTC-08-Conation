@@ -205,24 +205,81 @@ app.post('/customer_registration', (req, res) => {
 
 
 app.post('/business_registration', (req, res) => {
-	input = req.body
-	password1 = input.password
-	password2 = input.password2
-	email = input.email
-	phone = input.phone
-	firstName = input.firstName
-	lastName = input.lastName
-	businessName = input.businessName
-	address = input.address
-	address2 = input.address2
-	city = input.city
-	prov = input.prov
-	postalCode = input.zip
-	description = input.description
-	tag = input.tag
-	lat = input.lat
-	lng = input.long
-	console.log(lat, lng)
+	let input = req.body;
+	let email = input.email;
+	let password1 = input.password;
+	let password2 = input.password2;
+	let firstName = input.firstName;
+	let lastName = input.lastName;
+	let phone = input.phone;
+	let businessName = input.businessName;
+	let address = input.address;
+	let address2 = input.address2;
+	let city = input.city;
+	let prov = input.prov;
+	let postalCode = input.zip;
+	let lat = input.lat;
+	let lng = input.long;
+	let description = input.description;
+	let tag = input.tag;
+	let mon;
+	let tue;
+	let wed;
+	let thu;
+	let fri;
+	let sat;
+	let sun;
+	
+	if (input.monClosed) {
+		mon = "Closed";
+	} else if (input.mon24) {
+		mon = "24 hours";
+	} else {
+		mon = input.monOpen + " - " + input.monClose;
+	}
+	if (input.tueClosed) {
+		tue = "Closed";
+	} else if (input.tue24) {
+		tue = "24 hours";
+	} else {
+		tue = input.tueOpen + " - " + input.tueClose;
+	}
+	if (input.wedClosed) {
+		wed = "Closed";
+	} else if (input.wed24) {
+		wed = "24 hours";
+	} else {
+		wed = input.wedOpen + " - " + input.wedClose;
+	}
+	if (input.thuClosed) {
+		thu = "Closed";
+	} else if (input.thu24) {
+		thu = "24 hours";
+	} else {
+		thu = input.thuOpen + " - " + input.thuClose;
+	}
+	if (input.friClosed) {
+		fri = "Closed";
+	} else if (input.fri24) {
+		fri = "24 hours";
+	} else {
+		fri = input.friOpen + " - " + input.friClose;
+	}
+	if (input.satClosed) {
+		sat = "Closed";
+	} else if (input.sat24) {
+		sat = "24 hours";
+	} else {
+		sat = input.satOpen + " - " + input.satClose;
+	}
+	if (input.sunClosed) {
+		sun = "Closed";
+	} else if (input.sun24) {
+		sun = "24 hours";
+	} else {
+		sun = input.sunOpen + " - " + input.sunClose;
+	}
+
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
@@ -230,33 +287,21 @@ app.post('/business_registration', (req, res) => {
 			return res.status(500).send(err);
 		} else {
 			if (result[0]) {
-				console.log(result)
-				console.log("That email already exists")
-				res.redirect('/business_registration')
+				console.log(result);
+				console.log("That email already exists");
+				res.redirect('/business_registration');
 			} else {
 				// Hash Password
 				let hashedPassword = bcrypt.hashSync(password1, 10);
 
-				// SQL code goes here, using name values from the form
-				let ownerInfo = `INSERT INTO business_owners (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}','${email}', '${phone}');`;
-				pool.query(ownerInfo, (err, result) => {
+				// Creates business, owner, and hours
+				let procedureCall = `CALL create_business_owner_with_business ("${email}", "${hashedPassword}", "${firstName}", "${lastName}", "${phone}", "${businessName}", "${address}", "${address2}", "${city}", "${prov}", "${postalCode}", ${lat}, ${lng}, "${description}", "${tag}", "${mon}", "${tue}", "${wed}", "${thu}", "${fri}", "${sat}", "${sun}");`;
+				pool.query(procedureCall, (err, results) => {
 					if (err) {
-						console.log(err)
+						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						let businessInfo = `INSERT INTO businesses (name, description, address, city, province, category, postal_code, address_2, lat, lng) VALUES ('${businessName}', '${description}', '${address}', '${city}', '${prov}', '${tag}', '${postalCode}', '${address2}', '${lat}', '${lng}')`
-						pool.query(businessInfo, (err, result) => {
-							if (err) {
-								console.log(err)
-								return res.status(500).send(err);
-							} else {
-								res.render("conation/login",
-									{
-										layout: "layoutLoggedOut",
-										title: "Conation",
-									});
-							}
-						})
+						res.render("conation/login", {layout: "layoutLoggedOut", title: "Conation"});
 					}
 				});
 			}
