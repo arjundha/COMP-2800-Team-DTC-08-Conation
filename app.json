@@ -1,0 +1,9 @@
+{       
+    "name": "Conation",    
+    "description": "CST 2020 DTC Team 8",    
+    "repository": "https://github.com/arjundha/COMP-2800-Team-DTC-08-Conation",    
+    "logo": "https://cdn.rawgit.com/heroku/node-js-  getting-started/master/public/node.svg",    
+    "keywords": ["node", "express", "heroku"],     
+    "image": "heroku/nodejs"  
+
+} 
