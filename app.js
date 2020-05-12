@@ -65,9 +65,8 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/map', (req, res) => {
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' });
 });
-
 
 // ------------------------- //
 //  SIMPLE DATABASE QUERIES  //
@@ -265,9 +264,23 @@ app.post('/business_registration', (req, res) => {
 
 
 
-})
+});
 
+app.get('/donate/:productID', (req, res) => {
+	res.render('conation/donate', { layout: 'layoutLoggedIn', title: 'Donate' });
+});
 
+app.get('/donate/:productID', (req, res) => {
+	pool.query(`SELECT * FROM prodcuts WHERE id = ${req.params.productID};`, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/donate", {
+			layout: 'layoutLoggedIn',
+			title: result[0].name,
+			product: result[0]
+		});
+	});});
 
 app.get('/business', (req, res) => {
 	res.render('conation/business', {
@@ -279,7 +292,7 @@ app.get('/business', (req, res) => {
 });
 
 app.get('/business/:id', (req, res) => {
-	pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
+	pool.query(`SELECT * FROM businesses JOIN products ON products.business_id = ${req.params.id};`, (err, result) => {
 		if (err) {
 			console.log(err);
 		}
@@ -391,3 +404,4 @@ app.post('/updateBusinessInfo', (req, res) => {
 var port = process.env.port || 8080;
 
 app.listen(port);
+console.log("go to port 8080");
