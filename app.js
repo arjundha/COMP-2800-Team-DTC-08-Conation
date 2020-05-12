@@ -1,13 +1,17 @@
+// ========================= //
 // ------------------------- //
 //       DEPENDENCIES        //
 // ------------------------- //
 
 const express = require("express");
+
 const mysql = require("mysql2");
 const favicon = require("serve-favicon");
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
+const session = require("express-session")
+
 const app = express();
 
 
@@ -15,12 +19,26 @@ const app = express();
 //        MIDDLEWARE         //
 // ------------------------- //
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(ejsLayouts);
 app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
 app.set('views', path.join(__dirname, 'views'));
+
+
+// ------------------------- //
+//    SESSIONS + COOKIES     //
+// ------------------------- //
+
+app.use(session ({
+	name: "idk",
+	secret: "secret",
+	cookie:{
+		maxAge: 10000
+	}
+}))
 
 
 // ------------------------- //
@@ -72,6 +90,10 @@ app.get('/map', (req, res) => {
 	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
 });
 
+app.get('/update_business_info', (req, res) => {
+	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
+});
+
 
 // ------------------------- //
 //  SIMPLE DATABASE QUERIES  //
@@ -103,6 +125,7 @@ app.get('/getBusinesses', (req, res) => {
 // COMPLEX DATABASE QUERIES  //
 // ------------------------- //
 
+// ========================= //
 
 // LOGIN //
 
@@ -155,6 +178,7 @@ app.post("/login", (req, res) => {
 	});
 });
 
+// ========================= //
 
 // CUSTOMER REGISTRATION //
 
@@ -205,8 +229,9 @@ app.post('/customer_registration', (req, res) => {
 
 })
 
-// CUSTOMER REGISTRATION //
+// ========================= //
 
+// CUSTOMER REGISTRATION //
 
 app.post('/business_registration', (req, res) => {
 	input = req.body
@@ -266,12 +291,10 @@ app.post('/business_registration', (req, res) => {
 			}
 		}
 	});
-
-
-
 })
 
-
+// ========================= //
+//  stuff sarah did i think idk
 
 app.get('/business', (req, res) => {
 	res.render('conation/business', {
@@ -294,10 +317,6 @@ app.get('/business/:id', (req, res) => {
 			description: result[0].description
 		});
 	});
-});
-
-app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
 });
 
 app.get('/main', (req, res) => {
