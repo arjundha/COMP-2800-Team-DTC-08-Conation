@@ -412,7 +412,8 @@ app.post('/updateBusinessProfile', (req, res) => {
 
 app.post('/updateBusinessPassword', (req, res) => {
 	// Hard-coded username needs to be changed to pull from session, password needs hashing
-	let query = `UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`;
+	let hashedPassword = bcrypt.hashSync(req.body.password, 10);
+	let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE username = "yblague0";`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
@@ -432,6 +433,74 @@ app.post('/updateBusinessInfo', (req, res) => {
 	})
 });
 
+app.post("/updateBusinesshours", (req, res) => {
+	let input = req.body;
+	let mon;
+	let tue;
+	let wed;
+	let thu;
+	let fri;
+	let sat;
+	let sun;
+	
+	if (input.monClosed) {
+		mon = "Closed";
+	} else if (input.mon24) {
+		mon = "24 hours";
+	} else {
+		mon = input.monOpen + " - " + input.monClose;
+	}
+	if (input.tueClosed) {
+		tue = "Closed";
+	} else if (input.tue24) {
+		tue = "24 hours";
+	} else {
+		tue = input.tueOpen + " - " + input.tueClose;
+	}
+	if (input.wedClosed) {
+		wed = "Closed";
+	} else if (input.wed24) {
+		wed = "24 hours";
+	} else {
+		wed = input.wedOpen + " - " + input.wedClose;
+	}
+	if (input.thuClosed) {
+		thu = "Closed";
+	} else if (input.thu24) {
+		thu = "24 hours";
+	} else {
+		thu = input.thuOpen + " - " + input.thuClose;
+	}
+	if (input.friClosed) {
+		fri = "Closed";
+	} else if (input.fri24) {
+		fri = "24 hours";
+	} else {
+		fri = input.friOpen + " - " + input.friClose;
+	}
+	if (input.satClosed) {
+		sat = "Closed";
+	} else if (input.sat24) {
+		sat = "24 hours";
+	} else {
+		sat = input.satOpen + " - " + input.satClose;
+	}
+	if (input.sunClosed) {
+		sun = "Closed";
+	} else if (input.sun24) {
+		sun = "24 hours";
+	} else {
+		sun = input.sunOpen + " - " + input.sunClose;
+	}
+	// Hard-coded ID needs to be changed to pull from session
+	let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = 32;`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.redirect("/update_business_info");
+	});
+});
 
 var port = process.env.port || 8080;
 
