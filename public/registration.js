@@ -158,4 +158,4 @@ function codeAddress(address) {
             console.log('Geocode was not successful for the following reason: ' + status);
         }
     });
-  }
+}
