@@ -66,6 +66,10 @@ app.get('/login', (req, res) => {
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
 });
 
+app.get('/easteregg', (req, res) => {
+	res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
+});
+
 app.get('/registration', (req, res) => {
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
 });
