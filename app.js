@@ -388,6 +388,5 @@ app.post('/updateBusinessInfo', (req, res) => {
 });
 
 
-var port = process.env.port || 8080;
 
-app.listen(port);
+app.listen(process.env.port || 8080);
