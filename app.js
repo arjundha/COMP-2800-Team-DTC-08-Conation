@@ -389,4 +389,4 @@ app.post('/updateBusinessInfo', (req, res) => {
 
 
 
-app.listen(process.env.port || 8080);
+app.listen(process.env.PORT || 8080);
