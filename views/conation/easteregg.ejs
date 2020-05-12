@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="hangman.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HangMan Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+</head>
+<body id="body">
+
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>easter egg!</h1>      
+    <p>Guess the correct word before your lives run out!</p>
+    <p>Click 'RESET' button to reset the game</p>
+    <div class="bg-3 Left space">
+      <img id='hangmanImg' src="src/images/pic0.png" alt="hang0" >
+    </div>
+  </div>
+</div>
+
+<p id="wordDisplay" class="rainbow text-center text-uppercase">Word will display here</p>
+ 
+
+<div class="bg-3 text-center">
+
+    <div class="keyboard" id='keyboard'>
+    
+    </div>
+
+    <div>
+        <button id="reset" type='button' class="btn-primary">RESET</button>
+        <button id="endGame" type='button' class="btn-primary">END</button>
+    </div>
+
+</div>   
+
+
+
+<div class="card-center bg-3 text-center">
+  <div class= "value">
+    
+    <p id="live">Lives Remaining: </p>
+    <p id='letterLeft'>Letters Left: </p>
+    <p id="score">Score: 0</p>
+    <p id="guesses">Guessed Letters: </p>
+  </div>
+  <div class="hint">
+    <button class="btn-danger" id = "hintButton" onclick="showHint()"> HINT </button>
+    <P id="hintText"></P>
+</div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="hangman.js"></script>
+</html>
