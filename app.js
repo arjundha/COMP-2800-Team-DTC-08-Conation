@@ -10,7 +10,7 @@ const favicon = require("serve-favicon");
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
-const session = require("express-session")
+const session = require("express-session");
 
 const app = express();
 
@@ -92,6 +92,10 @@ app.get('/map', (req, res) => {
 
 app.get('/update_business_info', (req, res) => {
 	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
+});
+
+app.get('/add_product', (req, res) => {
+	res.render('conation/add_product', { layout: 'layoutLoggedIn', title: 'Add Product' });
 });
 
 
@@ -378,6 +382,21 @@ app.get('/main', (req, res) => {
 	});
 });
 
+app.post('addProduct', (req, res) => {
+	let query = `INSERT INTO products (name, description, cost) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}');`;
+
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).send(err);
+		}
+		res.render("conation/add_product",
+			{
+				layout: "layoutLoggedIn",
+				title: "Add Product",
+			});
+	});
+});
 
 app.post('/businessSearch', (req, res) => {
 	let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
@@ -528,3 +547,4 @@ app.post("/updateBusinesshours", (req, res) => {
 var port = process.env.port || 8080;
 
 app.listen(port);
+console.log("running on port 8080");
