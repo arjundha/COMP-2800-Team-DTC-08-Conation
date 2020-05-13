@@ -345,7 +345,7 @@ app.post('/business_registration', (req, res) => {
 //  stuff sarah did i think idk
 app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
-	pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => {
+	pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
 		if (err) {
 			console.log(err);
 		}
