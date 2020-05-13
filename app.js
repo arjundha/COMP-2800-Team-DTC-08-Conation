@@ -266,9 +266,9 @@ app.post('/business_registration', (req, res) => {
 
 });
 
-app.get('/donate/:productID', (req, res) => {
-	res.render('conation/donate', { layout: 'layoutLoggedIn', title: 'Donate' });
-});
+// app.get('/donate/:productID', (req, res) => {
+// 	res.render('conation/donate', { layout: 'layoutLoggedIn', title: 'Donate' });
+// });
 
 app.get('/donate/:productID', (req, res) => {
 	pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
