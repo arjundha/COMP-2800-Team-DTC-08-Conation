@@ -359,7 +359,7 @@ app.post('/addDonation', (req, res) => {
 	console.log('i am adding');
 	console.log(req.body);
 
-	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}';`;
+	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}');`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
