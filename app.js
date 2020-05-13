@@ -383,7 +383,7 @@ app.get('/main', (req, res) => {
 });
 
 app.post('/addProduct', (req, res) => {
-	let query = `INSERT INTO products (name, description, cost) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}');`;
+	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 1);`;
 
 	pool.query(query, (err, result) => {
 		if (err) {
