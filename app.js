@@ -32,7 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 //    SESSIONS + COOKIES     //
 // ------------------------- //
 
-app.use(session ({
+app.use(session({
 	name: "idk",
 	secret: "secret",
 	resave: true,
@@ -71,13 +71,13 @@ const pool = mysql.createPool({
 app.get("/", function (req, res) {
 	console.log(req.session)
 	console.log(req.session.cookie.maxAge)
-	if (req.session.user){
-			res.render("conation/index", {
-				layout: 'layoutLoggedIn',
-				title: 'Conation',
-				email: req.session.user,
-			})
-	}else{
+	if (req.session.user) {
+		res.render("conation/index", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	} else {
 		res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 	}
 })
@@ -87,15 +87,20 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/easteregg', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		res.render("conation/easteregg", {
 			layout: 'layoutLoggedIn',
 			title: 'Conation',
 			email: req.session.user,
 		})
-	}else{
+	} else {
 		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
 	}
+});
+
+app.get('/logout', function (req, res) {
+	req.session.destroy();
+	res.redirect('/login');
 });
 
 app.get('/registration', (req, res) => {
@@ -116,11 +121,11 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/map', (req, res) => {
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map', email: req.session.email})
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map', email: req.session.email })
 });
 
 app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile', email: req.session.email});
+	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile', email: req.session.email });
 });
 
 
@@ -291,7 +296,7 @@ app.post('/business_registration', (req, res) => {
 	let fri;
 	let sat;
 	let sun;
-	
+
 	if (input.monClosed) {
 		mon = "Closed";
 	} else if (input.mon24) {
@@ -363,7 +368,7 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", {layout: "layoutLoggedOut", title: "Conation"});
+						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
 					}
 				});
 			}
@@ -379,7 +384,7 @@ app.get('/main', (req, res) => {
 	console.log(req.session.cookie.maxAge)
 	console.log("on main")
 
-	if (req.session.user){
+	if (req.session.user) {
 		let query = "SELECT * FROM businesses";
 		pool.query(query, (err, result) => {
 			if (err) {
@@ -392,7 +397,7 @@ app.get('/main', (req, res) => {
 				businesses: result
 			})
 		});
-	}else{
+	} else {
 		res.redirect("/login")
 	}
 });
@@ -438,7 +443,7 @@ app.post('/businessSearch', (req, res) => {
 			title: 'conation',
 			email: req.session.email,
 			businesses: result
-			
+
 		});
 	});
 });
@@ -516,7 +521,7 @@ app.post("/updateBusinesshours", (req, res) => {
 	let fri;
 	let sat;
 	let sun;
-	
+
 	if (input.monClosed) {
 		mon = "Closed";
 	} else if (input.mon24) {
