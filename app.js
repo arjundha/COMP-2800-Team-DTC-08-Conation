@@ -271,7 +271,7 @@ app.get('/donate/:productID', (req, res) => {
 });
 
 app.get('/donate/:productID', (req, res) => {
-	pool.query(`SELECT * FROM prodcuts WHERE id = ${req.params.productID};`, (err, result) => {
+	pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 		if (err) {
 			console.log(err);
 		}
@@ -292,15 +292,21 @@ app.get('/business', (req, res) => {
 });
 
 app.get('/business/:id', (req, res) => {
-	pool.query(`SELECT * FROM businesses JOIN products ON products.business_id = ${req.params.id};`, (err, result) => {
+	pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, businessResult) => {
 		if (err) {
 			console.log(err);
 		}
-		res.render("conation/business", {
-			layout: 'layoutLoggedIn',
-			title: result[0].name,
-			businessName: result[0].name,
-			description: result[0].description
+		let productQuery = `SELECT * FROM products WHERE business_id = ${req.params.id};`;
+		pool.query(productQuery, (err, productResult) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/business", {
+				layout: 'layoutLoggedIn',
+				business: businessResult[0],
+				product: productResult[0],
+				title: businessResult[0].name
+			});
 		});
 	});
 });
