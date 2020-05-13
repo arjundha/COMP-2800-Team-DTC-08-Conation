@@ -35,9 +35,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(session ({
 	name: "idk",
 	secret: "secret",
-	cookie:{
-		maxAge: 10000
-	}
 }))
 
 
@@ -60,6 +57,7 @@ const pool = mysql.createPool({
 
 app.get("/", function (req, res) {
 	console.log(req.session)
+	console.log(req.session.cookie.maxAge)
 	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
 
@@ -84,6 +82,7 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
+	console.log(req.session)
 	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
 });
 
@@ -163,7 +162,9 @@ app.post("/login", (req, res) => {
 											res.redirect('/login')
 
 										} else {
+											// SET UP COOKIE ONLY WHEN LOGGED IN
 											req.session.email = input_email
+											req.session.cookie.maxAge = 1000000
 											res.redirect("/main")
 										}
 									})
@@ -368,6 +369,7 @@ app.get('/business/:id', (req, res) => {
 
 app.get('/main', (req, res) => {
 	console.log(req.session)
+	console.log(req.session.cookie.maxAge)
 	let query = "SELECT * FROM businesses";
 	pool.query(query, (err, result) => {
 		if (err) {
