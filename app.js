@@ -1,13 +1,17 @@
+// ========================= //
 // ------------------------- //
 //       DEPENDENCIES        //
 // ------------------------- //
 
 const express = require("express");
+
 const mysql = require("mysql2");
 const favicon = require("serve-favicon");
 const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
+const session = require("express-session")
+
 const app = express();
 
 
@@ -15,12 +19,23 @@ const app = express();
 //        MIDDLEWARE         //
 // ------------------------- //
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(ejsLayouts);
 app.use(favicon(path.join(__dirname, "public", "src", "images", "favicon.ico")));
 app.set('views', path.join(__dirname, 'views'));
+
+
+// ------------------------- //
+//    SESSIONS + COOKIES     //
+// ------------------------- //
+
+app.use(session ({
+	name: "idk",
+	secret: "secret",
+}))
 
 
 // ------------------------- //
@@ -41,11 +56,17 @@ const pool = mysql.createPool({
 
 
 app.get("/", function (req, res) {
+	console.log(req.session)
+	console.log(req.session.cookie.maxAge)
 	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
 
 app.get('/login', (req, res) => {
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
+});
+
+app.get('/easteregg', (req, res) => {
+	res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
 });
 
 app.get('/registration', (req, res) => {
@@ -61,12 +82,18 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
+	console.log(req.session)
 	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
 });
 
 app.get('/map', (req, res) => {
 	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' });
 });
+
+app.get('/update_business_info', (req, res) => {
+	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
+});
+
 
 // ------------------------- //
 //  SIMPLE DATABASE QUERIES  //
@@ -98,6 +125,7 @@ app.get('/getBusinesses', (req, res) => {
 // COMPLEX DATABASE QUERIES  //
 // ------------------------- //
 
+// ========================= //
 
 // LOGIN //
 
@@ -134,6 +162,9 @@ app.post("/login", (req, res) => {
 											res.redirect('/login')
 
 										} else {
+											// SET UP COOKIE ONLY WHEN LOGGED IN
+											req.session.email = input_email
+											req.session.cookie.maxAge = 1000000
 											res.redirect("/main")
 										}
 									})
@@ -150,6 +181,7 @@ app.post("/login", (req, res) => {
 	});
 });
 
+// ========================= //
 
 // CUSTOMER REGISTRATION //
 
@@ -200,28 +232,86 @@ app.post('/customer_registration', (req, res) => {
 
 })
 
+// ========================= //
+
 // CUSTOMER REGISTRATION //
 
-
 app.post('/business_registration', (req, res) => {
-	input = req.body
-	password1 = input.password
-	password2 = input.password2
-	email = input.email
-	phone = input.phone
-	firstName = input.firstName
-	lastName = input.lastName
-	businessName = input.businessName
-	address = input.address
-	address2 = input.address2
-	city = input.city
-	prov = input.prov
-	postalCode = input.zip
-	description = input.description
-	tag = input.tag
-	lat = input.lat
-	lng = input.long
-	console.log(lat, lng)
+	let input = req.body;
+	let email = input.email;
+	let password1 = input.password;
+	let password2 = input.password2;
+	let firstName = input.firstName;
+	let lastName = input.lastName;
+	let phone = input.phone;
+	let businessName = input.businessName;
+	let address = input.address;
+	let address2 = input.address2;
+	let city = input.city;
+	let prov = input.prov;
+	let postalCode = input.zip;
+	let lat = input.lat;
+	let lng = input.long;
+	let description = input.description;
+	let tag = input.tag;
+	let mon;
+	let tue;
+	let wed;
+	let thu;
+	let fri;
+	let sat;
+	let sun;
+	
+	if (input.monClosed) {
+		mon = "Closed";
+	} else if (input.mon24) {
+		mon = "24 hours";
+	} else {
+		mon = input.monOpen + " - " + input.monClose;
+	}
+	if (input.tueClosed) {
+		tue = "Closed";
+	} else if (input.tue24) {
+		tue = "24 hours";
+	} else {
+		tue = input.tueOpen + " - " + input.tueClose;
+	}
+	if (input.wedClosed) {
+		wed = "Closed";
+	} else if (input.wed24) {
+		wed = "24 hours";
+	} else {
+		wed = input.wedOpen + " - " + input.wedClose;
+	}
+	if (input.thuClosed) {
+		thu = "Closed";
+	} else if (input.thu24) {
+		thu = "24 hours";
+	} else {
+		thu = input.thuOpen + " - " + input.thuClose;
+	}
+	if (input.friClosed) {
+		fri = "Closed";
+	} else if (input.fri24) {
+		fri = "24 hours";
+	} else {
+		fri = input.friOpen + " - " + input.friClose;
+	}
+	if (input.satClosed) {
+		sat = "Closed";
+	} else if (input.sat24) {
+		sat = "24 hours";
+	} else {
+		sat = input.satOpen + " - " + input.satClose;
+	}
+	if (input.sunClosed) {
+		sun = "Closed";
+	} else if (input.sun24) {
+		sun = "24 hours";
+	} else {
+		sun = input.sunOpen + " - " + input.sunClose;
+	}
+
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
@@ -229,40 +319,26 @@ app.post('/business_registration', (req, res) => {
 			return res.status(500).send(err);
 		} else {
 			if (result[0]) {
-				console.log(result)
-				console.log("That email already exists")
-				res.redirect('/business_registration')
+				console.log(result);
+				console.log("That email already exists");
+				res.redirect('/business_registration');
 			} else {
 				// Hash Password
 				let hashedPassword = bcrypt.hashSync(password1, 10);
 
-				// SQL code goes here, using name values from the form
-				let ownerInfo = `INSERT INTO business_owners (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}','${email}', '${phone}');`;
-				pool.query(ownerInfo, (err, result) => {
+				// Creates business, owner, and hours
+				let procedureCall = `CALL create_business_owner_with_business ("${email}", "${hashedPassword}", "${firstName}", "${lastName}", "${phone}", "${businessName}", "${address}", "${address2}", "${city}", "${prov}", "${postalCode}", ${lat}, ${lng}, "${description}", "${tag}", "${mon}", "${tue}", "${wed}", "${thu}", "${fri}", "${sat}", "${sun}");`;
+				pool.query(procedureCall, (err, results) => {
 					if (err) {
-						console.log(err)
+						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						let businessInfo = `INSERT INTO businesses (name, description, address, city, province, category, postal_code, address_2, lat, lng) VALUES ('${businessName}', '${description}', '${address}', '${city}', '${prov}', '${tag}', '${postalCode}', '${address2}', '${lat}', '${lng}')`
-						pool.query(businessInfo, (err, result) => {
-							if (err) {
-								console.log(err)
-								return res.status(500).send(err);
-							} else {
-								res.render("conation/login",
-									{
-										layout: "layoutLoggedOut",
-										title: "Conation",
-									});
-							}
-						})
+						res.render("conation/login", {layout: "layoutLoggedOut", title: "Conation"});
 					}
 				});
 			}
 		}
 	});
-
-
 
 });
 
@@ -325,11 +401,9 @@ app.get('/business/:id', (req, res) => {
 	});
 });
 
-app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
-});
-
 app.get('/main', (req, res) => {
+	console.log(req.session)
+	console.log(req.session.cookie.maxAge)
 	let query = "SELECT * FROM businesses";
 	pool.query(query, (err, result) => {
 		if (err) {
@@ -400,7 +474,8 @@ app.post('/updateBusinessProfile', (req, res) => {
 
 app.post('/updateBusinessPassword', (req, res) => {
 	// Hard-coded username needs to be changed to pull from session, password needs hashing
-	let query = `UPDATE business_owners SET password = "${req.body.password}" WHERE username = "yblague0";`;
+	let hashedPassword = bcrypt.hashSync(req.body.password, 10);
+	let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE username = "yblague0";`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
@@ -420,8 +495,76 @@ app.post('/updateBusinessInfo', (req, res) => {
 	})
 });
 
+app.post("/updateBusinesshours", (req, res) => {
+	let input = req.body;
+	let mon;
+	let tue;
+	let wed;
+	let thu;
+	let fri;
+	let sat;
+	let sun;
+	
+	if (input.monClosed) {
+		mon = "Closed";
+	} else if (input.mon24) {
+		mon = "24 hours";
+	} else {
+		mon = input.monOpen + " - " + input.monClose;
+	}
+	if (input.tueClosed) {
+		tue = "Closed";
+	} else if (input.tue24) {
+		tue = "24 hours";
+	} else {
+		tue = input.tueOpen + " - " + input.tueClose;
+	}
+	if (input.wedClosed) {
+		wed = "Closed";
+	} else if (input.wed24) {
+		wed = "24 hours";
+	} else {
+		wed = input.wedOpen + " - " + input.wedClose;
+	}
+	if (input.thuClosed) {
+		thu = "Closed";
+	} else if (input.thu24) {
+		thu = "24 hours";
+	} else {
+		thu = input.thuOpen + " - " + input.thuClose;
+	}
+	if (input.friClosed) {
+		fri = "Closed";
+	} else if (input.fri24) {
+		fri = "24 hours";
+	} else {
+		fri = input.friOpen + " - " + input.friClose;
+	}
+	if (input.satClosed) {
+		sat = "Closed";
+	} else if (input.sat24) {
+		sat = "24 hours";
+	} else {
+		sat = input.satOpen + " - " + input.satClose;
+	}
+	if (input.sunClosed) {
+		sun = "Closed";
+	} else if (input.sun24) {
+		sun = "24 hours";
+	} else {
+		sun = input.sunOpen + " - " + input.sunClose;
+	}
+	// Hard-coded ID needs to be changed to pull from session
+	let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = 32;`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.redirect("/update_business_info");
+	});
+});
 
-var port = process.env.port || 8080;
+var port = process.env.PORT || 8080;
 
 app.listen(port);
 console.log("go to port 8080");
