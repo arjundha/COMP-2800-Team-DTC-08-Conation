@@ -25,7 +25,7 @@
 </div>
 
 
-<script src="https://www.paypal.com/sdk/js?client-id=AdCxqsvZVk8XNDLTjmt_tJ43ke7dKQFrPcG8_qpDe4fylQ9NRWyyFH3fF2DqV9QRz1iL-GxMzp8O8R07"></script>
+<script src="https://www.paypal.com/sdk/js?currency=CAD&client-id=AdCxqsvZVk8XNDLTjmt_tJ43ke7dKQFrPcG8_qpDe4fylQ9NRWyyFH3fF2DqV9QRz1iL-GxMzp8O8R07"></script>
 <script>
     paypal.Buttons({
         createOrder: function(data, actions) {
@@ -33,7 +33,7 @@
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: "<%= product.cost %>"
+                        value: "<%= product.cost %>"                        
                     }
                 }]
             });
