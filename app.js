@@ -94,7 +94,7 @@ app.get('/easteregg', (req, res) => {
 			email: req.session.user,
 		})
 	}else{
-		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
+		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'Easter Egg' });
 	}
 });
 
@@ -111,16 +111,39 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-	console.log(req.session)
-	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
+	if (req.session.user){
+		res.render("conation/about", {
+			layout: 'layoutLoggedIn',
+			title: 'About Us',
+			email: req.session.user,
+		})
+	}else{
+		res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
+	}
+
 });
 
 app.get('/map', (req, res) => {
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map', email: req.session.email})
+	if (req.session.user){
+		res.render("conation/map", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	}else{
+		res.render('conation/index', { layout: 'layoutLoggedOut', title: 'Conation' });
+	}
 });
 
 app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile', email: req.session.email});
+	if (req.session.user){
+		res.render('conation/update_business_info', { 
+			layout: 'layoutLoggedIn', 
+			title: 'Update Profile', 
+			email: req.session.email});
+	}else{
+		res.render('conation/index', { layout: 'layoutLoggedOut', title: 'Conation' });
+	}
 });
 
 
@@ -393,7 +416,7 @@ app.get('/main', (req, res) => {
 			})
 		});
 	}else{
-		res.redirect("/login")
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
 	}
 });
 
@@ -401,61 +424,71 @@ app.get('/main', (req, res) => {
 
 
 app.get('/business', (req, res) => {
-	res.render('conation/business', {
-		layout: 'layoutLoggedIn',
-		title: 'fake name',
-		businessName: 'fake name here',
-		email: req.session.email,
-		description: 'teiahtukjha'
-	});
+	if (req.session.user){
+		res.redirect('/main')
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
 });
 
 app.get('/business/:id', (req, res) => {
-	pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/business", {
-			layout: 'layoutLoggedIn',
-			title: result[0].name,
-			email: req.session.email,
-			businessName: result[0].name,
-			description: result[0].description
+	if (req.session.user){
+		pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/business", {
+				layout: 'layoutLoggedIn',
+				title: result[0].name,
+				email: req.session.email,
+				businessName: result[0].name,
+				description: result[0].description
+			});
 		});
-	});
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
 });
 
 
 
 app.post('/businessSearch', (req, res) => {
-	let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			email: req.session.email,
-			businesses: result
-			
+	if (req.session.user){
+		let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/main", {
+				layout: 'layoutLoggedIn',
+				title: 'conation',
+				email: req.session.email,
+				businesses: result
+				
+			});
 		});
-	});
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
 });
 
 app.post('/businessType', (req, res) => {
-	let query = `SELECT * FROM businesses ORDER BY category ASC, name ASC;`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			email: req.session.email,
-			businesses: result
+	if (req.session.user){
+		let query = `SELECT * FROM businesses ORDER BY category ASC, name ASC;`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/main", {
+				layout: 'layoutLoggedIn',
+				title: 'conation',
+				email: req.session.email,
+				businesses: result
+			});
 		});
-	});
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
 });
 
 /*app.post('/businessOpenNow', (req, res) => {
@@ -474,37 +507,54 @@ app.post('/businessType', (req, res) => {
 
 app.post('/updateBusinessProfile', (req, res) => {
 
+	if (req.session.user){
+		let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect("/update_business_info");
+		});
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
+
 	// Hard-coded username needs to be changed to pull from session
-	let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.redirect("/update_business_info");
-	});
+
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
-	// Hard-coded username needs to be changed to pull from session, password needs hashing
-	let hashedPassword = bcrypt.hashSync(req.body.password, 10);
-	let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE username = "yblague0";`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.redirect("/update_business_info");
-	});
+	if (req.session.user){
+		// Hard-coded username needs to be changed to pull from session, password needs hashing
+		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
+		let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE username = "yblague0";`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect("/update_business_info");
+		});
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
+
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
+	if (req.session.user){
+		let query = `UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect("/update_business_info");
+		})
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
+
 	// Hard-coded ID needs to be changed to pull from session
-	let query = `UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.redirect("/update_business_info");
-	})
+
 });
 
 app.post("/updateBusinesshours", (req, res) => {
@@ -567,13 +617,17 @@ app.post("/updateBusinesshours", (req, res) => {
 		sun = input.sunOpen + " - " + input.sunClose;
 	}
 	// Hard-coded ID needs to be changed to pull from session
-	let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = 32;`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.redirect("/update_business_info");
-	});
+	if (req.session.user){
+		let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = 32;`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect("/update_business_info");
+		});
+	}else{
+		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+	}
 });
 
 var port = process.env.PORT || 8080;
