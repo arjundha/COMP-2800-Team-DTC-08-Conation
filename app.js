@@ -35,7 +35,20 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(session ({
 	name: "idk",
 	secret: "secret",
+	resave: true,
+	saveUninitialized: true,
 }))
+
+// let session = expressSession({
+// 		name: "idk",
+// 		secret: "mysecret",
+// 		resave: true,
+// 		saveUninitialized: true,
+// 	})
+
+// app.use(session)
+
+
 
 
 // ------------------------- //
@@ -58,7 +71,15 @@ const pool = mysql.createPool({
 app.get("/", function (req, res) {
 	console.log(req.session)
 	console.log(req.session.cookie.maxAge)
-	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
+	if (req.session.user){
+			res.render("conation/index", {
+				layout: 'layoutLoggedIn',
+				title: 'Conation',
+				email: req.session.user,
+			})
+	}else{
+		res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
+	}
 })
 
 app.get('/login', (req, res) => {
@@ -66,7 +87,15 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/easteregg', (req, res) => {
-	res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
+	if (req.session.user){
+		res.render("conation/easteregg", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	}else{
+		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
+	}
 });
 
 app.get('/registration', (req, res) => {
@@ -348,10 +377,9 @@ app.post('/business_registration', (req, res) => {
 app.get('/main', (req, res) => {
 	console.log(req.session)
 	console.log(req.session.cookie.maxAge)
-	console.log(req.session)
 	console.log("on main")
 
-	if (res.session.user){
+	if (req.session.user){
 		let query = "SELECT * FROM businesses";
 		pool.query(query, (err, result) => {
 			if (err) {
