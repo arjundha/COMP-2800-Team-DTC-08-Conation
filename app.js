@@ -104,14 +104,23 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/registration', (req, res) => {
+	if (req.session.email) {
+		req.session.destroy();
+	}
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
 });
 
 app.get('/customer_registration', (req, res) => {
+	if (req.session.email) {
+		req.session.destroy();
+	}
 	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
 });
 
 app.get('/business_registration', (req, res) => {
+	if (req.session.email) {
+		req.session.destroy();
+	}
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
 
