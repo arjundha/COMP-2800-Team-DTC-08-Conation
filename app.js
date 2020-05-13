@@ -59,6 +59,7 @@ const pool = mysql.createPool({
 
 
 app.get("/", function (req, res) {
+	console.log(req.session)
 	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 })
 
@@ -162,6 +163,7 @@ app.post("/login", (req, res) => {
 											res.redirect('/login')
 
 										} else {
+											req.session.email = input_email
 											res.redirect("/main")
 										}
 									})
@@ -365,6 +367,7 @@ app.get('/business/:id', (req, res) => {
 });
 
 app.get('/main', (req, res) => {
+	console.log(req.session)
 	let query = "SELECT * FROM businesses";
 	pool.query(query, (err, result) => {
 		if (err) {
