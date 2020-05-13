@@ -343,6 +343,9 @@ app.post('/business_registration', (req, res) => {
 
 // ========================= //
 //  stuff sarah did i think idk
+app.get('/my_donations', (req, res) => {
+	res.render('/conation/my_donations', { layout: 'layoutLoggedIn', title: 'Donations'});
+});
 
 app.get('/business', (req, res) => {
 	res.render('conation/business', {
