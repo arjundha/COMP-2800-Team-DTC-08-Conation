@@ -344,15 +344,16 @@ app.post('/business_registration', (req, res) => {
 // ========================= //
 //  stuff sarah did i think idk
 app.get('/my_donations', (req, res) => {
-	res.render('/conation/my_donations', { layout: 'layoutLoggedIn', title: 'Donations'});
-});
-
-app.get('/business', (req, res) => {
-	res.render('conation/business', {
-		layout: 'layoutLoggedIn',
-		title: 'fake name',
-		businessName: 'fake name here',
-		description: 'teiahtukjha'
+	//Need to add something to get total sum of all donations by user
+	pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/my_donations", {
+			layout: 'layoutLoggedIn',
+			title: 'My Donations',
+			donations: result
+		});
 	});
 });
 
