@@ -45,19 +45,19 @@
 
                 alert('Transaction completed by ' + details.payer.name.given_name);
                 // push to DB via POST
-                // $.ajax({
-                //     url: '/addDonation',
-                //     method: 'POST',
-                //     data: {
-                //         userID: 1,
-                //         productID: '<%= product.id %>',
-                //         amount: '<%= product.amount %>',
-                //     }
-                // }).done(function(data) {
-                //     alert(data.success);
-                // }).fail(function(error) {
-                //     console.log(error);
-                // });
+                $.ajax({
+                    url: '/addDonation',
+                    method: 'POST',
+                    data: {
+                        customer_id: 1, //MUST CHANGE
+                        product_id: "<%= product.id %>",
+                        amount: "<%= product.cost %>"
+                    }
+                }).done(function(data) {
+                    alert(data.success);
+                }).fail(function(error) {
+                    console.log(error);
+                });
             });
         }
     }).render('#paypal-button-container');

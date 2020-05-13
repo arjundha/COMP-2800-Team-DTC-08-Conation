@@ -82,7 +82,7 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-	console.log(req.session)
+	console.log(req.session);
 	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
 });
 
@@ -342,10 +342,6 @@ app.post('/business_registration', (req, res) => {
 
 });
 
-// app.get('/donate/:productID', (req, res) => {
-// 	res.render('conation/donate', { layout: 'layoutLoggedIn', title: 'Donate' });
-// });
-
 app.get('/donate/:productID', (req, res) => {
 	pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 		if (err) {
@@ -360,24 +356,19 @@ app.get('/donate/:productID', (req, res) => {
 });
 
 app.post('/addDonation', (req, res) => {
-	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.userID}', '${req.body.productID}', '${req.body.amount}';`;
+	console.log('i am adding');
+	console.log(req.body);
+
+	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}';`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
 		}
-		res.render("conation/donate", {
+		console.log(result);
+		res.render("conation/customer_registration", {
 			layout: 'layoutLoggedIn',
-			title: 'Donate',
+			title: 'Done',
 		});
-	});
-});
-
-app.get('/business', (req, res) => {
-	res.render('conation/business', {
-		layout: 'layoutLoggedIn',
-		title: 'fake name',
-		businessName: 'fake name here',
-		description: 'teiahtukjha'
 	});
 });
 
