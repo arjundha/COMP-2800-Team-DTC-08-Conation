@@ -280,7 +280,21 @@ app.get('/donate/:productID', (req, res) => {
 			title: result[0].name,
 			product: result[0]
 		});
-	});});
+	});
+});
+
+app.post('/addDonation', (req, res) => {
+	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.userID}', '${req.body.productID}', '${req.body.amount}';`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/donate", {
+			layout: 'layoutLoggedIn',
+			title: 'Donate',
+		});
+	});
+});
 
 app.get('/business', (req, res) => {
 	res.render('conation/business', {

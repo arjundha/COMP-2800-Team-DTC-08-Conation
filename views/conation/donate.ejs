@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="https://homepages.cae.wisc.edu/~ece533/images/airplane.png" class="img-fluid" alt="Product Image"/>
+                            <img src="<%= product.image %>" class="img-fluid" alt="Product Image"/>
                         </div>
                         <div class="col-md-8">
                             <p> <%= product.description %></p>
@@ -42,7 +42,22 @@
             // This function captures the funds from the transaction.
             return actions.order.capture().then(function(details) {
                 // This function shows a transaction success message to your buyer.
+
                 alert('Transaction completed by ' + details.payer.name.given_name);
+                // push to DB via POST
+                $.ajax({
+                    url: '/addDonation',
+                    method: 'POST',
+                    data: {
+                        userID: 1,
+                        productID: '<%= product.id %>',
+                        amount: '<%= product.amount %>',
+                    }
+                }).done(function(data) {
+                    alert(data.success);
+                }).fail(function(error) {
+                    console.log(error);
+                });
             });
         }
     }).render('#paypal-button-container');
