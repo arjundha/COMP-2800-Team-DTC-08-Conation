@@ -1,0 +1,102 @@
+<!-- The Card -->
+<div class="my-4 container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <h2 class="card-header">Settings</h2>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Sidebar -->
+                            <div class="col-md-3">
+                                <ul class="nav nav-pills navbar-danger flex-lg-column mb-3 nav-fill" id="settingsTabs" role="tablist" aria-orientation="horizontal">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="profileTab" data-toggle="pill" href="#profileSettings" role="tab" aria-controls="profileSettings" aria-selected="true">
+                                            Profile Information
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Profile Information Tab -->
+                            <div class="col-md-8">
+                                <div class="tab-content" id="settingsTabsContent">
+                                    <div class="tab-pane fade show active" id="profileSettings" role="tabpanel" aria-labelledby="profileTab">
+                                        <h3>Profile Information</h3>
+                                        <form id="profileUpdate" action="/updateBusinessProfile" method="post">
+                                            <br>
+
+                                            <!-- Business Owner FirstName -->
+                                            <div class="form-group row">
+                                                <label for="firstName" class="col-sm-3 col-form-label">First Name:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" required>
+                                                    <small id="fNameHelp" class="form-text text-muted">Your first name.</small>
+                                                </div>
+                                            </div>
+
+                                            <!-- Business Owner LastName -->
+                                            <div class="form-group row">
+                                                <label for="lastName" class="col-sm-3 col-form-label">Last Name:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" required>
+                                                    <small id="lNameHelp" class="form-text text-muted">Your last name.</small>
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Email -->
+                                            <!-- <div class="form-group row">
+                                                <label for="email" class="col-sm-3 col-form-label">Email:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" id="email" placeholder="INSERT SQL HERE" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                                                    <small id="emailTaken" class="form-text text-danger"></small>
+                                                </div>
+                                            </div> -->
+                                            <!-- Phone Number -->
+                                            <div class="form-group row">
+                                                <label for="phone" class="col-sm-3 col-form-label">Phone Number:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" id="phone" placeholder="111-222-3333" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                                                </div>
+                                            </div>
+                                            <!-- Submit for Customer Profile-->
+                                            <input id="businessProfileChange" type="submit" class="btn btn-main float-right" value="Save Changes">
+                                        </form>
+
+                                        <br><br><hr><br>
+                                        <!-- Update Password Form -->
+                                        <form id="passwordUpdate" action="/updateBusinessPassword" method="post">
+                                            <h5>Update Password</h5>
+                                            <br>
+                                            <!-- New Password -->
+                                            <div class="form-group row">
+                                                <label for="password" class="col-sm-3 col-form-label">Password:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
+                                                    <small id="passwordHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#)</small>
+                                                </div>
+                                            </div>
+                                            <!-- Confirm New Password -->
+                                            <div class="form-group row">
+                                                <label for="passwordConfirm" class="col-sm-3 col-form-label">Confirm Password:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="passwordConfirm" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this); finalPasswordCheck()" required>
+                                                    <small id="divCheckPasswordMatch" class="form-text text-danger"></small>
+                                                    <small id="divCheckPasswordMatchTrue" class="form-text text-success"></small>
+                                                </div>
+                                            </div>
+                                            <input id="businessPasswordChange" type="submit" class="btn btn-main float-right" value="Update Password">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOG3EpPiavwq5xcbGYHnX9efVUwtPeDcw"></script>
+<script src="registration.js"></script>
+<script src="hours.js"></script>
