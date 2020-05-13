@@ -87,11 +87,11 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/map', (req, res) => {
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
+	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map', email: req.session.email})
 });
 
 app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
+	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile', email: req.session.email});
 });
 
 
@@ -164,7 +164,8 @@ app.post("/login", (req, res) => {
 										} else {
 											// SET UP COOKIE ONLY WHEN LOGGED IN
 											req.session.email = input_email
-											req.session.cookie.maxAge = 1000000
+											req.session.user = input_email
+											req.session.cookie.maxAge = 100000000
 											res.redirect("/main")
 										}
 									})
@@ -344,11 +345,39 @@ app.post('/business_registration', (req, res) => {
 // ========================= //
 //  stuff sarah did i think idk
 
+app.get('/main', (req, res) => {
+	console.log(req.session)
+	console.log(req.session.cookie.maxAge)
+	console.log(req.session)
+	console.log("on main")
+
+	if (res.session.user){
+		let query = "SELECT * FROM businesses";
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/main", {
+				layout: 'layoutLoggedIn',
+				title: 'conation',
+				email: req.session.user,
+				businesses: result
+			})
+		});
+	}else{
+		res.redirect("/login")
+	}
+});
+
+
+
+
 app.get('/business', (req, res) => {
 	res.render('conation/business', {
 		layout: 'layoutLoggedIn',
 		title: 'fake name',
 		businessName: 'fake name here',
+		email: req.session.email,
 		description: 'teiahtukjha'
 	});
 });
@@ -361,27 +390,13 @@ app.get('/business/:id', (req, res) => {
 		res.render("conation/business", {
 			layout: 'layoutLoggedIn',
 			title: result[0].name,
+			email: req.session.email,
 			businessName: result[0].name,
 			description: result[0].description
 		});
 	});
 });
 
-app.get('/main', (req, res) => {
-	console.log(req.session)
-	console.log(req.session.cookie.maxAge)
-	let query = "SELECT * FROM businesses";
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			businesses: result
-		})
-	});
-});
 
 
 app.post('/businessSearch', (req, res) => {
@@ -393,7 +408,9 @@ app.post('/businessSearch', (req, res) => {
 		res.render("conation/main", {
 			layout: 'layoutLoggedIn',
 			title: 'conation',
+			email: req.session.email,
 			businesses: result
+			
 		});
 	});
 });
@@ -407,6 +424,7 @@ app.post('/businessType', (req, res) => {
 		res.render("conation/main", {
 			layout: 'layoutLoggedIn',
 			title: 'conation',
+			email: req.session.email,
 			businesses: result
 		});
 	});
