@@ -83,6 +83,7 @@ app.get("/", function (req, res) {
 })
 
 app.get('/login', (req, res) => {
+	req.session.destroy();
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
 });
 
@@ -145,7 +146,7 @@ app.get('/map', (req, res) => {
 			email: req.session.user,
 		})
 	}else{
-		res.render('conation/index', { layout: 'layoutLoggedOut', title: 'Conation' });
+		res.redirect('/login');
 	}
 });
 
@@ -156,7 +157,7 @@ app.get('/update_business_info', (req, res) => {
 			title: 'Update Profile', 
 			email: req.session.email});
 	}else{
-		res.render('conation/index', { layout: 'layoutLoggedOut', title: 'Conation' });
+		res.redirect('/login');
 	}
 });
 
@@ -430,7 +431,7 @@ app.get('/main', (req, res) => {
 			})
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 });
 
@@ -441,7 +442,7 @@ app.get('/business', (req, res) => {
 	if (req.session.user){
 		res.redirect('/main')
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 });
 
@@ -460,7 +461,7 @@ app.get('/business/:id', (req, res) => {
 			});
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 });
 
@@ -482,7 +483,7 @@ app.post('/businessSearch', (req, res) => {
 			});
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 });
 
@@ -501,7 +502,7 @@ app.post('/businessType', (req, res) => {
 			});
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 });
 
@@ -530,7 +531,7 @@ app.post('/updateBusinessProfile', (req, res) => {
 			res.redirect("/update_business_info");
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 
 	// Hard-coded username needs to be changed to pull from session
@@ -549,7 +550,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 			res.redirect("/update_business_info");
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 
 });
@@ -564,7 +565,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 			res.redirect("/update_business_info");
 		})
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 
 	// Hard-coded ID needs to be changed to pull from session
@@ -640,7 +641,7 @@ app.post("/updateBusinesshours", (req, res) => {
 			res.redirect("/update_business_info");
 		});
 	}else{
-		res.redirect('conation/login', { layout: 'layoutLoggedOut', title: 'Login' });
+		res.redirect('/login');
 	}
 });
 
