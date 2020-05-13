@@ -150,12 +150,21 @@ app.get('/map', (req, res) => {
 	}
 });
 
-app.get('/update_business_info', (req, res) => {
+app.get('/update_info', (req, res) => {
 	if (req.session.user){
-		res.render('conation/update_business_info', { 
-			layout: 'layoutLoggedIn', 
-			title: 'Update Profile', 
-			email: req.session.email});
+		if (req.session.acct == "business"){
+			res.render('conation/update_business_info', { 
+				layout: 'layoutLoggedIn', 
+				title: 'Update Profile', 
+				email: req.session.email});
+
+		} else {
+			res.render('conation/update_customer_info', { 
+				layout: 'layoutLoggedIn', 
+				title: 'Update Profile', 
+				email: req.session.email});
+		}
+
 	}else{
 		res.redirect('/login');
 	}
@@ -229,11 +238,29 @@ app.post("/login", (req, res) => {
 											res.redirect('/login')
 
 										} else {
-											// SET UP COOKIE ONLY WHEN LOGGED IN
-											req.session.email = input_email
-											req.session.user = input_email
-											req.session.cookie.maxAge = 100000000
-											res.redirect("/main")
+											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function(err, result){
+												console.log(result)
+												if (result != ""){
+													console.log("customer:" + result)
+													req.session.email = input_email
+													req.session.user = input_email
+													req.session.acct = "customer"
+													req.session.cookie.maxAge = 100000000
+													res.redirect("/main")
+												} else {
+													console.log("business:" + result)
+													req.session.email = input_email
+													req.session.user = input_email
+													req.session.acct = "business"
+													req.session.cookie.maxAge = 100000000
+													res.redirect("/main")
+												}
+											})
+											// // SET UP COOKIE ONLY WHEN LOGGED IN
+											// req.session.email = input_email
+											// req.session.user = input_email
+											// req.session.cookie.maxAge = 100000000
+											// res.redirect("/main")
 										}
 									})
 								} else {
@@ -523,13 +550,27 @@ app.post('/businessType', (req, res) => {
 app.post('/updateBusinessProfile', (req, res) => {
 
 	if (req.session.user){
-		let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`;
-		pool.query(query, (err, result) => {
-			if (err) {
-				console.log(err);
-			}
-			res.redirect("/update_business_info");
-		});
+		console.log(req.body)
+		if (req.session.acct == "business"){
+			let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+
+		} else {
+			let query = `UPDATE customers SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+
+		}
+
 	}else{
 		res.redirect('/login');
 	}
@@ -547,7 +588,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.redirect("/update_business_info");
+			res.redirect("/update_info");
 		});
 	}else{
 		res.redirect('/login');
@@ -562,7 +603,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.redirect("/update_business_info");
+			res.redirect("/update_info");
 		})
 	}else{
 		res.redirect('/login');
@@ -638,7 +679,7 @@ app.post("/updateBusinesshours", (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.redirect("/update_business_info");
+			res.redirect("/update_info");
 		});
 	}else{
 		res.redirect('/login');
