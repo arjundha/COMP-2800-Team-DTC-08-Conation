@@ -304,12 +304,22 @@ app.post("/login", (req, res) => {
 											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
 												console.log(result);
 												if (result != "") {
-													console.log("customer")
-													req.session.email = input_email;
-													req.session.user = input_email;
-													req.session.acct = "customer";
-													req.session.cookie.maxAge = 100000000;
-													res.redirect("/main");
+
+													let query = `SELECT id FROM customers WHERE email = "${input_email}"`;
+													pool.query(query, (err, result) => {
+														if (err) {
+															console.log(err);
+														}
+														console.log("customer")
+														let id = result[0].id;
+														req.session.email = input_email;
+														req.session.user = input_email;
+														req.session.acct = "customer";
+														req.session.customerId = id;
+														req.session.cookie.maxAge = 100000000;
+														res.redirect("/main");
+													})
+
 												} else {
 													let query = `SELECT business_id FROM business_owners WHERE email = "${input_email}"`;
 													pool.query(query, (err, result) => {
