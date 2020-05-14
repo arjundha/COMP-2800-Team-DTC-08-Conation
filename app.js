@@ -71,12 +71,19 @@ const pool = mysql.createPool({
 app.get("/", function (req, res) {
 	console.log(req.session)
 	console.log(req.session.cookie.maxAge);
-	if (req.session.user) {
+	if (req.session.acct == "customer") {
 		res.render("conation/index", {
 			layout: 'layoutLoggedIn',
 			title: 'Conation',
 			email: req.session.user,
 		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/index", {
+			layout: 'layoutBusinessOwner',
+			title: 'Conation',
+			email: req.session.user,
+		})
+
 	} else {
 		res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 	}
@@ -88,12 +95,19 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/easteregg', (req, res) => {
-	if (req.session.user) {
+	if (req.session.acct == "customer") {
 		res.render("conation/easteregg", {
 			layout: 'layoutLoggedIn',
-			title: 'Conation',
+			title: 'Easter Egg',
 			email: req.session.user,
 		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/easteregg", {
+			layout: 'layoutBusinessOwner',
+			title: 'Easter Egg',
+			email: req.session.user,
+		})
+
 	}else{
 		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'Easter Egg' });
 	}
@@ -126,12 +140,19 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-	if (req.session.user){
+	if (req.session.acct == "customer") {
 		res.render("conation/about", {
 			layout: 'layoutLoggedIn',
 			title: 'About Us',
 			email: req.session.user,
 		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/about", {
+			layout: 'layoutBusinessOwner',
+			title: 'About Us',
+			email: req.session.user,
+		})
+
 	}else{
 		res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
 	}
@@ -139,12 +160,19 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/map', (req, res) => {
-	if (req.session.user){
+	if (req.session.acct == "customer") {
 		res.render("conation/map", {
 			layout: 'layoutLoggedIn',
 			title: 'Conation',
 			email: req.session.user,
 		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/map", {
+			layout: 'layoutBusinessOwner',
+			title: 'Conation',
+			email: req.session.user,
+		})
+
 	}else{
 		res.redirect('/login');
 	}
@@ -152,9 +180,9 @@ app.get('/map', (req, res) => {
 
 app.get('/update_info', (req, res) => {
 	if (req.session.user){
-		if (req.session.acct === "business") {
+		if (req.session.acct == "business") {
 			res.render('conation/update_business_info', { 
-				layout: 'layoutLoggedIn', 
+				layout: 'layoutBusinessOwner', 
 				title: 'Update Profile', 
 				email: req.session.email});
 
@@ -171,7 +199,16 @@ app.get('/update_info', (req, res) => {
 });
 
 app.get('/add_product', (req, res) => {
-	res.render('conation/add_product', { layout: 'layoutLoggedIn', title: 'Add Product' });
+	if (req.session.acct == "business") {
+		res.render("conation/add_product", {
+			layout: 'layoutBusinessOwner',
+			title: 'Add Product',
+			email: req.session.user,
+		})
+
+	} else {
+		res.redirect('/main')
+	}
 });
 
 
@@ -244,7 +281,7 @@ app.post("/login", (req, res) => {
 										} else {
 											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function(err, result){
 												console.log(result);
-												if (result !== "") {
+												if (result != "") {
 													console.log("customer:" + result)
 													req.session.email = input_email;
 													req.session.user = input_email;
@@ -445,7 +482,6 @@ app.post('/business_registration', (req, res) => {
 
 app.get('/main', (req, res) => {
 	console.log(req.session);
-	console.log(req.session.cookie.maxAge);
 	console.log("on main");
 
 	if (req.session.user) {
@@ -454,14 +490,24 @@ app.get('/main', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/main", {
-				layout: 'layoutLoggedIn',
-				title: 'conation',
-				email: req.session.user,
-				businesses: result
-			})
+			else if (req.session.acct == "customer") {
+				res.render("conation/main", {
+					layout: 'layoutLoggedIn',
+					title: 'Conation',
+					email: req.session.user,
+					businesses: result
+				})
+			} else {
+				res.render("conation/main", {
+					layout: 'layoutBusinessOwner',
+					title: 'Conation',
+					email: req.session.user,
+					businesses: result
+				})
+			}
 		});
-	}else{
+
+	} else {
 		res.redirect('/login');
 	}
 });
@@ -476,16 +522,32 @@ app.get('/business', (req, res) => {
 
 app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
-	pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/my_donations", {
-			layout: 'layoutLoggedIn',
-			title: 'My Donations',
-			donations: result
+	if (req.session.user){
+		pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
+			if (err) {
+				console.log(err);
+			}
+			else if (req.session.acct == "customer") {
+				res.render("conation/my_donations", {
+					layout: 'layoutLoggedIn',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result
+				});
+			}
+			else {
+				res.render("conation/my_donations", {
+					layout: 'layoutBusinessOwner',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result
+				});
+			}
 		});
-	});
+	}
+	else {
+		res.redirect('/login')
+	}
 });
 
 app.get('/business/:id', (req, res) => {
@@ -510,16 +572,29 @@ app.get('/business/:id', (req, res) => {
 					pool.query(productQuery, (err, productResult) => {
 						if (err) {
 							console.log(err);
+
+						} else if (req.session.acct == "customer") {
+							res.render("conation/business", {
+								layout: 'layoutLoggedIn',
+								title: businessResult[0].name,
+								email: req.session.email,
+								business: businessResult[0],
+								hours: hoursResult[0],
+								news: newsResult,
+								products: productResult
+							});
+
+						} else {
+							res.render("conation/business", {
+								layout: 'layoutBusinessOwner',
+								title: businessResult[0].name,
+								email: req.session.email,
+								business: businessResult[0],
+								hours: hoursResult[0],
+								news: newsResult,
+								products: productResult
+							});
 						}
-						res.render("conation/business", {
-							layout: 'layoutLoggedIn',
-							title: businessResult[0].name,
-							email: req.session.email,
-							business: businessResult[0],
-							hours: hoursResult[0],
-							news: newsResult,
-							products: productResult
-						});
 					});
 				});
 			});
@@ -530,16 +605,34 @@ app.get('/business/:id', (req, res) => {
 });
 
 app.get('/donate/:productID', (req, res) => {
-	pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/donate", {
-			layout: 'layoutLoggedIn',
-			title: result[0].name,
-			product: result[0]
+
+	if (req.session.user){
+		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
+			if (err) {
+				console.log(err);
+	
+			} else if (req.session.acct == "customer") {
+				res.render("conation/donate", {
+					layout: 'layoutLoggedIn',
+					title: result[0].name,
+					product: result[0],
+					email: req.session.user
+				})
+			}
+			else {
+				res.render("conation/donate", {
+					layout: 'layoutBusinessOwner',
+					title: result[0].name,
+					product: result[0],
+					email: req.session.user
+				})
+			}
 		});
-	});
+	}
+
+	else {
+		res.redirect('login')
+	}
 });
 
 app.post('/addDonation', (req, res) => {
@@ -582,13 +675,22 @@ app.post('/businessSearch', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/main", {
-				layout: 'layoutLoggedIn',
-				title: 'conation',
-				email: req.session.email,
-				businesses: result
-				
-			});
+			else if (req.session.acct == "customer"){
+				res.render("conation/main", {
+					layout: 'layoutLoggedIn',
+					title: 'Conation',
+					email: req.session.email,
+					businesses: result
+				})
+			}
+			else {
+				res.render("conation/main", {
+					layout: 'layoutBusinessOwner',
+					title: 'Conation',
+					email: req.session.email,
+					businesses: result
+				});
+			}
 		});
 	}else{
 		res.redirect('/login');
@@ -602,12 +704,23 @@ app.post('/businessType', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/main", {
-				layout: 'layoutLoggedIn',
-				title: 'conation',
-				email: req.session.email,
-				businesses: result
-			});
+			else if (req.session.acct == "customer"){
+				res.render("conation/main", {
+					layout: 'layoutLoggedIn',
+					title: 'Conation',
+					email: req.session.email,
+					businesses: result
+				});
+
+			}
+			else {
+				res.render("conation/main", {
+					layout: 'layoutBusinesOwner',
+					title: 'Conation',
+					email: req.session.email,
+					businesses: result
+				});
+			}
 		});
 	}else{
 		res.redirect('/login');
@@ -632,7 +745,7 @@ app.post('/updateBusinessProfile', (req, res) => {
 
 	if (req.session.user){
 		console.log(req.body);
-		if (req.session.acct === "business"){
+		if (req.session.acct == "business"){
 			let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
@@ -665,7 +778,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 		// Hard-coded username needs to be changed to pull from session, password needs hashing
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct === "business"){
+		if (req.sesstion.acct == "business"){
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
