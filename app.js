@@ -372,7 +372,7 @@ app.post('/customer_registration', (req, res) => {
 
 // ========================= //
 
-// CUSTOMER REGISTRATION //
+// BUSINESS REGISTRATION //
 
 app.post('/business_registration', (req, res) => {
 	let input = req.body;
@@ -480,7 +480,7 @@ app.post('/business_registration', (req, res) => {
 });
 
 // ========================= //
-//  stuff sarah did i think idk
+//    MAIN BUSINESS PAGES    //
 
 app.get('/main', (req, res) => {
 	console.log(req.session);
@@ -514,162 +514,6 @@ app.get('/main', (req, res) => {
 	}
 });
 
-app.get('/business', (req, res) => {
-	if (req.session.user) {
-		res.redirect('/main')
-	} else {
-		res.redirect('/login');
-	}
-});
-
-app.get('/my_donations', (req, res) => {
-	//Need to add something to get total sum of all donations by user
-	if (req.session.user) {
-		pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
-			if (err) {
-				console.log(err);
-			}
-			else if (req.session.acct == "customer") {
-				res.render("conation/my_donations", {
-					layout: 'layoutLoggedIn',
-					title: 'My Donations',
-					email: req.session.email,
-					donations: result
-				});
-			}
-			else {
-				res.render("conation/my_donations", {
-					layout: 'layoutBusinessOwner',
-					title: 'My Donations',
-					email: req.session.email,
-					donations: result
-				});
-			}
-		});
-	}
-	else {
-		res.redirect('/login')
-	}
-});
-
-app.get('/business/:id', (req, res) => {
-	if (req.session.user) {
-		let id = req.params.id;
-		let businessQuery = `SELECT * FROM businesses WHERE id = ${id};`;
-		pool.query(businessQuery, (err, businessResult) => {
-			if (err) {
-				console.log(err);
-			}
-			let hoursQuery = `SELECT * FROM business_hours WHERE business_id = ${id}`;
-			pool.query(hoursQuery, (err, hoursResult) => {
-				if (err) {
-					console.log(err);
-				}
-				let newsQuery = `SELECT title, DATE_FORMAT(date, "%y-%m-%d") AS date, content FROM news WHERE business_id = ${id} ORDER BY date DESC;`;
-				pool.query(newsQuery, (err, newsResult) => {
-					if (err) {
-						console.log(err);
-					}
-					let productQuery = `SELECT * FROM products WHERE business_id = ${id} ORDER BY cost ASC;`;
-					pool.query(productQuery, (err, productResult) => {
-						if (err) {
-							console.log(err);
-
-						} else if (req.session.acct == "customer") {
-							res.render("conation/business", {
-								layout: 'layoutLoggedIn',
-								title: businessResult[0].name,
-								email: req.session.email,
-								business: businessResult[0],
-								hours: hoursResult[0],
-								news: newsResult,
-								products: productResult
-							});
-
-						} else {
-							res.render("conation/business", {
-								layout: 'layoutBusinessOwner',
-								title: businessResult[0].name,
-								email: req.session.email,
-								business: businessResult[0],
-								hours: hoursResult[0],
-								news: newsResult,
-								products: productResult
-							});
-						}
-					});
-				});
-			});
-		});
-	} else {
-		res.redirect('/login');
-	}
-});
-
-app.get('/donate/:productID', (req, res) => {
-
-	if (req.session.user) {
-		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
-			if (err) {
-				console.log(err);
-
-			} else if (req.session.acct == "customer") {
-				res.render("conation/donate", {
-					layout: 'layoutLoggedIn',
-					title: result[0].name,
-					product: result[0],
-					email: req.session.user
-				})
-			}
-			else {
-				res.render("conation/donate", {
-					layout: 'layoutBusinessOwner',
-					title: result[0].name,
-					product: result[0],
-					email: req.session.user
-				})
-			}
-		});
-	}
-
-	else {
-		res.redirect('login');
-	}
-});
-
-app.post('/addDonation', (req, res) => {
-	console.log('i am adding');
-	console.log(req.body);
-
-	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}');`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		console.log(result);
-		res.redirect("/my_donations");
-	});
-});
-
-app.post('/addProduct', (req, res) => {
-
-
-	let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		let id = result[0].business_id;
-		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
-		pool.query(query, (err, result) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).send(err);
-			}
-			res.redirect("/add_product")
-		});
-	});
-});
 
 app.post('/businessSearch', (req, res) => {
 	if (req.session.user) {
@@ -729,6 +573,178 @@ app.post('/businessType', (req, res) => {
 		res.redirect('/login');
 	}
 });
+
+
+// ========================= //
+// INDIVIDUAL BUSINESS PAGE  //
+
+app.get('/business', (req, res) => {
+	if (req.session.user) {
+		res.redirect('/main')
+	} else {
+		res.redirect('/login');
+	}
+});
+
+app.get('/business/:id', (req, res) => {
+	if (req.session.user) {
+		let id = req.params.id;
+		let businessQuery = `SELECT * FROM businesses WHERE id = ${id};`;
+		pool.query(businessQuery, (err, businessResult) => {
+			if (err) {
+				console.log(err);
+			}
+			let hoursQuery = `SELECT * FROM business_hours WHERE business_id = ${id}`;
+			pool.query(hoursQuery, (err, hoursResult) => {
+				if (err) {
+					console.log(err);
+				}
+				let newsQuery = `SELECT title, DATE_FORMAT(date, "%y-%m-%d") AS date, content FROM news WHERE business_id = ${id} ORDER BY date DESC;`;
+				pool.query(newsQuery, (err, newsResult) => {
+					if (err) {
+						console.log(err);
+					}
+					let productQuery = `SELECT * FROM products WHERE business_id = ${id} ORDER BY cost ASC;`;
+					pool.query(productQuery, (err, productResult) => {
+						if (err) {
+							console.log(err);
+
+						} else if (req.session.acct == "customer") {
+							res.render("conation/business", {
+								layout: 'layoutLoggedIn',
+								title: businessResult[0].name,
+								email: req.session.email,
+								business: businessResult[0],
+								hours: hoursResult[0],
+								news: newsResult,
+								products: productResult
+							});
+
+						} else {
+							res.render("conation/business", {
+								layout: 'layoutBusinessOwner',
+								title: businessResult[0].name,
+								email: req.session.email,
+								business: businessResult[0],
+								hours: hoursResult[0],
+								news: newsResult,
+								products: productResult
+							});
+						}
+					});
+				});
+			});
+		});
+	} else {
+		res.redirect('/login');
+	}
+});
+
+// ========================= //
+//        DONATIONS          //
+
+app.get('/donate/:productID', (req, res) => {
+
+	if (req.session.user) {
+		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
+			if (err) {
+				console.log(err);
+
+			} else if (req.session.acct == "customer") {
+				res.render("conation/donate", {
+					layout: 'layoutLoggedIn',
+					title: result[0].name,
+					product: result[0],
+					email: req.session.user
+				})
+			}
+			else {
+				res.render("conation/donate", {
+					layout: 'layoutBusinessOwner',
+					title: result[0].name,
+					product: result[0],
+					email: req.session.user
+				})
+			}
+		});
+	}
+
+	else {
+		res.redirect('login');
+	}
+});
+
+app.post('/addDonation', (req, res) => {
+	console.log('i am adding');
+	console.log(req.body);
+
+	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}');`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		console.log(result);
+		res.redirect("/my_donations");
+	});
+});
+
+app.get('/my_donations', (req, res) => {
+	//Need to add something to get total sum of all donations by user
+	if (req.session.user) {
+		pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
+			if (err) {
+				console.log(err);
+			}
+			else if (req.session.acct == "customer") {
+				res.render("conation/my_donations", {
+					layout: 'layoutLoggedIn',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result
+				});
+			}
+			else {
+				res.render("conation/my_donations", {
+					layout: 'layoutBusinessOwner',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result
+				});
+			}
+		});
+	}
+	else {
+		res.redirect('/login')
+	}
+});
+
+// ========================= //
+//      LISTING PRODUCTS     //
+
+app.post('/addProduct', (req, res) => {
+	let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		let id = result[0].business_id;
+		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+				return res.status(500).send(err);
+			}
+			res.redirect("/add_product")
+		});
+	});
+});
+
+
+
+
+
+// ========================= //
+//    UPDATE PROFILE INFO    //
 
 app.post('/updateBusinessProfile', (req, res) => {
 
@@ -889,6 +905,12 @@ app.post("/updateBusinesshours", (req, res) => {
 		res.redirect('/login');
 	}
 });
+
+
+// ========================= //
+//        NEWS POSTS         //
+
+
 
 var port = process.env.PORT || 8080;
 
