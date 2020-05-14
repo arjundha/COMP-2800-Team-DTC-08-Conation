@@ -182,7 +182,7 @@ app.get('/update_info', (req, res) => {
 	if (req.session.user){
 		if (req.session.acct == "business") {
 			res.render('conation/update_business_info', { 
-				layout: 'layoutBusinessProfile', 
+				layout: 'layoutBusinessOwner', 
 				title: 'Update Profile', 
 				email: req.session.email});
 
@@ -201,7 +201,7 @@ app.get('/update_info', (req, res) => {
 app.get('/add_product', (req, res) => {
 	if (req.session.acct == "business") {
 		res.render("conation/add_product", {
-			layout: 'layoutLoggedIn',
+			layout: 'layoutBusinessOwner',
 			title: 'Add Product',
 			email: req.session.user,
 		})
