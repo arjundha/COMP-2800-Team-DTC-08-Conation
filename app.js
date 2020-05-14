@@ -496,9 +496,8 @@ app.post('/business_registration', (req, res) => {
 //    MAIN BUSINESS PAGES    //
 
 app.get('/main', (req, res) => {
-	console.log(req.session);
+	console.log(req.session.email);
 	console.log("on main");
-
 	if (req.session.user) {
 		let query = "SELECT * FROM businesses";
 		pool.query(query, (err, result) => {
@@ -513,12 +512,24 @@ app.get('/main', (req, res) => {
 					businesses: result
 				})
 			} else {
-				res.render("conation/main", {
-					layout: 'layoutBusinessOwner',
-					title: 'Conation',
-					email: req.session.user,
-					businesses: result
-				})
+				businesses = result;
+				let query = `SELECT business_id FROM business_owners WHERE email = '${req.session.email}'`;
+				pool.query(query, (err, result) => {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(result)
+						res.render("conation/main", {
+							layout: 'layoutBusinessOwner',
+							title: 'Conation',
+							email: req.session.user,
+							id: result[0].business_id,
+							businesses: businesses
+						});
+					}
+				});
+
+				
 			}
 		});
 
@@ -602,6 +613,7 @@ app.get('/business', (req, res) => {
 app.get('/business/:id', (req, res) => {
 	if (req.session.user) {
 		let id = req.params.id;
+		console.log(id)
 		let businessQuery = `SELECT * FROM businesses WHERE id = ${id};`;
 		pool.query(businessQuery, (err, businessResult) => {
 			if (err) {
