@@ -930,8 +930,6 @@ app.post("/addNewsPost", (req, res) => {
 			if (err) {
 				console.log(err)
 			}
-			// let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
-
 			let id = result[0].business_id
 			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
 			pool.query(query, (err, result) => {
@@ -941,19 +939,10 @@ app.post("/addNewsPost", (req, res) => {
 				res.redirect("/main");
 			});
 		})
-
-
 	}
-
-
 	else {
 		res.redirect("/main")
 	}
-
-
-
-
-
 })
 
 
