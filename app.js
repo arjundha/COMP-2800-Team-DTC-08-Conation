@@ -354,15 +354,37 @@ app.get('/business', (req, res) => {
 });
 
 app.get('/business/:id', (req, res) => {
-	pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
+	let id = req.params.id;
+	let businessQuery = `SELECT * FROM businesses WHERE id = ${id};`;
+	pool.query(businessQuery, (err, businessResult) => {
 		if (err) {
 			console.log(err);
 		}
-		res.render("conation/business", {
-			layout: 'layoutLoggedIn',
-			title: result[0].name,
-			businessName: result[0].name,
-			description: result[0].description
+		let hoursQuery = `SELECT * FROM business_hours WHERE business_id = ${id}`;
+		pool.query(hoursQuery, (err, hoursResult) => {
+			if (err) {
+				console.log(err);
+			}
+			let newsQuery = `SELECT title, DATE_FORMAT(date, "%y-%m-%d") AS date, content FROM news WHERE business_id = ${id} ORDER BY date DESC;`;
+			pool.query(newsQuery, (err, newsResult) => {
+				if (err) {
+					console.log(err);
+				}
+				let productQuery = `SELECT * FROM products WHERE business_id = ${id} ORDER BY cost ASC;`;
+				pool.query(productQuery, (err, productResult) => {
+					if (err) {
+						console.log(err);
+					}
+					res.render("conation/business", {
+						layout: 'layoutLoggedIn',
+						title: businessResult[0].name,
+						business: businessResult[0],
+						hours: hoursResult[0],
+						news: newsResult,
+						products: productResult
+					});
+				});
+			});
 		});
 	});
 });
