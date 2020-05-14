@@ -213,6 +213,19 @@ app.get('/add_product', (req, res) => {
 	}
 });
 
+app.get("/news_form", (req, res) => {
+	if (req.session.acct == "business") {
+		res.render("conation/news_form", {
+			layout: 'layoutBusinessOwner',
+			title: 'Add News Update',
+			email: req.session.user,
+		})
+
+	} else {
+		res.redirect('/main')
+	}
+})
+
 
 // ------------------------- //
 //  SIMPLE DATABASE QUERIES  //
@@ -909,6 +922,41 @@ app.post("/updateBusinesshours", (req, res) => {
 
 // ========================= //
 //        NEWS POSTS         //
+
+app.post("/addNewsPost", (req, res) => {
+	if (req.session.acct == "business"){
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err)
+			}
+			// let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
+
+			let id = result[0].business_id
+			let query = `INSERT INTO news (business_id, title, content) VALUES ("${id}, "${req.body.title}", "${req.body.description}")`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/news_form");
+			});
+		})
+
+
+	}
+
+
+	else {
+		res.redirect("/main")
+	}
+
+
+
+
+
+})
+
+
 
 
 
