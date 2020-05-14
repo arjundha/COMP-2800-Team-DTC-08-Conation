@@ -703,33 +703,49 @@ app.post('/addDonation', (req, res) => {
 
 app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
-	if (req.session.user) {
+	if (req.session.user && req.session.acct == "customer") {
 		// `SELECT * FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`
 		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.image AS prodImg, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`;
 		pool.query(donationProductsQuery, (err, result) => { // Need customer id to be based on session
 			if (err) {
 				console.log(err);
 			}
-			else if (req.session.acct == "customer") {
-				res.render("conation/my_donations", {
-					layout: 'layoutLoggedIn',
-					title: 'My Donations',
-					email: req.session.email,
-					donations: result
-				});
-			}
-			else {
-				res.render("conation/my_donations", {
-					layout: 'layoutBusinessOwner',
-					title: 'My Donations',
-					email: req.session.email,
-					donations: result
-				});
-			}
+			res.render("conation/my_donations", {
+				layout: 'layoutLoggedIn',
+				title: 'My Donations',
+				email: req.session.email,
+				donations: result
+			});
 		});
 	}
+	else if (req.session.user && req.session.acct == "business") {
+		res.redirect('/track_donations');
+	}
+
 	else {
 		res.redirect('/login')
+	}
+});
+
+app.get('/track_donations', (req, res) => {
+	if (req.session.user && req.session.acct == "business") {
+		let businessDonationsQuery = `SELECT * FROM products WHERE business_id = 32;`;
+		pool.query(businessDonationsQuery, (err, result) => {
+			res.render("conation/track_donations", {
+				layout: 'layoutBusinessOwner',
+				title: 'Track Donations',
+				email: req.session.email,
+				products: result
+			});
+		});
+	}
+
+	else if (req.session.user && req.session.acct == "customer") {
+		res.redirect('/my_donations');
+	}
+
+	else {
+		res.redirect('/login');
 	}
 });
 
