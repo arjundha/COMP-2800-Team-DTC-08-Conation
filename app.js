@@ -32,10 +32,23 @@ app.set('views', path.join(__dirname, 'views'));
 //    SESSIONS + COOKIES     //
 // ------------------------- //
 
-app.use(session ({
+app.use(session({
 	name: "idk",
 	secret: "secret",
+	resave: true,
+	saveUninitialized: true,
 }))
+
+// let session = expressSession({
+// 		name: "idk",
+// 		secret: "mysecret",
+// 		resave: true,
+// 		saveUninitialized: true,
+// 	})
+
+// app.use(session)
+
+
 
 
 // ------------------------- //
@@ -58,40 +71,103 @@ const pool = mysql.createPool({
 app.get("/", function (req, res) {
 	console.log(req.session)
 	console.log(req.session.cookie.maxAge)
-	res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
+	if (req.session.user) {
+		res.render("conation/index", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	} else {
+		res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
+	}
 })
 
 app.get('/login', (req, res) => {
+	req.session.destroy();
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
 });
 
 app.get('/easteregg', (req, res) => {
-	res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'easter egg' });
+	if (req.session.user) {
+		res.render("conation/easteregg", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	}else{
+		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'Easter Egg' });
+	}
+});
+
+app.get('/logout', function (req, res) {
+	req.session.destroy();
+	res.redirect('/login');
 });
 
 app.get('/registration', (req, res) => {
+	if (req.session.email) {
+		req.session.destroy();
+	}
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
 });
 
 app.get('/customer_registration', (req, res) => {
+	if (req.session.email) {
+		req.session.destroy();
+	}
 	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
 });
 
 app.get('/business_registration', (req, res) => {
+	if (req.session.email) {
+		req.session.destroy();
+	}
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
 
 app.get('/about', (req, res) => {
-	console.log(req.session)
-	res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
+	if (req.session.user){
+		res.render("conation/about", {
+			layout: 'layoutLoggedIn',
+			title: 'About Us',
+			email: req.session.user,
+		})
+	}else{
+		res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
+	}
+
 });
 
 app.get('/map', (req, res) => {
-	res.render('conation/map', { layout: 'layoutLoggedIn', title: 'Map' })
+	if (req.session.user){
+		res.render("conation/map", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	}else{
+		res.redirect('/login');
+	}
 });
 
-app.get('/update_business_info', (req, res) => {
-	res.render('conation/update_business_info', { layout: 'layoutLoggedIn', title: 'Update Profile' });
+app.get('/update_info', (req, res) => {
+	if (req.session.user){
+		if (req.session.acct == "business"){
+			res.render('conation/update_business_info', { 
+				layout: 'layoutLoggedIn', 
+				title: 'Update Profile', 
+				email: req.session.email});
+
+		} else {
+			res.render('conation/update_customer_info', { 
+				layout: 'layoutLoggedIn', 
+				title: 'Update Profile', 
+				email: req.session.email});
+		}
+
+	}else{
+		res.redirect('/login');
+	}
 });
 
 app.get('/add_product', (req, res) => {
@@ -166,10 +242,29 @@ app.post("/login", (req, res) => {
 											res.redirect('/login')
 
 										} else {
-											// SET UP COOKIE ONLY WHEN LOGGED IN
-											req.session.email = input_email
-											req.session.cookie.maxAge = 1000000
-											res.redirect("/main")
+											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function(err, result){
+												console.log(result)
+												if (result != ""){
+													console.log("customer:" + result)
+													req.session.email = input_email
+													req.session.user = input_email
+													req.session.acct = "customer"
+													req.session.cookie.maxAge = 100000000
+													res.redirect("/main")
+												} else {
+													console.log("business:" + result)
+													req.session.email = input_email
+													req.session.user = input_email
+													req.session.acct = "business"
+													req.session.cookie.maxAge = 100000000
+													res.redirect("/main")
+												}
+											})
+											// // SET UP COOKIE ONLY WHEN LOGGED IN
+											// req.session.email = input_email
+											// req.session.user = input_email
+											// req.session.cookie.maxAge = 100000000
+											// res.redirect("/main")
 										}
 									})
 								} else {
@@ -265,7 +360,7 @@ app.post('/business_registration', (req, res) => {
 	let fri;
 	let sat;
 	let sun;
-	
+
 	if (input.monClosed) {
 		mon = "Closed";
 	} else if (input.mon24) {
@@ -337,7 +432,7 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", {layout: "layoutLoggedOut", title: "Conation"});
+						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
 					}
 				});
 			}
@@ -348,44 +443,59 @@ app.post('/business_registration', (req, res) => {
 // ========================= //
 //  stuff sarah did i think idk
 
-app.get('/business', (req, res) => {
-	res.render('conation/business', {
-		layout: 'layoutLoggedIn',
-		title: 'fake name',
-		businessName: 'fake name here',
-		description: 'teiahtukjha'
-	});
-});
-
-app.get('/business/:id', (req, res) => {
-	pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/business", {
-			layout: 'layoutLoggedIn',
-			title: result[0].name,
-			businessName: result[0].name,
-			description: result[0].description
-		});
-	});
-});
-
 app.get('/main', (req, res) => {
 	console.log(req.session)
 	console.log(req.session.cookie.maxAge)
-	let query = "SELECT * FROM businesses";
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			businesses: result
-		})
-	});
+	console.log("on main")
+
+	if (req.session.user) {
+		let query = "SELECT * FROM businesses";
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/main", {
+				layout: 'layoutLoggedIn',
+				title: 'conation',
+				email: req.session.user,
+				businesses: result
+			})
+		});
+	}else{
+		res.redirect('/login');
+	}
 });
+
+
+
+
+app.get('/business', (req, res) => {
+	if (req.session.user){
+		res.redirect('/main')
+	}else{
+		res.redirect('/login');
+	}
+});
+
+app.get('/business/:id', (req, res) => {
+	if (req.session.user){
+		pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/business", {
+				layout: 'layoutLoggedIn',
+				title: result[0].name,
+				email: req.session.email,
+				businessName: result[0].name,
+				description: result[0].description
+			});
+		});
+	}else{
+		res.redirect('/login');
+	}
+});
+
 
 app.post('/addProduct', (req, res) => {
 	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 1);`;
@@ -404,31 +514,42 @@ app.post('/addProduct', (req, res) => {
 });
 
 app.post('/businessSearch', (req, res) => {
-	let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			businesses: result
+	if (req.session.user){
+		let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/main", {
+				layout: 'layoutLoggedIn',
+				title: 'conation',
+				email: req.session.email,
+				businesses: result
+				
+			});
 		});
-	});
+	}else{
+		res.redirect('/login');
+	}
 });
 
 app.post('/businessType', (req, res) => {
-	let query = `SELECT * FROM businesses ORDER BY category ASC, name ASC;`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			businesses: result
+	if (req.session.user){
+		let query = `SELECT * FROM businesses ORDER BY category ASC, name ASC;`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.render("conation/main", {
+				layout: 'layoutLoggedIn',
+				title: 'conation',
+				email: req.session.email,
+				businesses: result
+			});
 		});
-	});
+	}else{
+		res.redirect('/login');
+	}
 });
 
 /*app.post('/businessOpenNow', (req, res) => {
@@ -447,37 +568,86 @@ app.post('/businessType', (req, res) => {
 
 app.post('/updateBusinessProfile', (req, res) => {
 
-	// Hard-coded username needs to be changed to pull from session
-	let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", email = "${req.body.email}", phone = "${req.body.phone}" WHERE username = "yblague0";`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
+	if (req.session.user){
+		console.log(req.body)
+		if (req.session.acct == "business"){
+			let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+
+		} else {
+			let query = `UPDATE customers SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+
 		}
-		res.redirect("/update_business_info");
-	});
+
+	}else{
+		res.redirect('/login');
+	}
+
+	// Hard-coded username needs to be changed to pull from session
+
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
-	// Hard-coded username needs to be changed to pull from session, password needs hashing
-	let hashedPassword = bcrypt.hashSync(req.body.password, 10);
-	let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE username = "yblague0";`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
+	if (req.session.user){
+		// Hard-coded username needs to be changed to pull from session, password needs hashing
+		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
+
+		if (req.sesstion.acct == "business"){
+			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+
+		} else {
+			let query = `UPDATE customers SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
 		}
-		res.redirect("/update_business_info");
-	});
+
+	}else{
+		res.redirect('/login');
+	}
+
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
-	// Hard-coded ID needs to be changed to pull from session
-	let query = `UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.redirect("/update_business_info");
-	})
+	if (req.session.user){
+		console.log("ok")
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err)
+			}
+			let id = result[0].business_id
+			let query = `UPDATE businesses SET address = "${req.body.address}", address_2 = "${req.body.address2}", city = "${req.body.city}", province = "${req.body.province}", postal_code = "${req.body.postal}", category = "${req.body.category}", description = "${req.body.description}", lat = "${req.body.lat}", lng = "${req.body.long}"  WHERE id = "${id}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			})
+		})
+	}else{
+		res.redirect('/login');
+	}
 });
 
 app.post("/updateBusinesshours", (req, res) => {
@@ -489,7 +659,7 @@ app.post("/updateBusinesshours", (req, res) => {
 	let fri;
 	let sat;
 	let sun;
-	
+
 	if (input.monClosed) {
 		mon = "Closed";
 	} else if (input.mon24) {
@@ -540,13 +710,26 @@ app.post("/updateBusinesshours", (req, res) => {
 		sun = input.sunOpen + " - " + input.sunClose;
 	}
 	// Hard-coded ID needs to be changed to pull from session
-	let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = 32;`;
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.redirect("/update_business_info");
-	});
+
+	if (req.session.user){
+		console.log("ok")
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err)
+			}
+			let id = result[0].business_id
+			let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = "${id}";`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+		})
+	}else{
+		res.redirect('/login');
+	}
 });
 
 var port = process.env.PORT || 8080;

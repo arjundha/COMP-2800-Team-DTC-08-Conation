@@ -50,18 +50,18 @@
                                             </div>
 
                                             <!-- Email -->
-                                            <div class="form-group row">
+                                            <!-- <div class="form-group row">
                                                 <label for="email" class="col-sm-3 col-form-label">Email:</label>
                                                 <div class="col-sm-9">
                                                     <input type="email" class="form-control" id="email" placeholder="INSERT SQL HERE" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
                                                     <small id="emailTaken" class="form-text text-danger"></small>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- Phone Number -->
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-3 col-form-label">Phone Number:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel" class="form-control" id="phone" placeholder="INSERT SQL HERE" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                                                    <input type="text" class="form-control" id="phone" placeholder="111-222-3333" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
                                                 </div>
                                             </div>
                                             <!-- Submit for Business Profile-->
@@ -77,7 +77,7 @@
                                             <div class="form-group row">
                                                 <label for="password" class="col-sm-3 col-form-label">Password:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" class="form-control" id="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
+                                                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
                                                     <small id="passwordHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#)</small>
                                                 </div>
                                             </div>
@@ -100,7 +100,19 @@
                                             <br>
                                             <div class="form-group">
                                                 <label for="inputAddress">Address</label>
-                                                <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St" required>
+                                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St" required>
+                                            </div>
+                                            <!-- THESE ARE HIDDEN -->
+                                            <!-- lat -->
+                                            <!-- style="display: none;" -->
+                                            <div class="form-group" style="display: none;">
+                                                <label for="lat">lat</label>
+                                                <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" required>
+                                            </div>
+                                            <!-- long -->
+                                            <div class="form-group" style="display: none;">
+                                                <label for="lat">long</label>
+                                                <input type="text" class="form-control" id="long" placeholder="long" name="long" required>
                                             </div>
 
                                             <div class="form-group">
@@ -298,4 +310,6 @@
         </div>
     </div>
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOG3EpPiavwq5xcbGYHnX9efVUwtPeDcw"></script>
+<script src="registration.js"></script>
 <script src="hours.js"></script>
