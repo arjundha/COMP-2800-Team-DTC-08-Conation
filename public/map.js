@@ -8,7 +8,21 @@ $('document').ready(function(){
   initMap();
   addMarker({ coords: {lat: 80.9999793, lng: -135.0007473},
               iconImage: "https://img.icons8.com/color/48/000000/santa.png",
-              content: contentMaker({name: "Santa's Workshop", description: "An emporium full of toys and elves", address: "North Pole"})});
+              content: contentMaker({
+                name: "Santa's Workshop", 
+                description: "An emporium full of toys and elves that never takes a day off.", 
+                address: "123 Candycane Lane",
+                city: "North Pole",
+                province: "Christmasville",
+                mon: "?",
+                tue: "?",
+                wed: "?",
+                thu: "?",
+                fri: "?",
+                sat: "?",
+                sun: "?"
+
+              })});
 
   $.ajax('/getBusinesses')
   .done(function(data) {
