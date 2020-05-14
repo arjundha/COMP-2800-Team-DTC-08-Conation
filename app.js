@@ -438,7 +438,6 @@ app.post('/business_registration', (req, res) => {
 			}
 		}
 	});
-})
 
 // ========================= //
 //  stuff sarah did i think idk
@@ -478,24 +477,60 @@ app.get('/business', (req, res) => {
 });
 
 app.get('/business/:id', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		pool.query(`SELECT * FROM businesses WHERE id = ${req.params.id};`, (err, result) => {
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/business", {
-				layout: 'layoutLoggedIn',
-				title: result[0].name,
-				email: req.session.email,
-				businessName: result[0].name,
-				description: result[0].description
+			let productQuery = `SELECT * FROM products WHERE business_id = ${req.params.id};`;
+			pool.query(productQuery, (err, productResult) => {
+				if (err) {
+					console.log(err);
+				}
+				res.render("conation/business", {
+					layout: 'layoutLoggedIn',
+					title: result[0].name,
+					email: req.session.email,
+					businessName: result[0].name,
+					description: result[0].description
+				});
 			});
-		});
-	}else{
+		} 
+	}
+	else {
 		res.redirect('/login');
 	}
 });
 
+app.get('/donate/:productID', (req, res) => {
+	pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/donate", {
+			layout: 'layoutLoggedIn',
+			title: result[0].name,
+			product: result[0]
+		});
+	});
+});
+
+app.post('/addDonation', (req, res) => {
+	console.log('i am adding');
+	console.log(req.body);
+
+	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}');`;
+	pool.query(query, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		console.log(result);
+		res.render("conation/customer_registration", {
+			layout: 'layoutLoggedIn',
+			title: 'Done',
+		});
+	});
+});
 
 app.post('/addProduct', (req, res) => {
 	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 1);`;

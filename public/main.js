@@ -1,22 +1,21 @@
 // $(document).ready(function() {
-
-    // $('#businessProfileChange').on('click', function() {
-    //     $.ajax({
-    //         url: '/updateBusinessProfile',
-    //         method: 'POST',
-    //         data: {
-    //             username: $('#username').val(), // This doesn't need to be here, but since we don't have sessions yet...
-    //             firstName: $('#firstName').val(),
-    //             lastName: $('#lastName').val(),
-    //             email: $('#email').val(),
-    //             phone: $('#phone').val()
-    //         }
-    //     }).done(function(data) {
-    //         alert(data.success);
-    //     }).fail(function(error) {
-    //         console.log(error);
-    //     });
-    // });
+//     $('#businessProfileChange').on('click', function() {
+//         $.ajax({
+//             url: '/updateBusinessProfile',
+//             method: 'POST',
+//             data: {
+//                 username: $('#username').val(), // This doesn't need to be here, but since we don't have sessions yet...
+//                 firstName: $('#firstName').val(),
+//                 lastName: $('#lastName').val(),
+//                 email: $('#email').val(),
+//                 phone: $('#phone').val()
+//             }
+//         }).done(function(data) {
+//             alert(data.success);
+//         }).fail(function(error) {
+//             console.log(error);
+//         });
+//     });
 
 //     $('#businessPasswordChange').on('click', function() {
 //         $.ajax({
