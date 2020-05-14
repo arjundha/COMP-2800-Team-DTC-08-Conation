@@ -474,6 +474,18 @@ app.get('/business', (req, res) => {
 	}else{
 		res.redirect('/login');
 	}
+app.get('/my_donations', (req, res) => {
+	//Need to add something to get total sum of all donations by user
+	pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
+		if (err) {
+			console.log(err);
+		}
+		res.render("conation/my_donations", {
+			layout: 'layoutLoggedIn',
+			title: 'My Donations',
+			donations: result
+		});
+	});
 });
 
 app.get('/business/:id', (req, res) => {
