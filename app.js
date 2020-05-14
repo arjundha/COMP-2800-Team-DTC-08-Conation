@@ -704,7 +704,9 @@ app.post('/addDonation', (req, res) => {
 app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
 	if (req.session.user) {
-		pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
+		// `SELECT * FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`
+		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.image AS prodImg, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`;
+		pool.query(donationProductsQuery, (err, result) => { // Need customer id to be based on session
 			if (err) {
 				console.log(err);
 			}
