@@ -37,7 +37,7 @@ app.use(session({
 	secret: "secret",
 	resave: true,
 	saveUninitialized: true,
-}))
+}));
 
 // let session = expressSession({
 // 		name: "idk",
@@ -70,7 +70,7 @@ const pool = mysql.createPool({
 
 app.get("/", function (req, res) {
 	console.log(req.session)
-	console.log(req.session.cookie.maxAge)
+	console.log(req.session.cookie.maxAge);
 	if (req.session.user) {
 		res.render("conation/index", {
 			layout: 'layoutLoggedIn',
@@ -80,7 +80,7 @@ app.get("/", function (req, res) {
 	} else {
 		res.render("conation/index", { layout: 'layoutLoggedOut', title: 'Conation' });
 	}
-})
+});
 
 app.get('/login', (req, res) => {
 	req.session.destroy();
@@ -152,7 +152,7 @@ app.get('/map', (req, res) => {
 
 app.get('/update_info', (req, res) => {
 	if (req.session.user){
-		if (req.session.acct == "business"){
+		if (req.session.acct === "business") {
 			res.render('conation/update_business_info', { 
 				layout: 'layoutLoggedIn', 
 				title: 'Update Profile', 
@@ -193,11 +193,11 @@ app.get('/getBusinesses', (req, res) => {
 	console.log("Business");
 	// SELECT `name`, description, lat, `long`, mon, tue, wed, thu, fri, sat sun FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;
 	pool.query('SELECT `name`, description, address, city, province, category, postal_code, lat, lng , mon, tue, wed, thu, fri, sat, sun FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;', function (err, result) {
-		console.log("Getting data")
-		console.log(result)
+		console.log("Getting data");
+		console.log(result);
 		res.json(result);
-	})
-})
+	});
+});
 
 
 
@@ -211,53 +211,53 @@ app.get('/getBusinesses', (req, res) => {
 
 app.post("/login", (req, res) => {
 	// SQL code goes here
-	input = req.body
-	input_email = input.email
-	input_password = input.password
+	let input = req.body;
+	let input_email = input.email;
+	let input_password = input.password;
 
 	// Check if user exists
 	pool.query(`SELECT email FROM customers WHERE email ='${input_email}' UNION SELECT email FROM business_owners WHERE email ='${input_email}'`, function (err, result) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 
-			res.redirect('/login')
+			res.redirect('/login');
 		} else {
 			if (!result[0]) {
-				console.log("That email does not exist")
-				res.redirect('/login')
+				console.log("That email does not exist");
+				res.redirect('/login');
 			} else {
 				if (result[0].email.length > 0) {
 					pool.query(`SELECT password FROM customers WHERE email ='${input_email}' UNION SELECT password FROM business_owners WHERE email ='${input_email}'`, function (err, result) {
 						if (err) {
-							console.log(err)
-							res.redirect('/login')
+							console.log(err);
+							res.redirect('/login');
 
 						} else {
-							console.log(result)
+							console.log(result);
 							bcrypt.compare(input_password, result[0].password, function (err, result) {
 								if (result) {
 									pool.query(`SELECT first_name, last_name, email FROM customers WHERE email ='${input_email}'`, function (err, result) {
 										if (err) {
-											console.log(err)
-											res.redirect('/login')
+											console.log(err);
+											res.redirect('/login');
 
 										} else {
 											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function(err, result){
-												console.log(result)
-												if (result != ""){
+												console.log(result);
+												if (result !== "") {
 													console.log("customer:" + result)
-													req.session.email = input_email
-													req.session.user = input_email
-													req.session.acct = "customer"
-													req.session.cookie.maxAge = 100000000
-													res.redirect("/main")
+													req.session.email = input_email;
+													req.session.user = input_email;
+													req.session.acct = "customer";
+													req.session.cookie.maxAge = 100000000;
+													res.redirect("/main");
 												} else {
-													console.log("business:" + result)
-													req.session.email = input_email
-													req.session.user = input_email
-													req.session.acct = "business"
-													req.session.cookie.maxAge = 100000000
-													res.redirect("/main")
+													console.log("business:" + result);
+													req.session.email = input_email;
+													req.session.user = input_email;
+													req.session.acct = "business";
+													req.session.cookie.maxAge = 100000000;
+													res.redirect("/main");
 												}
 											})
 											// // SET UP COOKIE ONLY WHEN LOGGED IN
@@ -268,8 +268,8 @@ app.post("/login", (req, res) => {
 										}
 									})
 								} else {
-									console.log("Passwords do not match")
-									res.redirect("/login")
+									console.log("Passwords do not match");
+									res.redirect("/login");
 								}
 							});
 						}
@@ -285,23 +285,23 @@ app.post("/login", (req, res) => {
 // CUSTOMER REGISTRATION //
 
 app.post('/customer_registration', (req, res) => {
-	input = req.body
-	password1 = input.password
-	password2 = input.password2
-	email = input.email
-	phone = input.phone
-	firstName = input.firstName
-	lastName = input.lastName
+	let input = req.body;
+	let password1 = input.password;
+	let password2 = input.password2;
+	let email = input.email;
+	let phone = input.phone;
+	let firstName = input.firstName;
+	let lastName = input.lastName;
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 			return res.status(500).send(err);
 		} else {
 			if (result[0]) {
-				console.log(result)
-				console.log("That email already exists")
-				res.redirect('/customer_registration')
+				console.log(result);
+				console.log("That email already exists");
+				res.redirect('/customer_registration');
 			} else {
 				// Hash Password
 				let hashedPassword = bcrypt.hashSync(password1, 10);
@@ -310,18 +310,18 @@ app.post('/customer_registration', (req, res) => {
 				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
 				pool.query(query, (err, result) => {
 					if (err) {
-						console.log(err)
+						console.log(err);
 						return res.status(500).send(err);
 					}
 					// Redirect URL on success
-					console.log(result)
+					console.log(result);
 					res.render("conation/login",
 						{
 							layout: "layoutLoggedOut",
 							title: "Conation",
 						})
 				});
-				res.redirect('/login')
+				res.redirect('/login');
 
 			}
 		}
@@ -414,7 +414,7 @@ app.post('/business_registration', (req, res) => {
 
 	pool.query(`SELECT email FROM customers WHERE email ='${email}' UNION SELECT email FROM business_owners WHERE email ='${email}'`, function (err, result) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 			return res.status(500).send(err);
 		} else {
 			if (result[0]) {
@@ -432,20 +432,21 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+						res.render("conation/login", {layout: "layoutLoggedOut", title: "Conation"});
 					}
 				});
 			}
 		}
 	});
+});
 
 // ========================= //
 //  stuff sarah did i think idk
 
 app.get('/main', (req, res) => {
-	console.log(req.session)
-	console.log(req.session.cookie.maxAge)
-	console.log("on main")
+	console.log(req.session);
+	console.log(req.session.cookie.maxAge);
+	console.log("on main");
 
 	if (req.session.user) {
 		let query = "SELECT * FROM businesses";
@@ -465,15 +466,14 @@ app.get('/main', (req, res) => {
 	}
 });
 
-
-
-
 app.get('/business', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		res.redirect('/main')
-	}else{
+	} else {
 		res.redirect('/login');
 	}
+});
+
 app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
 	pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
@@ -631,8 +631,8 @@ app.post('/businessType', (req, res) => {
 app.post('/updateBusinessProfile', (req, res) => {
 
 	if (req.session.user){
-		console.log(req.body)
-		if (req.session.acct == "business"){
+		console.log(req.body);
+		if (req.session.acct === "business"){
 			let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
@@ -661,11 +661,11 @@ app.post('/updateBusinessProfile', (req, res) => {
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		// Hard-coded username needs to be changed to pull from session, password needs hashing
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct == "business"){
+		if (req.sesstion.acct === "business"){
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
@@ -684,19 +684,18 @@ app.post('/updateBusinessPassword', (req, res) => {
 			});
 		}
 
-	}else{
+	} else{
 		res.redirect('/login');
 	}
-
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
 	if (req.session.user){
-		console.log("ok")
+		console.log("ok");
 		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 		pool.query(query, (err, result) => {
 			if (err) {
-				console.log(err)
+				console.log(err);
 			}
 			let id = result[0].business_id
 			let query = `UPDATE businesses SET address = "${req.body.address}", address_2 = "${req.body.address2}", city = "${req.body.city}", province = "${req.body.province}", postal_code = "${req.body.postal}", category = "${req.body.category}", description = "${req.body.description}", lat = "${req.body.lat}", lng = "${req.body.long}"  WHERE id = "${id}"`;
