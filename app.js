@@ -647,10 +647,7 @@ app.post('/addDonation', (req, res) => {
 			console.log(err);
 		}
 		console.log(result);
-		res.render("conation/customer_registration", {
-			layout: 'layoutLoggedIn',
-			title: 'Done',
-		});
+		res.redirect("/my_donations");
 	});
 });
 
@@ -733,20 +730,6 @@ app.post('/businessType', (req, res) => {
 	}
 });
 
-/*app.post('/businessOpenNow', (req, res) => {
-	let query = `SELECT * FROM businesses WHERE`; // INSERT CODE TO CHECK IF OPEN
-	pool.query(query, (err, result) => {
-		if (err) {
-			console.log(err);
-		}
-		res.render("conation/main", {
-			layout: 'layoutLoggedIn',
-			title: 'conation',
-			businesses: result
-		});
-	});
-});*/
-
 app.post('/updateBusinessProfile', (req, res) => {
 
 	if (req.session.user) {
@@ -774,14 +757,10 @@ app.post('/updateBusinessProfile', (req, res) => {
 	} else {
 		res.redirect('/login');
 	}
-
-	// Hard-coded username needs to be changed to pull from session
-
 });
 
 app.post('/updateBusinessPassword', (req, res) => {
 	if (req.session.user) {
-		// Hard-coded username needs to be changed to pull from session, password needs hashing
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
 		if (req.sesstion.acct == "business") {
@@ -889,7 +868,6 @@ app.post("/updateBusinesshours", (req, res) => {
 	} else {
 		sun = input.sunOpen + " - " + input.sunClose;
 	}
-	// Hard-coded ID needs to be changed to pull from session
 
 	if (req.session.user) {
 		console.log("ok")
