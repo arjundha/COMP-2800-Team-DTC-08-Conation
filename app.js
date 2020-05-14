@@ -583,13 +583,26 @@ app.post('/updateBusinessPassword', (req, res) => {
 	if (req.session.user){
 		// Hard-coded username needs to be changed to pull from session, password needs hashing
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
-		let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE username = "yblague0";`;
-		pool.query(query, (err, result) => {
-			if (err) {
-				console.log(err);
-			}
-			res.redirect("/update_info");
-		});
+
+		if (req.sesstion.acct == "business"){
+			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+
+		} else {
+			let query = `UPDATE customers SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+		}
+
 	}else{
 		res.redirect('/login');
 	}
@@ -598,19 +611,24 @@ app.post('/updateBusinessPassword', (req, res) => {
 
 app.post('/updateBusinessInfo', (req, res) => {
 	if (req.session.user){
-		let query = `UPDATE businesses SET address = "${req.body.address}", city = "${req.body.city}", province = "${req.body.province}", category = "${req.body.category}", description = "${req.body.description}" WHERE id = 1`;
+		console.log("ok")
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 		pool.query(query, (err, result) => {
 			if (err) {
-				console.log(err);
+				console.log(err)
 			}
-			res.redirect("/update_info");
+			let id = result[0].business_id
+			let query = `UPDATE businesses SET address = "${req.body.address}", address_2 = "${req.body.address2}", city = "${req.body.city}", province = "${req.body.province}", postal_code = "${req.body.postal}", category = "${req.body.category}", description = "${req.body.description}", lat = "${req.body.lat}", lng = "${req.body.long}"  WHERE id = "${id}"`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			})
 		})
 	}else{
 		res.redirect('/login');
 	}
-
-	// Hard-coded ID needs to be changed to pull from session
-
 });
 
 app.post("/updateBusinesshours", (req, res) => {
@@ -673,14 +691,23 @@ app.post("/updateBusinesshours", (req, res) => {
 		sun = input.sunOpen + " - " + input.sunClose;
 	}
 	// Hard-coded ID needs to be changed to pull from session
+
 	if (req.session.user){
-		let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = 32;`;
+		console.log("ok")
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 		pool.query(query, (err, result) => {
 			if (err) {
-				console.log(err);
+				console.log(err)
 			}
-			res.redirect("/update_info");
-		});
+			let id = result[0].business_id
+			let query = `UPDATE business_hours SET mon = "${mon}", tue = "${tue}", wed = "${wed}", thu = "${thu}", fri = "${fri}", sat = "${sat}", sun = "${sun}" WHERE business_id = "${id}";`;
+			pool.query(query, (err, result) => {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect("/update_info");
+			});
+		})
 	}else{
 		res.redirect('/login');
 	}
