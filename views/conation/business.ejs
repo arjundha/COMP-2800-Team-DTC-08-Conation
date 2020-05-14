@@ -1,42 +1,127 @@
 <header>
-<div id="webpage-big-picture">
-    <div class="carousel-inner">
-        <!-- Slide One - Set the background image for this slide in the line below -->
-        <div class="carousel-item active" style="background-color: #52796f">
-            <div class="col-lg-12 text-center">
-                <h1 class="display-4 text-white mt-5 mb-2"><%= business.name %></h1>
-                <p class="lead mb-5 text-white-50">Extra Business Information</p>
-            </div>
-        </div>
-    </div>
-</div>
-</header>
-
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 mb-8">
-            <div class="card">
-                <h2 class="card-header">About Us</h2>
-                <div class="card-body">
-                    <p class="card-text">
-                        <%= business.description %>
-                    </p>
+    <!-- <div id="webpage-big-picture">
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="background-color: #52796f">
+                <div class="col-lg-12 text-center">
+                    
+                    <div class="carousal-caption">
+                        
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 mb-4">
-            <div class="card">
-                <h4 class="card-header">Support Us!</h4>
-                <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS5joTSfhtGz3w7AD8Gbq_MG1x54hpYdEQHYsTSNvIsaBQCa8h1&usqp=CAU" alt="image to go here">
-            <div class="card-body">
-                <p class="card-text">Mi ipsum faucibus vitae aliquet nec ullamcorper. Id
-                    porta nibh venenatis cras sed felis eget velit aliquet.</p>
+    </div> -->
+    <div class="container" id="business-header">
+        <img id="business-image" src="<%= business.image %>" alt="Business Image">
+        <h1 class="display-4 pl-3 pr-3" id="business-name"><%= business.name %></h1>
+    </div>
+</header>
+
+<!-- Navigation -->
+<div class="container">
+    <ul class="nav nav-pills m-3 nav-justified" id="pills-tab business-nav" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="pills-about-tab" data-toggle="pill" href="#pills-about" role="tab"
+                aria-controls="pills-about" aria-selected="true">About</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="pills-news-tab" data-toggle="pill" href="#pills-news" role="tab"
+                aria-controls="pills-news" aria-selected="false">News</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="pills-shop-tab" data-toggle="pill" href="#pills-shop" role="tab"
+                aria-controls="pills-shop" aria-selected="false">Shop</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Content -->
+<div class="tab-content" id="pills-tabContent">
+
+    <!-- About -->
+    <div class="tab-pane fade show active" id="pills-about" role="tabpanel" aria-labelledby="pills-about-tab">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mb-3">
+                    <div class="card">
+                        <h2 class="card-header">About Us</h2>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <%= business.description %>
+                                <hr><a href="#" class="btn btn-main float-right">Donate to <%= business.name %> Now</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card">
+                        <h4 class="card-header">Information</h4>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <h5>Address</h5>
+                                <%= business.address %>
+                                <% if (business.address_2) { %>
+                                <br><%= business.address_2 %>
+                                <% }; %>
+                                <br><%= business.city %>
+                                <br><%= business.postal_code %>
+                                <hr>
+                                <h5>Hours of Operation</h5>
+                                Monday: <%= hours.mon %>
+                                <br>Tuesday: <%= hours.tue %>
+                                <br>Wednesday: <%= hours.wed %>
+                                <br>Thursday: <%= hours.thu %>
+                                <br>Friday: <%= hours.fri %>
+                                <br>Saturday: <%= hours.sat %>
+                                <br>Sunday: <%= hours.sun %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-                <a href='/donate/<%= product.id %>' class="btn btn-main float-right">Donate!</a>
+        </div>
+    </div>
+
+    <!-- News -->
+    <div class="tab-pane fade" id="pills-news" role="tabpanel" aria-labelledby="pills-news-tab">
+        <div class="container">
+            <% if (!news) { %>
+            <p class="mt-5 mb-5 text-center">This business has not yet made any news posts.</p>
+            <% } else { %>
+            <% news.forEach((newsItem) => { %>
+            <div class="card mb-3 mx-auto">
+                <div class="card-body">
+                    <h5 class="card-title"><%= newsItem.title %></h5>
+                    <h6 class="card-subtitle mb-2 text-muted"><%= newsItem.date %></h6>
+                    <p class="card-text"><%= newsItem.content %></p>
+                </div>
             </div>
+            <% }); %>
+            <% }; %>
+        </div>
+    </div>
+
+    <!-- Shop -->
+    <div class="tab-pane fade" id="pills-shop" role="tabpanel" aria-labelledby="pills-shop-tab">
+        <div class="container">
+            <div class="row">
+                <% if (!products) { %>
+                <p class="mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
+                <% } else { %>
+                <% products.forEach((product) => { %>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                    <div class="card product-card" style="width: 18rem;">
+                        <img src="<%= product.image %>" class="card-img-top" alt="Product">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= product.name %></h5>
+                            <p class="card-text">$<%= product.cost %></p>
+                            <a href="#" class="btn btn-main">Buy</a>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+                <% }; %>
             </div>
         </div>
     </div>
 </div>
-
