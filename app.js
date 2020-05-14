@@ -938,7 +938,7 @@ app.post("/addNewsPost", (req, res) => {
 				if (err) {
 					console.log(err);
 				}
-				res.redirect("/news_form");
+				res.redirect("/main");
 			});
 		})
 
