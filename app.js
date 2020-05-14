@@ -633,7 +633,7 @@ app.get('/donate/:productID', (req, res) => {
 	}
 
 	else {
-		res.redirect('login')
+		res.redirect('login');
 	}
 });
 
@@ -662,7 +662,7 @@ app.post('/addProduct', (req, res) => {
 		if (err) {
 			console.log(err);
 		}
-		let id = result[0].business_id
+		let id = result[0].business_id;
 		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
 		pool.query(query, (err, result) => {
 			if (err) {
@@ -671,10 +671,7 @@ app.post('/addProduct', (req, res) => {
 			}
 			res.redirect("/add_product")
 		});
-
-	})
-
-
+	});
 });
 
 app.post('/businessSearch', (req, res) => {
@@ -819,7 +816,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			let id = result[0].business_id
+			let id = result[0].business_id;
 			let query = `UPDATE businesses SET address = "${req.body.address}", address_2 = "${req.body.address2}", city = "${req.body.city}", province = "${req.body.province}", postal_code = "${req.body.postal}", category = "${req.body.category}", description = "${req.body.description}", lat = "${req.body.lat}", lng = "${req.body.long}"  WHERE id = "${id}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
