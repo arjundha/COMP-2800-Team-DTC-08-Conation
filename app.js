@@ -82,6 +82,7 @@ app.get("/", function (req, res) {
 			layout: 'layoutBusinessOwner',
 			title: 'Conation',
 			email: req.session.user,
+			id: req.session.businessId
 		})
 
 	} else {
@@ -106,6 +107,7 @@ app.get('/easteregg', (req, res) => {
 			layout: 'layoutBusinessOwner',
 			title: 'Easter Egg',
 			email: req.session.user,
+			id: req.session.businessId
 		})
 
 	} else {
@@ -151,6 +153,7 @@ app.get('/about', (req, res) => {
 			layout: 'layoutBusinessOwner',
 			title: 'About Us',
 			email: req.session.user,
+			id: req.session.businessId
 		})
 
 	} else {
@@ -171,6 +174,7 @@ app.get('/map', (req, res) => {
 			layout: 'layoutBusinessOwner',
 			title: 'Conation',
 			email: req.session.user,
+			id: req.session.businessId
 		})
 
 	} else {
@@ -184,7 +188,8 @@ app.get('/update_info', (req, res) => {
 			res.render('conation/update_business_info', {
 				layout: 'layoutBusinessOwner',
 				title: 'Update Profile',
-				email: req.session.email
+				email: req.session.email,
+				id: req.session.businessId
 			});
 
 		} else {
@@ -206,6 +211,7 @@ app.get('/add_product', (req, res) => {
 			layout: 'layoutBusinessOwner',
 			title: 'Add Product',
 			email: req.session.user,
+			id: req.session.businessId
 		})
 
 	} else {
@@ -219,6 +225,7 @@ app.get("/news_form", (req, res) => {
 			layout: 'layoutBusinessOwner',
 			title: 'Add News Update',
 			email: req.session.user,
+			id: req.session.businessId
 		})
 
 	} else {
@@ -297,19 +304,28 @@ app.post("/login", (req, res) => {
 											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
 												console.log(result);
 												if (result != "") {
-													console.log("customer:" + result)
+													console.log("customer")
 													req.session.email = input_email;
 													req.session.user = input_email;
 													req.session.acct = "customer";
 													req.session.cookie.maxAge = 100000000;
 													res.redirect("/main");
 												} else {
-													console.log("business:" + result);
-													req.session.email = input_email;
-													req.session.user = input_email;
-													req.session.acct = "business";
-													req.session.cookie.maxAge = 100000000;
-													res.redirect("/main");
+													let query = `SELECT business_id FROM business_owners WHERE email = "${input_email}"`;
+													pool.query(query, (err, result) => {
+														if (err) {
+															console.log(err);
+														}
+														let id = result[0].business_id;
+														console.log("business");
+														req.session.email = input_email;
+														req.session.user = input_email;
+														req.session.businessId = id;
+														req.session.acct = "business";
+														req.session.cookie.maxAge = 100000000;
+														res.redirect("/main");
+													})
+											
 												}
 											})
 											// // SET UP COOKIE ONLY WHEN LOGGED IN
@@ -378,9 +394,6 @@ app.post('/customer_registration', (req, res) => {
 			}
 		}
 	})
-
-
-
 })
 
 // ========================= //
@@ -496,6 +509,7 @@ app.post('/business_registration', (req, res) => {
 //    MAIN BUSINESS PAGES    //
 
 app.get('/main', (req, res) => {
+	console.log(req.session)
 	console.log(req.session.email);
 	console.log("on main");
 	if (req.session.user) {
@@ -523,7 +537,7 @@ app.get('/main', (req, res) => {
 							layout: 'layoutBusinessOwner',
 							title: 'Conation',
 							email: req.session.user,
-							id: result[0].business_id,
+							id: req.session.businessId,
 							businesses: businesses
 						});
 					}
@@ -559,7 +573,8 @@ app.post('/businessSearch', (req, res) => {
 					layout: 'layoutBusinessOwner',
 					title: 'Conation',
 					email: req.session.email,
-					businesses: result
+					businesses: result,
+					id: req.session.businessId
 				});
 			}
 		});
@@ -589,7 +604,8 @@ app.post('/businessType', (req, res) => {
 					layout: 'layoutBusinesOwner',
 					title: 'Conation',
 					email: req.session.email,
-					businesses: result
+					businesses: result,
+					id: req.session.businessId
 				});
 			}
 		});
@@ -653,7 +669,8 @@ app.get('/business/:id', (req, res) => {
 								business: businessResult[0],
 								hours: hoursResult[0],
 								news: newsResult,
-								products: productResult
+								products: productResult,
+								id: req.session.businessId
 							});
 						}
 					});
@@ -688,7 +705,8 @@ app.get('/donate/:productID', (req, res) => {
 					layout: 'layoutBusinessOwner',
 					title: result[0].name,
 					product: result[0],
-					email: req.session.user
+					email: req.session.user,
+					id: req.session.businessId
 				})
 			}
 		});
@@ -733,7 +751,8 @@ app.get('/my_donations', (req, res) => {
 					layout: 'layoutBusinessOwner',
 					title: 'My Donations',
 					email: req.session.email,
-					donations: result
+					donations: result,
+					id: req.session.businessId
 				});
 			}
 		});
