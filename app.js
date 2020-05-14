@@ -152,7 +152,7 @@ app.get('/map', (req, res) => {
 
 app.get('/update_info', (req, res) => {
 	if (req.session.user){
-		if (req.session.acct === "business") {
+		if (req.session.acct == "business") {
 			res.render('conation/update_business_info', { 
 				layout: 'layoutLoggedIn', 
 				title: 'Update Profile', 
@@ -171,7 +171,7 @@ app.get('/update_info', (req, res) => {
 });
 
 app.get('/add_product', (req, res) => {
-	res.render('conation/add_product', { layout: 'layoutLoggedIn', title: 'Add Product' });
+	res.render('conation/add_product', { layout: 'layoutLoggedIn', title: 'Add Product', email: req.session.email });
 });
 
 
@@ -244,7 +244,7 @@ app.post("/login", (req, res) => {
 										} else {
 											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function(err, result){
 												console.log(result);
-												if (result !== "") {
+												if (result != "") {
 													console.log("customer:" + result)
 													req.session.email = input_email;
 													req.session.user = input_email;
@@ -632,7 +632,7 @@ app.post('/updateBusinessProfile', (req, res) => {
 
 	if (req.session.user){
 		console.log(req.body);
-		if (req.session.acct === "business"){
+		if (req.session.acct == "business"){
 			let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
@@ -665,7 +665,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 		// Hard-coded username needs to be changed to pull from session, password needs hashing
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct === "business"){
+		if (req.sesstion.acct == "business"){
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
