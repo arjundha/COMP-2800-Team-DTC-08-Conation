@@ -108,7 +108,7 @@ app.get('/easteregg', (req, res) => {
 			email: req.session.user,
 		})
 
-	}else{
+	} else {
 		res.render('conation/easteregg', { layout: 'layoutLoggedOut', title: 'Easter Egg' });
 	}
 });
@@ -153,7 +153,7 @@ app.get('/about', (req, res) => {
 			email: req.session.user,
 		})
 
-	}else{
+	} else {
 		res.render('conation/about', { layout: 'layoutLoggedOut', title: 'About Us' });
 	}
 
@@ -173,27 +173,29 @@ app.get('/map', (req, res) => {
 			email: req.session.user,
 		})
 
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 });
 
 app.get('/update_info', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		if (req.session.acct == "business") {
-			res.render('conation/update_business_info', { 
-				layout: 'layoutBusinessOwner', 
-				title: 'Update Profile', 
-				email: req.session.email});
+			res.render('conation/update_business_info', {
+				layout: 'layoutBusinessOwner',
+				title: 'Update Profile',
+				email: req.session.email
+			});
 
 		} else {
-			res.render('conation/update_customer_info', { 
-				layout: 'layoutLoggedIn', 
-				title: 'Update Profile', 
-				email: req.session.email});
+			res.render('conation/update_customer_info', {
+				layout: 'layoutLoggedIn',
+				title: 'Update Profile',
+				email: req.session.email
+			});
 		}
 
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 });
@@ -279,7 +281,7 @@ app.post("/login", (req, res) => {
 											res.redirect('/login');
 
 										} else {
-											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function(err, result){
+											pool.query(`SELECT email FROM customers WHERE email ='${input_email}'`, function (err, result) {
 												console.log(result);
 												if (result != "") {
 													console.log("customer:" + result)
@@ -469,7 +471,7 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", {layout: "layoutLoggedOut", title: "Conation"});
+						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
 					}
 				});
 			}
@@ -522,7 +524,7 @@ app.get('/business', (req, res) => {
 
 app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
-	if (req.session.user){
+	if (req.session.user) {
 		pool.query(`SELECT * FROM donations WHERE customer_id = 1;`, (err, result) => { // Need customer id to be based on session
 			if (err) {
 				console.log(err);
@@ -606,11 +608,11 @@ app.get('/business/:id', (req, res) => {
 
 app.get('/donate/:productID', (req, res) => {
 
-	if (req.session.user){
+	if (req.session.user) {
 		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 			if (err) {
 				console.log(err);
-	
+
 			} else if (req.session.acct == "customer") {
 				res.render("conation/donate", {
 					layout: 'layoutLoggedIn',
@@ -653,29 +655,36 @@ app.post('/addDonation', (req, res) => {
 });
 
 app.post('/addProduct', (req, res) => {
-	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 1);`;
 
+
+	let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
-			return res.status(500).send(err);
 		}
-		res.render("conation/add_product",
-			{
-				layout: "layoutLoggedIn",
-				title: "Add Product",
-			});
-	});
+		let id = result[0].business_id
+		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+				return res.status(500).send(err);
+			}
+			res.redirect("/add_product")
+		});
+
+	})
+
+
 });
 
 app.post('/businessSearch', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		let query = `SELECT * FROM businesses WHERE name LIKE '%${req.body.search}%';`;
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
 			}
-			else if (req.session.acct == "customer"){
+			else if (req.session.acct == "customer") {
 				res.render("conation/main", {
 					layout: 'layoutLoggedIn',
 					title: 'Conation',
@@ -692,19 +701,19 @@ app.post('/businessSearch', (req, res) => {
 				});
 			}
 		});
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 });
 
 app.post('/businessType', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		let query = `SELECT * FROM businesses ORDER BY category ASC, name ASC;`;
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
 			}
-			else if (req.session.acct == "customer"){
+			else if (req.session.acct == "customer") {
 				res.render("conation/main", {
 					layout: 'layoutLoggedIn',
 					title: 'Conation',
@@ -722,7 +731,7 @@ app.post('/businessType', (req, res) => {
 				});
 			}
 		});
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 });
@@ -743,9 +752,9 @@ app.post('/businessType', (req, res) => {
 
 app.post('/updateBusinessProfile', (req, res) => {
 
-	if (req.session.user){
+	if (req.session.user) {
 		console.log(req.body);
-		if (req.session.acct == "business"){
+		if (req.session.acct == "business") {
 			let query = `UPDATE business_owners SET first_name = "${req.body.firstName}", last_name = "${req.body.lastName}", phone = "${req.body.phone}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
@@ -765,7 +774,7 @@ app.post('/updateBusinessProfile', (req, res) => {
 
 		}
 
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 
@@ -778,7 +787,7 @@ app.post('/updateBusinessPassword', (req, res) => {
 		// Hard-coded username needs to be changed to pull from session, password needs hashing
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct == "business"){
+		if (req.sesstion.acct == "business") {
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
@@ -797,13 +806,13 @@ app.post('/updateBusinessPassword', (req, res) => {
 			});
 		}
 
-	} else{
+	} else {
 		res.redirect('/login');
 	}
 });
 
 app.post('/updateBusinessInfo', (req, res) => {
-	if (req.session.user){
+	if (req.session.user) {
 		console.log("ok");
 		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 		pool.query(query, (err, result) => {
@@ -819,7 +828,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 				res.redirect("/update_info");
 			})
 		})
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 });
@@ -885,7 +894,7 @@ app.post("/updateBusinesshours", (req, res) => {
 	}
 	// Hard-coded ID needs to be changed to pull from session
 
-	if (req.session.user){
+	if (req.session.user) {
 		console.log("ok")
 		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 		pool.query(query, (err, result) => {
@@ -901,7 +910,7 @@ app.post("/updateBusinesshours", (req, res) => {
 				res.redirect("/update_info");
 			});
 		})
-	}else{
+	} else {
 		res.redirect('/login');
 	}
 });
