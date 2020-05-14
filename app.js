@@ -933,12 +933,12 @@ app.post("/addNewsPost", (req, res) => {
 			// let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
 
 			let id = result[0].business_id
-			let query = `INSERT INTO news (business_id, title, content) VALUES ("${id}, "${req.body.title}", "${req.body.description}")`;
+			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
 				}
-				res.redirect("/news_form");
+				res.redirect("/main");
 			});
 		})
 
