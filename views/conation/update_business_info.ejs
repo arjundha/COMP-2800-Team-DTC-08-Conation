@@ -100,30 +100,30 @@
                                             <br>
                                             <div class="form-group">
                                                 <label for="inputAddress">Address</label>
-                                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St" required>
+                                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St" value="<%= address %>" required>
                                             </div>
                                             <!-- THESE ARE HIDDEN -->
                                             <!-- lat -->
                                             <!-- style="display: none;" -->
                                             <div class="form-group" style="display: none;">
                                                 <label for="lat">lat</label>
-                                                <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" required>
+                                                <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" value="<%= lat %>" required>
                                             </div>
                                             <!-- long -->
                                             <div class="form-group" style="display: none;">
                                                 <label for="lat">long</label>
-                                                <input type="text" class="form-control" id="long" placeholder="long" name="long" required>
+                                                <input type="text" class="form-control" id="long" placeholder="long" name="long" value="<%= lng %>" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="inputAddress2">Address Line 2</label>
-                                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
+                                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor" value="<%= address_2 %>">
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
                                                     <label for="inputCity">City</label>
-                                                    <input type="text" class="form-control" id="city" name="city" required>
+                                                    <input type="text" class="form-control" id="city" name="city" value="<%= city %>" required>
                                                 </div>
 
                                                 <div class="form-group col-md-4">
@@ -147,7 +147,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="postal">Postal Code</label>
-                                                    <input type="text" class="form-control" id="inputPostal" name="postal" required>
+                                                    <input type="text" class="form-control" id="inputPostal" name="postal" value="<%= postal_code %>" required>
                                                 </div>
 
                                             </div>
@@ -156,7 +156,7 @@
                                             <br>
                                             <div class="form-group">
                                                 <label for="description">Description</label>
-                                                <textarea class="form-control" id="description" rows="3" placeholder="Description" name="description"></textarea>
+                                                <textarea class="form-control" id="description" rows="3" placeholder="Description" name="description" ><%= description %></textarea>
                                             </div>
 
                                             <div class="form-group">
