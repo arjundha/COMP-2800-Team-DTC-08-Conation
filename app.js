@@ -611,7 +611,7 @@ app.post('/businessType', (req, res) => {
 			}
 			else {
 				res.render("conation/main", {
-					layout: 'layoutBusinesOwner',
+					layout: 'layoutBusinessOwner',
 					title: 'Conation',
 					email: req.session.email,
 					businesses: result,
