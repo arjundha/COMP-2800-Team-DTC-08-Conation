@@ -97,7 +97,7 @@
                 </div>
             </div>
             <% }); %>
-            <% }; %>
+            <% } %>
         </div>
     </div>
 
@@ -109,18 +109,20 @@
                 <p class="mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
                 <% } else { %>
                 <% products.forEach((product) => { %>
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3 justify-content-between">
                     <div class="card product-card" style="width: 18rem;">
                         <img src="<%= product.image %>" class="card-img-top" alt="Product">
                         <div class="card-body">
                             <h5 class="card-title"><%= product.name %></h5>
                             <p class="card-text">$<%= product.cost %></p>
-                            <a href="#" class="btn btn-main">Buy</a>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/donate/<%= product.id %>" class="btn btn-main float-right">Buy</a>
                         </div>
                     </div>
                 </div>
                 <% }); %>
-                <% }; %>
+                <% } %>
             </div>
         </div>
     </div>
