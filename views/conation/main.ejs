@@ -108,7 +108,7 @@
             <div class="col-sm-10 col-lg-6">
                 <div class="form-check">
                     <input class="form-check-input" id="searchOnlineStore" type="checkbox">
-                    <label class="form-check-label" for="store">
+                    <label class="form-check-label" for="searchOnlineStore">
                         Online Store Available
                     </label>
                 </div>
@@ -119,12 +119,16 @@
                 </div>
             </div>
     </form>
+    <div class="alert alert-light mx-5" id="searchBanner" role="alert">
+        <span id="searchBannerText"></span> <span id="searchBannerFilter"></span> <span
+            id="searchBannerOnlineStore"></span>
+    </div>
 </div>
 
 <!-- Business Listings -->
 <div class="container">
     <% businesses.forEach((business) => { %>
-        <div class="row my-3 businessCard <%= business.category %>">
+    <div class="row my-3 businessCard <%= business.category %> productCount<%= business.product_count %>">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header"><strong><%= business.name %></strong> |
@@ -144,10 +148,42 @@
 </div>
 
 <script>
+    $("#searchBanner").hide();
+
     $("#searchSubmit").on("click", () => {
-            $(".businessCard").hide();
-            let filter = $("#searchFilter").val();
-            console.log(filter);
-            $("." + filter).show();
-        });
+        $(".businessCard").show();
+        $("#searchBanner").hide();
+
+        let text = $("#searchText").val();
+        if (text) {
+            console.log("Searching by " + text);
+            $(".businessCard:not(:contains(" + text + "))").hide();
+            $("#searchBanner").show();
+            $("#searchBannerText").html("Showing results for \"" + text + "\".");
+        }
+
+        let filter = $("#searchFilter").val();
+        if (filter !== "None") {
+            console.log("Filtering by " + filter);
+            $(".businessCard:not(." + filter + "):visible").hide();
+            $("#searchBanner").show();
+            if (text) {
+                $("#searchBannerFilter").html("<br>Showing " + filter + "s.");
+            } else {
+                $("#searchBannerFilter").html("Showing " + filter + "s.");
+            }
+        }
+
+        let onlineStore = $("#searchOnlineStore").is(":checked");
+        if (onlineStore) {
+            console.log("Filtering by online store");
+            $(".businessCard.productCount0:visible").hide();
+            $("#searchBanner").show();
+            if (text || filter !== "None") {
+                $("#searchBannerOnlineStore").html("<br>Showing businesses with an online store.");
+            } else {
+                $("#searchBannerOnlineStore").html("Showing businesses with an online store.");
+            }
+        }
+    });
 </script>

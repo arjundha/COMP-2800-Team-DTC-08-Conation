@@ -500,7 +500,7 @@ app.get('/main', (req, res) => {
 	console.log("on main");
 
 	if (req.session.user) {
-		let query = "SELECT * FROM businesses";
+		let query = "SELECT businesses.name AS name, businesses.description AS description, businesses.category AS category, COUNT(products.id) AS product_count FROM businesses LEFT JOIN products ON products.business_id = businesses.id GROUP BY products.business_id";
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
