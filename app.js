@@ -731,7 +731,7 @@ app.post('/addDonation', (req, res) => {
 	console.log('i am adding');
 	console.log(req.body);
 
-	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.body.customer_id}', '${req.body.product_id}', '${req.body.amount}');`;
+	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.session.customerId}', '${req.body.product_id}', '${req.body.amount}');`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
@@ -745,7 +745,7 @@ app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
 	if (req.session.user && req.session.acct == "customer") {
 		// `SELECT * FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`
-		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.image AS prodImg, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`;
+		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.image AS prodImg, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = '${req.session.customerId}';`;
 		pool.query(donationProductsQuery, (err, result) => { // Need customer id to be based on session
 			if (err) {
 				console.log(err);
@@ -769,12 +769,13 @@ app.get('/my_donations', (req, res) => {
 
 app.get('/track_donations', (req, res) => {
 	if (req.session.user && req.session.acct == "business") {
-		let businessDonationsQuery = `SELECT * FROM products WHERE business_id = 32;`;
+		let businessDonationsQuery = `SELECT * FROM products WHERE business_id = '${req.session.businessId}';`;
 		pool.query(businessDonationsQuery, (err, result) => {
 			res.render("conation/track_donations", {
 				layout: 'layoutBusinessOwner',
 				title: 'Track Donations',
 				email: req.session.email,
+				id: req.session.businessId,
 				products: result
 			});
 		});
@@ -799,13 +800,13 @@ app.post('/addProduct', (req, res) => {
 			console.log(err);
 		}
 		let id = result[0].business_id;
-		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
+		let query = `INSERT INTO products (name, description, cost, image, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 'https://via.placeholder.com/250', '${id}');`;
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
-				return res.status(500).send(err);
+				res.redirect('/add_product?success=false');
 			}
-			res.redirect("/add_product")
+			res.redirect('/add_product?success=true');
 		});
 	});
 });
