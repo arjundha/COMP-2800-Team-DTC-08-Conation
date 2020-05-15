@@ -325,7 +325,7 @@ app.post("/login", (req, res) => {
 														req.session.user = input_email;
 														req.session.acct = "customer";
 														req.session.customerId = id;
-														req.session.cookie.maxAge = 100000000;
+														req.session.cookie.maxAge = 600000;
 														res.redirect("/main");
 													})
 
@@ -341,7 +341,7 @@ app.post("/login", (req, res) => {
 														req.session.user = input_email;
 														req.session.businessId = id;
 														req.session.acct = "business";
-														req.session.cookie.maxAge = 100000000;
+														req.session.cookie.maxAge = 600000;
 														res.redirect("/main");
 													})
 											
@@ -528,6 +528,7 @@ app.post('/business_registration', (req, res) => {
 //    MAIN BUSINESS PAGES    //
 
 app.get('/main', (req, res) => {
+	console.log(req.session.cookie.maxAge);
 	console.log(req.session)
 	console.log(req.session.email);
 	console.log("on main");
