@@ -261,9 +261,8 @@ app.get('/getEmails', (req, res) => {
 app.get('/getBusinesses', (req, res) => {
 	console.log("Business");
 	// SELECT `name`, description, lat, `long`, mon, tue, wed, thu, fri, sat sun FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;
-	pool.query('SELECT `name`, description, address, city, province, category, postal_code, lat, lng , mon, tue, wed, thu, fri, sat, sun FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;', function (err, result) {
+	pool.query('SELECT * FROM business_hours JOIN businesses ON businesses.id = business_hours.business_id;', function (err, result) {
 		console.log("Getting data");
-		console.log(result);
 		res.json(result);
 	});
 });
