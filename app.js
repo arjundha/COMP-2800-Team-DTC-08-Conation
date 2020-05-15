@@ -185,12 +185,22 @@ app.get('/map', (req, res) => {
 app.get('/update_info', (req, res) => {
 	if (req.session.user) {
 		if (req.session.acct == "business") {
-			res.render('conation/update_business_info', {
-				layout: 'layoutBusinessOwner',
-				title: 'Update Profile',
-				email: req.session.email,
-				id: req.session.businessId
-			});
+			pool.query(`SELECT * FROM businesses WHERE id = '${req.session.businessId}'`, function (err, result) {
+				console.log("The result is: " + result[0].description)
+				res.render('conation/update_business_info', {
+					layout: 'layoutBusinessOwner',
+					title: 'Update Profile',
+					email: req.session.email,
+					id: req.session.businessId,
+					address: result[0].address,
+					address_2: result[0].address_2,
+					city: result[0].city,
+					postal_code: result[0].postal_code,
+					description: result[0].description,
+					lat: result[0].lat,
+					lng: result[0].lng
+				});
+			})
 
 		} else {
 			res.render('conation/update_customer_info', {
