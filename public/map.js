@@ -20,7 +20,8 @@ $('document').ready(function(){
                 thu: "?",
                 fri: "?",
                 sat: "?",
-                sun: "?"
+                sun: "?",
+                id: 0
 
               })});
 
@@ -142,6 +143,7 @@ function contentMaker(obj){
   // Business Info
   let title = obj.name;
   let description = obj.description;
+  let id = obj.id;
 
   // Address Info
   let address = obj.address;
@@ -163,7 +165,18 @@ function contentMaker(obj){
   let fullAddress = "<p>" + address + ", " + city + ", " + prov + "</p>";
   let fullHours = "<p><b>Hours of Operation:</b></p><p>"+ mon + tues + wednes + thurs + fri + sat + sun +"</p>";
 
-  // Return the messages strung together
-  return firstMessage + fullAddress + fullHours
+  if (id == 0) {
+    // This is for Santa
+    let site = "<br><a href='/easteregg'>Play Game</a>"
+    // Return the messages strung together
+    return firstMessage + fullAddress + fullHours + site
+  }
+  else {
+    let site = "<br><a href='/business/"+id+"'>View Profile</a>"
+    // Return the messages strung together
+    return firstMessage + fullAddress + fullHours + site
+  }
+
+
 
 }
