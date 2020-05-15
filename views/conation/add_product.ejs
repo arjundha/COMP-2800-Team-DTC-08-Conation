@@ -58,11 +58,12 @@
     let urlParams = new URLSearchParams(window.location.search);
     let success = urlParams.get('success');
 
-    if(success === "true") {
+    if (success === "true") {
+        $('#productAlertFail').hide();
         $('#productAlert').show();
     }
     else if (success === "false") {
+        $('#productAlert').hide();
         $('#productAlertFail').show();
     }
-
 </script>

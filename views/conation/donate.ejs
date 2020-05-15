@@ -8,7 +8,7 @@
 </div>
 
 <div class="container mt-3">
-    <div id="donationSuccess" class="alert alert-primary alert-dismissible fade show mt-1" role="alert">
+    <div id="donationSuccess" class="alert alert-success alert-dismissible fade show mt-1" role="alert">
         <strong>Congratulations!</strong> Your donation was successful. <a href="/my_donations" class="alert-link">Click here to view your donations.</a>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -47,10 +47,11 @@
     $('#donationFail').hide();
     $('#donationSuccess').hide();
 
-
     paypal.Buttons({
         createOrder: function(data, actions) {
             // This function sets up the details of the transaction, including the amount and line item details.
+            $('#donationFail').hide();
+            $('#donationSuccess').hide();
             return actions.order.create({
                 purchase_units: [{
                     amount: {
@@ -72,7 +73,7 @@
                         amount: "<%= product.cost %>"
                     }
                 }).done(function(data) {
-                    //window.location.href = "/my_donations";
+                    // window.location.href = "/my_donations";
                     $('#donationSuccess').show();
                 }).fail(function(error) {
                     console.log(error);
@@ -88,4 +89,14 @@
         }
     }).render('#paypal-button-container');
     //This function displays Smart Payment Buttons on your web page.
+    //
+    // let urlParams = new URLSearchParams(window.location.search);
+    // let success = urlParams.get('success');
+    //
+    // if(success === "true") {
+    //     $('#donationSuccess').show();
+    // }
+    // else if (success === "false") {
+    //     $('#donationFail').show();
+    // }
 </script>

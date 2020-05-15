@@ -733,7 +733,7 @@ app.get('/donate/:productID', (req, res) => {
 	}
 
 	else {
-		res.redirect('login');
+		res.redirect('/login');
 	}
 });
 
@@ -747,7 +747,7 @@ app.post('/addDonation', (req, res) => {
 			console.log(err);
 		}
 		console.log(result);
-		res.redirect("/my_donations");
+		res.redirect('/donate/' + req.body.product_id);
 	});
 });
 
