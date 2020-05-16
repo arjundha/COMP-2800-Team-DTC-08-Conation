@@ -6,17 +6,31 @@ geocoder = new google.maps.Geocoder();
 // jQuery for the AJAX call to fill map with locations
 $('document').ready(function(){
   initMap();
-  addMarker({coords: {lat: 48.427502, lng: -123.367264}, content: '<h3>TEST</h3>'});
+  addMarker({ coords: {lat: 80.9999793, lng: -135.0007473},
+              iconImage: "https://img.icons8.com/color/48/000000/santa.png",
+              content: contentMaker({
+                name: "Santa's Workshop", 
+                description: "An emporium full of toys and elves that never takes a day off.", 
+                address: "123 Candycane Lane",
+                city: "North Pole",
+                province: "Christmasville",
+                mon: "?",
+                tue: "?",
+                wed: "?",
+                thu: "?",
+                fri: "?",
+                sat: "?",
+                sun: "?",
+                id: 0
+
+              })});
 
   $.ajax('/getBusinesses')
   .done(function(data) {
-      for (i = 0; i < 10; i++){
+      for (i = 0; i < data.length; i++){
         // console.log(data[i]);
-        // NEEDS to be timed out otherwise it will fail after three tags
         codeAddress(data[i])
-        // setTimeout(codeAddress(data[i]), 8000);
       }
-      
   })
   .fail(function(error){
       console.log(error);
@@ -28,45 +42,35 @@ $('document').ready(function(){
 function initMap() {
     // initalize map
     map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 49.289031, lng: -123.1297058}, // Default starting location
-      // center: {lat: 48.427502, lng: -123.367264}, // Default starting location
+      // Default starting location (DT Vancouver)
+      center: {lat: 49.289031, lng: -123.1297058}, 
+      // center: {lat: 48.427502, lng: -123.367264}, // Default starting location for Victoria (testing purposes)
       zoom: 15
       });
 
     // Array of test markers
-    let markers = [
-    {
-      coords:{lat:48.4271342,lng:-123.3695606},
-      content:'<h3>Il Terrazo</h3>'
-    },
-    {
-        coords:{lat:48.4263023,lng:-123.3631996,},
-        content: `
-        <h3>Fan Favourites</h3>
-        <p>We are a local used game store</p>
-        <p>We are open for pick-up on weekends</p>
-        <p>Our website is www.google.ca</p>
-        `
+    // let markers = [
+    // {
+    //   coords:{lat:48.4271342,lng:-123.3695606},
+    //   content:'<h3>Il Terrazo</h3>'
+    // },
+    // {
+    //     coords:{lat:48.4263023,lng:-123.3631996,},
+    //     content: `
+    //     <h3>Fan Favourites</h3>
+    //     <p>We are a local used game store</p>
+    //     <p>We are open for pick-up on weekends</p>
+    //     <p>Our website is www.google.ca</p>
+    //     `
 
-    },
-    ];
+    // },
+    // ];
 
-
-      // Create the search box and link it to the UI element.
-      let input = document.getElementById('pac-input');
-      let searchBox = new google.maps.places.SearchBox(input);
-      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-      // Bias the SearchBox results towards current map's viewport.
-      map.addListener('bounds_changed', function() {
-        searchBox.setBounds(map.getBounds());
-      });
-
-    // Loop through markers
-    for(var i = 0;i < markers.length;i++){
-    // Add marker
-      addMarker(markers[i]);
-    }
+    // // Loop through markers
+    // for(var i = 0;i < markers.length;i++){
+    //   // Add marker
+    //   addMarker(markers[i]);
+    // }
 
     // Browser asks for location
     let infoWindow = new google.maps.InfoWindow;
@@ -111,6 +115,7 @@ function addMarker(props){
   // Check for customicon
   if(props.iconImage){
     // Set icon image
+
     marker.setIcon(props.iconImage);
   }
 
@@ -126,33 +131,52 @@ function addMarker(props){
   }
 }
 
-// Get lat long from address
+// Function for creating descriptive markers for each business
 function codeAddress(obj) {
   console.log("STARTING FUNCTION");
-  geocoder.geocode({ 'address': obj.address, 'componentRestrictions':{'country':'CA'}}, function (results, status) {
-      if (status == 'OK') {
-        console.log("STATUS OK");
-          //     var marker = new google.maps.Marker({
-          //     position: results[0].geometry.location,
-          //     map: map,
-          // });
-          let description = contentMaker(obj);
-          console.log(results[0].geometry.location.lat())
-          console.log(results[0].geometry.location.lng())
-          // console.log(typeof(results[0].geometry.location.lng()))
-          addMarker({coords: results[0].geometry.location, content: description});
-      } else {
-          console.log('Geocode was not successful for the following reason: ' + status);
-      }
-  });
+  let description = contentMaker(obj);
+  addMarker({coords: {lat: obj.lat, lng: obj.lng}, content: description});
 }
 
 // Create tag contents from business info
 function contentMaker(obj){
-  title = obj.name;
-  description = obj.description;
-  address = obj.address;
+  // Business Info
+  let title = obj.name;
+  let description = obj.description;
+  let id = obj.id;
 
-  return "<h3>" + title + "</h3><p><i>" + description + "</i></p><p>" + address + "</p>"
+  // Address Info
+  let address = obj.address;
+  let city = obj.city;
+  let prov = obj.province;
+  let postal = obj.postal_code;
+
+  // Create structure for each day's hours
+  let mon = "Monday: " + obj.mon +"<br>";
+  let tues = "Tuesday: " + obj.tue +"<br>";
+  let wednes = "Wednesday: " + obj.wed +"<br>";
+  let thurs = "Thursday: " + obj.thu +"<br>";
+  let fri = "Friday: " + obj.fri +"<br>";
+  let sat = "Saturday: " + obj.sat +"<br>";
+  let sun = "Sunday: " + obj.sun;
+
+  // Construct Messages
+  let firstMessage = "<h3>" + title + "</h3><p><i>" + description + "</i></p>";
+  let fullAddress = "<p>" + address + ", " + city + ", " + prov + "</p>";
+  let fullHours = "<p><b>Hours of Operation:</b></p><p>"+ mon + tues + wednes + thurs + fri + sat + sun +"</p>";
+
+  if (id == 0) {
+    // This is for Santa
+    let site = "<br><a href='/easteregg'>Play Game</a>"
+    // Return the messages strung together
+    return firstMessage + fullAddress + fullHours + site
+  }
+  else {
+    let site = "<br><a href='/business/"+id+"'>View Profile</a>"
+    // Return the messages strung together
+    return firstMessage + fullAddress + fullHours + site
+  }
+
+
 
 }

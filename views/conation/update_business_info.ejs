@@ -50,18 +50,18 @@
                                             </div>
 
                                             <!-- Email -->
-                                            <div class="form-group row">
+                                            <!-- <div class="form-group row">
                                                 <label for="email" class="col-sm-3 col-form-label">Email:</label>
                                                 <div class="col-sm-9">
                                                     <input type="email" class="form-control" id="email" placeholder="INSERT SQL HERE" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
                                                     <small id="emailTaken" class="form-text text-danger"></small>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- Phone Number -->
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-3 col-form-label">Phone Number:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="tel" class="form-control" id="phone" placeholder="INSERT SQL HERE" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                                                    <input type="text" class="form-control" id="phone" placeholder="111-222-3333" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
                                                 </div>
                                             </div>
                                             <!-- Submit for Business Profile-->
@@ -77,7 +77,7 @@
                                             <div class="form-group row">
                                                 <label for="password" class="col-sm-3 col-form-label">Password:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="password" class="form-control" id="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
+                                                    <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
                                                     <small id="passwordHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#)</small>
                                                 </div>
                                             </div>
@@ -100,18 +100,30 @@
                                             <br>
                                             <div class="form-group">
                                                 <label for="inputAddress">Address</label>
-                                                <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St" required>
+                                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="1234 Main St" value="<%= address %>" required>
+                                            </div>
+                                            <!-- THESE ARE HIDDEN -->
+                                            <!-- lat -->
+                                            <!-- style="display: none;" -->
+                                            <div class="form-group" style="display: none;">
+                                                <label for="lat">lat</label>
+                                                <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" value="<%= lat %>" required>
+                                            </div>
+                                            <!-- long -->
+                                            <div class="form-group" style="display: none;">
+                                                <label for="lat">long</label>
+                                                <input type="text" class="form-control" id="long" placeholder="long" name="long" value="<%= lng %>" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="inputAddress2">Address Line 2</label>
-                                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
+                                                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor" value="<%= address_2 %>">
                                             </div>
 
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
                                                     <label for="inputCity">City</label>
-                                                    <input type="text" class="form-control" id="city" name="city" required>
+                                                    <input type="text" class="form-control" id="city" name="city" value="<%= city %>" required>
                                                 </div>
 
                                                 <div class="form-group col-md-4">
@@ -135,7 +147,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="postal">Postal Code</label>
-                                                    <input type="text" class="form-control" id="inputPostal" name="postal" required>
+                                                    <input type="text" class="form-control" id="inputPostal" name="postal" value="<%= postal_code %>" required>
                                                 </div>
 
                                             </div>
@@ -144,12 +156,12 @@
                                             <br>
                                             <div class="form-group">
                                                 <label for="description">Description</label>
-                                                <textarea class="form-control" id="description" rows="3" placeholder="Description" name="description"></textarea>
+                                                <textarea class="form-control" id="description" rows="3" placeholder="Description" name="description" ><%= description %></textarea>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="businessTag">Category</label>
-                                                <small id="tagHelp" class="form-text text-muted">Choose the tag that best describes your business</small>
+                                                <small id="tagHelp" class="form-text text-muted">Choose the category that best describes your business</small>
                                                 <select id="category" class="form-control" name="category" required>
                                                     <option value="" id="placeholderOption" value="Select" selected disabled>---</option>
                                                     <option>Bakery</option>
@@ -165,9 +177,129 @@
                                                     <option>Other</option>
                                                 </select>
                                             </div>
+
                                             <!-- Submit -->
                                             <input id="businessInfoChange" type="submit" class="btn btn-main float-right" value="Save Changes">
-                                        </form>
+                                            </form>
+                                            <!-- Update Business Hours -->
+
+                                            <br><br><hr><br>
+                                            <form action="/updateBusinessHours" method="post">
+                                                <h3>Hours of Operation</h3>
+                                                <small class="form-text text-muted mb-3">Select the time your business opens and closes each day.<br>Select "Closed"
+                                                    if your business is closed that day.<br>Select "24 hours" if your business is open all day.</small>
+                                                <div class="form-row">
+                                                    <div class="form-group col-sm-6 col-med-6 col-lg-2">
+                                                        <label>Monday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="monCheckClosed" name="monClosed">
+                                                            <label class="form-check-label" for="monCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="monCheck24" name="mon24">
+                                                            <label class="form-check-label" for="monCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="monOpen" name="monOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="monClose" name="monClose"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6 col-lg-2">
+                                                        <label>Tuesday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="tueCheckClosed" name="tueClosed">
+                                                            <label class="form-check-label" for="tueCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="tueCheck24" name="tue24">
+                                                            <label class="form-check-label" for="tueCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="tueOpen" name="tueOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="tueClose" name="tueClose"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6 col-lg-2">
+                                                        <label>Wednesday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="wedCheckClosed" name="wedClosed">
+                                                            <label class="form-check-label" for="wedCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="wedCheck24" name="wed24">
+                                                            <label class="form-check-label" for="wedCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="wedOpen" name="wedOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="wedClose" name="wedClose"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6 col-lg-2">
+                                                        <label>Thursday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="thuCheckClosed" name="thuClosed">
+                                                            <label class="form-check-label" for="thuCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="thuCheck24" name="thu24">
+                                                            <label class="form-check-label" for="thuCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="thuOpen" name="thuOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="thuClose" name="thuClose"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6 col-lg-2">
+                                                        <label>Friday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="friCheckClosed" name="friClosed">
+                                                            <label class="form-check-label" for="friCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="friCheck24" name="fri24">
+                                                            <label class="form-check-label" for="friCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="friOpen" name="friOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="friClose" name="friClose"></select>
+                                                    </div>
+                                                    <div class="d-none d-lg-block col-lg-2"></div>
+                                                    <div class="form-group col-sm-6 col-lg-2">
+                                                        <label>Saturday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="satCheckClosed" name="satClosed">
+                                                            <label class="form-check-label" for="satCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="satCheck24" name="sat24">
+                                                            <label class="form-check-label" for="satCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="satOpen" name="satOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="satClose" name="satClose"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-6 col-lg-2">
+                                                        <label>Sunday</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="sunCheckClosed" name="sunClosed">
+                                                            <label class="form-check-label" for="sunCheckClosed">Closed</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="sunCheck24" name="sun24">
+                                                            <label class="form-check-label" for="sunCheck24">24 hours</label>
+                                                        </div>
+                                                        <small class="form-text text-muted">Open</small>
+                                                        <select class="time-input form-control form-control-sm" id="sunOpen" name="sunOpen"></select>
+                                                        <small class="form-text text-muted">Close</small>
+                                                        <select class="time-input form-control form-control-sm" id="sunClose" name="sunClose"></select>
+                                                    </div>
+                                                </div>
+                                            
+                                                <!-- Submit Business Hours -->
+                                                <input id="businessHourChange" type="submit" class="btn btn-main float-right" value="Save Changes">
+                                            </form>
                                     </div>
                                 </div>
                             </div>
@@ -178,3 +310,6 @@
         </div>
     </div>
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOG3EpPiavwq5xcbGYHnX9efVUwtPeDcw"></script>
+<script src="registration.js"></script>
+<script src="hours.js"></script>

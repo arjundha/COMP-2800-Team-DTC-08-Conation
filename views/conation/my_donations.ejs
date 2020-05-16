@@ -1,0 +1,39 @@
+<div class="container my-4">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <h2 class="card-header">My Donations</h2>
+                <div class="card-body">
+                    <div class="row">
+                        <% donations.forEach((donation) => { %>
+                        <div class="col-sm-12 col-md-6 col-lg-4 my-3">
+                            <div class="card">
+                                <h4 class="card-header"><%= donation.prodName%> <span style="float: right; color: green;">$<%= donation.amount %></span></h4>
+                                <img class="card-img-top" src="<%= donation.prodImg %>" alt="image to go here">
+                                <div class="card-body">
+                                    <p class="card-text"><%= donation.prodDesc %></p>
+                                    <hr>
+                                    <p class="card-text">
+                                        <%= donation.busName %>
+                                        <br>
+                                        <%= donation.address%>
+                                        <br>
+                                        <% if (donation.address_2) { %>
+                                            <%= donation.address_2 %>
+                                            <br>
+                                        <% } %>
+                                        <%= donation.city %>, <%= donation.province %>  <%= donation.postal_code %>
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <p style="text-align: center; margin: auto" class="text-muted"><%= donation.date %></p>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

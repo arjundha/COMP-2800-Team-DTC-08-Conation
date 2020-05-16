@@ -8,8 +8,9 @@ body {
 }
 
 .carousel-item {
-  height: 65vh;
   min-height: 300px;
+  max-height: 2vw;
+  width: 100%;
   background: no-repeat center center scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -70,3 +71,33 @@ body {
   left: 0;
   min-height: 300px;
 }
+
+/* ↓ Business Page ↓ */
+#business-header {
+  margin-top: 3vw;
+}
+
+#business-image {
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  max-height: 20vw;
+  border-radius: 5px;
+}
+
+.nav-link {
+  color: black;
+}
+
+.nav-link.active {
+  background-color: #354f52 !important;
+}
+
+.nav-item{
+  text-align: right;
+}
+
+.product-card {
+  margin: auto;
+}
+/* ↑  Business Page ↑ */

@@ -1,3 +1,6 @@
+let geocoder;
+geocoder = new google.maps.Geocoder();
+
 // Dynamically inform users if the passwords they are entering into password fields match
 function checkPasswordMatch() {
     let password = $("#passwordInput").val();
@@ -51,44 +54,44 @@ function verifyPasswordsMatch(){
 }
 
 // Obsolete function, I found out there is a .includes() in JavaScript so using that now instead
-function matchFinder(arrayOfNames, newName){
-    for (i = 0; i < arrayOfNames.length; i++){
-        if (arrayOfNames[i] == newName){
-            return true
-        }
-    } 
-    return false
-}
+// function matchFinder(arrayOfNames, newName){
+//     for (i = 0; i < arrayOfNames.length; i++){
+//         if (arrayOfNames[i] == newName){
+//             return true
+//         }
+//     } 
+//     return false
+// }
 
-$('document').ready(function(){
+// $('document').ready(function(){
 
-    $('#usernameInput').on('blur', function(){
-        console.log("username blur")
-        let takenNames = ["arjun", "chris", "susan", "hudson", "nicholas", "sarah", "Arjun", "Chris", "Hudson", "Nicholas"];
-        let username = $('#usernameInput').val();
+//     $('#usernameInput').on('blur', function(){
+//         console.log("username blur")
+//         let takenNames = ["arjun", "chris", "susan", "hudson", "nicholas", "sarah", "Arjun", "Chris", "Hudson", "Nicholas"];
+//         let username = $('#usernameInput').val();
 
-        let nameIsTaken = takenNames.includes(username);
+//         let nameIsTaken = takenNames.includes(username);
 
-        if (username == '') {
-            $("#usernameTaken").html("This field cannot be blank.");
-            $("#usernameFree").html("");
-            document.getElementById('usernameInput').setCustomValidity('Username cannot be blank.');
-        }
+//         if (username == '') {
+//             $("#usernameTaken").html("This field cannot be blank.");
+//             $("#usernameFree").html("");
+//             document.getElementById('usernameInput').setCustomValidity('Username cannot be blank.');
+//         }
 
-        else if (nameIsTaken == true ) {
-            $("#usernameTaken").html("Username is taken.");
-            $("#usernameFree").html("");
-            document.getElementById('usernameInput').setCustomValidity('Username is already taken. Please input another username.');
+//         else if (nameIsTaken == true ) {
+//             $("#usernameTaken").html("Username is taken.");
+//             $("#usernameFree").html("");
+//             document.getElementById('usernameInput').setCustomValidity('Username is already taken. Please input another username.');
 
 
-        }else if (nameIsTaken == false ) {
-            $("#usernameTaken").html("");
-            $("#usernameFree").html("Username is available.");
-            document.getElementById('usernameInput').setCustomValidity('');
+//         }else if (nameIsTaken == false ) {
+//             $("#usernameTaken").html("");
+//             $("#usernameFree").html("Username is available.");
+//             document.getElementById('usernameInput').setCustomValidity('');
 
-        }
-    })
-})
+//         }
+//     })
+// })
 
 
 $('document').ready(function(){
@@ -125,9 +128,34 @@ $('document').ready(function(){
 
             }
         })
+        $('#inputAddress').on('blur', function(){
+            console.log("address blur");
+            let location = $('#inputAddress').val();
+            codeAddress(location);
+        })
     
     })
     .fail(function(error){
         console.log(error);
     })
 })
+
+function codeAddress(address) {
+    console.log("STARTING FUNCTION");
+    geocoder.geocode({ 'address': address, 'componentRestrictions':{'country':'CA'}}, function (results, status) {
+        if (status == 'OK') {
+            console.log("STATUS OK");
+            let lat = results[0].geometry.location.lat()
+            let lng = results[0].geometry.location.lng()
+            console.log(lat)
+            console.log(lng)
+            let latInput = $("#lat").val(lat);
+            let lngInput = $("#long").val(lng);
+            latInput= lat;
+            lngInput = lng;
+            console.log(document.getElementById("long").value)
+        } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
