@@ -93,6 +93,10 @@ body {
   background-color: #354f52 !important;
 }
 
+.nav-item{
+  text-align: right;
+}
+
 .product-card {
   margin: auto;
 }
