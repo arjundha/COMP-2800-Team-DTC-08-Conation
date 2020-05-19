@@ -828,7 +828,7 @@ app.post('/addProduct', (req, res) => {
 // ========================= //
 //    UPDATE PROFILE INFO    //
 
-app.post('/updateBusinessProfile', (req, res) => {
+app.post('/updateProfile', (req, res) => {
 
 	if (req.session.user) {
 		console.log(req.body);
@@ -837,8 +837,9 @@ app.post('/updateBusinessProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -846,8 +847,10 @@ app.post('/updateBusinessProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		}
@@ -857,17 +860,19 @@ app.post('/updateBusinessProfile', (req, res) => {
 	}
 });
 
-app.post('/updateBusinessPassword', (req, res) => {
+app.post('/updatePassword', (req, res) => {
 	if (req.session.user) {
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct == "business") {
+		if (req.session.acct == "business") {
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -875,8 +880,11 @@ app.post('/updateBusinessPassword', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
+
 			});
 		}
 
@@ -898,8 +906,9 @@ app.post('/updateBusinessInfo', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			})
 		})
 	} else {
@@ -907,7 +916,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 	}
 });
 
-app.post("/updateBusinesshours", (req, res) => {
+app.post("/updateBusinessHours", (req, res) => {
 	let input = req.body;
 	let mon;
 	let tue;
@@ -979,8 +988,9 @@ app.post("/updateBusinesshours", (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 		})
 	} else {
@@ -1003,16 +1013,16 @@ app.post("/addNewsPost", (req, res) => {
 			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
 			pool.query(query, (err, result) => {
 				if (err) {
-					console.log(err);
+					res.redirect("/news_form?success=false");
 				}
-				res.redirect("/main");
+				res.redirect("/news_form?success=true");
 			});
 		})
 	}
 	else {
 		res.redirect("/main")
 	}
-})
+});
 
 
 

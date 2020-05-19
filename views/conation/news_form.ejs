@@ -1,3 +1,21 @@
+<div id="newsFail" class="container mt-3" style="display: none">
+    <div class="alert alert-danger alert-dismissible fade show mt-1" role="alert">
+        <strong>Sorry!</strong> Your news post couldn't be added. Please try again.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div id="newsSuccess" class="container mt-3" style="display: none">
+    <div class="alert alert-success alert-dismissible fade show mt-1" role="alert">
+        <strong>Congratulations!</strong> Your news post was added successfully. <a href="/business/<%= id %>" class="alert-link">Click here to view your page.</a>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
 <div class="container mt-4 mb-3">
     <div class="row">
         <div class="col-sm-2"></div>
@@ -22,3 +40,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    let urlParams = new URLSearchParams(window.location.search);
+    let success = urlParams.get('success');
+
+    if (success === "true") {
+        $('#newsSuccess').show();
+    }
+    else if (success === "false") {
+        $('#newsFail').show();
+    }
+</script>
