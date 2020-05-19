@@ -24,8 +24,8 @@ closeButton.addEventListener('click', event => {
 });
 
 copyButton.addEventListener('click', function(event) {  
-    // Select the email link anchor text  
-    var emailLink = document.getElementById('link');  
+    var emailLink = document.getElementById('link') 
+    console.log(emailLink) 
     var range = document.createRange();  
     range.selectNode(emailLink);  
     window.getSelection().addRange(range);  
