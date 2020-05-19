@@ -85,8 +85,12 @@
     <!-- News -->
     <div class="tab-pane fade" id="pills-news" role="tabpanel" aria-labelledby="pills-news-tab">
         <div class="container">
-            <% if (!news) { %>
-            <p class="mt-5 mb-5 text-center">This business has not yet made any news posts.</p>
+            <% if (news.length === 0) { %>
+                <div class="col-sm-12">
+                    <div class="card mb-3">
+                        <p class="card-text mt-5 mb-5 text-center">This business does not have any news posts.</p>
+                    </div>
+                </div>
             <% } else { %>
             <% news.forEach((newsItem) => { %>
             <div class="card mb-3 mx-auto">
@@ -105,8 +109,12 @@
     <div class="tab-pane fade" id="pills-shop" role="tabpanel" aria-labelledby="pills-shop-tab">
         <div class="container">
             <div class="row">
-                <% if (!products) { %>
-                <p class="mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
+                <% if (products.length === 0) { %>
+                <div class="col-sm-12">
+                    <div class="card mb-3">
+                        <p class="card-text mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
+                    </div>
+                </div>
                 <% } else { %>
                 <% products.forEach((product) => { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3 justify-content-between">
