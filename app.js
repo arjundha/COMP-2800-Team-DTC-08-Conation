@@ -425,7 +425,7 @@ app.post('/customer_registration', (req, res) => {
 
 // BUSINESS REGISTRATION //
 
-app.post('/business_registration', (req, res) => {
+app.post('/business_registration', upload.single("image"), (req, res) => {
 	let input = req.body;
 	let email = input.email;
 	let password1 = input.password;
@@ -522,7 +522,20 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+						let newBusinessIDQuery = `SELECT business_id FROM business_owners WHERE email = "${email}"`;
+						pool.query(newBusinessIDQuery, (err, idResult) => {
+							// Image Upload
+							const tempPath = req.file.path;
+							const targetPath = path.join(__dirname, "public/src/images/businesses/" + idResult[0].business_id + ".png");
+							fs.rename(tempPath, targetPath, err => {
+								if (err) {
+									console.log(err);
+								};
+								
+								res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+							});
+
+						});
 					}
 				});
 			}
@@ -712,7 +725,6 @@ app.get('/business/:id', (req, res) => {
 //        DONATIONS          //
 
 app.get('/donate/:productID', (req, res) => {
-
 	if (req.session.user) {
 		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 			if (err) {
@@ -815,7 +827,7 @@ app.post('/addProduct', upload.single("productIMG"), (req, res) => {
 		if (err) {
 			console.log(err);
 		}
-		
+
 		let id = idResult[0].business_id;
 		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
 		pool.query(query, (err, result) => {
@@ -823,36 +835,20 @@ app.post('/addProduct', upload.single("productIMG"), (req, res) => {
 				console.log(err);
 				res.redirect('/add_product?success=false');
 			}
+
 			// Image Upload
 			const tempPath = req.file.path;
 			const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
-			
-			// if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-				fs.rename(tempPath, targetPath, err => {
-				  if (err) {
-					  console.log(err);
-				  };
-		  
-				  console.log("rename");
-				});
-			//   } else {
-			// 	fs.unlink(tempPath, err => {
-			// 	  if (err) {
-			// 		  console.log(err);
-			// 	  };
-		  
-			// 	  console.log("unlink");
-				// });
-			//   }
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
 
 			res.redirect('/add_product?success=true');
 		});
 	});
 });
-
-
-
-
 
 // ========================= //
 //    UPDATE PROFILE INFO    //
