@@ -1013,9 +1013,9 @@ app.post("/addNewsPost", (req, res) => {
 			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
 			pool.query(query, (err, result) => {
 				if (err) {
-					console.log(err);
+					res.redirect("/news_form?success=false");
 				}
-				res.redirect("/main");
+				res.redirect("/news_form?success=true");
 			});
 		})
 	}

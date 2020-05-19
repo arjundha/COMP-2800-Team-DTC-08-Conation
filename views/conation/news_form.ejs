@@ -40,3 +40,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    let urlParams = new URLSearchParams(window.location.search);
+    let success = urlParams.get('success');
+
+    if (success === "true") {
+        $('#newsSuccess').show();
+    }
+    else if (success === "false") {
+        $('#newsFail').show();
+    }
+</script>
