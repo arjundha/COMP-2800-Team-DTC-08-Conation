@@ -67,17 +67,15 @@
 <!-- Filter and Sort -->
 <div class="container p-3">
     <form>
-        <!-- <div class="col-sm-2 col-lg-3"></div> -->
         <div class="form-group row">
-            <label for="search" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10 col-lg-6">
+            <label for="search" class="col-md-2 offset-lg-1 col-form-label"></label>
+            <div class="col-sm-10 col-md-8 col-lg-6">
                 <input class="form-control form-control-sm" id="searchText" type="search" placeholder="Search">
             </div>
         </div>
-        <div class="col-sm-2 col-lg-3"></div>
         <div class="form-group row">
-            <label for="sort" class="col-sm-2 col-form-label">Sort By...</label>
-            <div class="col-sm-10 col-lg-6">
+            <label for="sort" class="col-md-2 offset-lg-1 col-form-label">Sort By...</label>
+            <div class="col-sm-10 col-md-8 col-lg-6">
                 <select class="form-control form-control-sm" id="searchSort">
                     <option selected>Name &darr;</option>
                     <option>Name &uarr;</option>
@@ -85,8 +83,8 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="filter" class="col-sm-2 col-form-label">Filter By...</label>
-            <div class="col-sm-10 col-lg-6">
+            <label for="filter" class="col-md-2 offset-lg-1 col-form-label">Filter By...</label>
+            <div class="col-sm-10 col-md-8 col-lg-6">
                 <select class="form-control form-control-sm" id="searchFilter">
                     <option selected>None</option>
                     <option>Bakery</option>
@@ -104,8 +102,7 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-10 col-lg-6">
+            <div class="offset-md-2 offset-lg-3 col-form-label">
                 <div class="form-check">
                     <input class="form-check-input" id="searchOnlineStore" type="checkbox">
                     <label class="form-check-label" for="searchOnlineStore">
@@ -113,15 +110,20 @@
                     </label>
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button id="searchSubmit" type="button" class="btn btn-dark mt-3 ml-3">Search</button>
-                </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button class="btn btn-dark offset-lg-1" id="searchSubmit" type="button">Search</button>
             </div>
+        </div>
     </form>
-    <div class="alert alert-light mx-5" id="searchBanner" role="alert">
-        <span id="searchBannerText"></span> <span id="searchBannerFilter"></span> <span
-            id="searchBannerOnlineStore"></span>
+
+    <!-- Display Search Results -->
+    <div class="row">
+        <div class="alert alert-light mt-3 col-sm-8 col-md-8 col-lg-6 offset-md-2 offset-lg-3" id="searchBanner" role="alert">
+            <span id="searchBannerText"></span> <span id="searchBannerFilter"></span> <span
+                id="searchBannerOnlineStore"></span>
+        </div>
     </div>
 </div>
 
@@ -153,13 +155,16 @@
     $("#searchSubmit").on("click", () => {
         $(".businessCard").show();
         $("#searchBanner").hide();
+        $("#searchBannerText").html("");
+        $("#searchBannerFilter").html("");
+        $("#searchBannerOnlineStore").html("");
 
         let text = $("#searchText").val();
         if (text) {
             console.log("Searching by " + text);
             $(".businessCard:not(:contains(" + text + "))").hide();
             $("#searchBanner").show();
-            $("#searchBannerText").html("Showing results for \"" + text + "\".");
+            $("#searchBannerText").html("Showing results for: \"" + text + "\".");
         }
 
         let filter = $("#searchFilter").val();
@@ -168,9 +173,9 @@
             $(".businessCard:not(." + filter + "):visible").hide();
             $("#searchBanner").show();
             if (text) {
-                $("#searchBannerFilter").html("<br>Showing " + filter + "s.");
+                $("#searchBannerFilter").html("<br>Filtering by category: " + filter + ".");
             } else {
-                $("#searchBannerFilter").html("Showing " + filter + "s.");
+                $("#searchBannerFilter").html("Filtering by category: " + filter + ".");
             }
         }
 
