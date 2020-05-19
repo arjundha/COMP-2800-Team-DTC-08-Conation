@@ -1,3 +1,5 @@
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0"></script>
 
 <div class="carousel-inner">
   <!-- Slide One - Set the background image for this slide in the line below -->
@@ -10,6 +12,7 @@
 </div>
 
 <!-- Page Content -->
+
 <div class="container" >
   <h1 class="my-4 welcome">Features</h1>
   <div class="row">
@@ -31,22 +34,22 @@
         <div class="card-footer">
           <div class="share-dialog" id="share-dialog">
             <header>
-              <h3 class="dialog-title">Share this pen</h3>
+              <h3 class="dialog-title">Share Our Site!</h3>
               <button class="close-button" id="close-button"><svg><use href="#close"></use></svg></button>
             </header>
             <div class="targets">
-              <a class="button">
+              <a class="button fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fco-nation.herokuapp.com%2F&amp;src=sdkpreparse">
                 <svg>
                   <use href="#facebook"></use>
                 </svg>
                 <span>Facebook</span>
               </a>
               
-              <a class="button">
+              <a class="button" target="_blank" href="https://twitter.com/intent/tweet?text=Support%20Locals%20With%20Conation%20at%20https://co-nation.herokuapp.com/">
                 <svg>
                   <use href="#twitter"></use>
                 </svg>
-                <span>Twitter</span>
+                <span>Twitter</span>               
               </a>
               
               <a class="button">
@@ -213,6 +216,23 @@
     <!-- Animated js functions -->
     <script src="/animations.js"></script>
     <script src="/mediashare.js"></script>
+    <script>window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+    
+      return t;
+    }(document, "script", "twitter-wjs"));</script>
+
 
 
 
