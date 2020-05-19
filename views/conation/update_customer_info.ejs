@@ -1,3 +1,21 @@
+<div id="updateSuccess" class="container mt-3" style="display: none">
+    <div class="alert alert-success alert-dismissible fade show mt-1" role="alert">
+        <strong>Success!</strong> Your information has been changed.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div id="updateFail" class="container mt-3" style="display: none">
+    <div class="alert alert-danger alert-dismissible fade show mt-1" role="alert">
+        <strong>Sorry!</strong> Your information could not be changed. Please try again.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
 <!-- The Card -->
 <div class="my-4 container">
     <div class="row">
@@ -22,8 +40,17 @@
                                 <div class="tab-content" id="settingsTabsContent">
                                     <div class="tab-pane fade show active" id="profileSettings" role="tabpanel" aria-labelledby="profileTab">
                                         <h3>Profile Information</h3>
-                                        <form id="profileUpdate" action="/updateBusinessProfile" method="post">
+                                        <form id="profileUpdate" action="/updateProfile" method="post">
                                             <br>
+
+                                            <!-- Email -->
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-3 col-form-label">Email:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" id="email" value="<%= email %>" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" disabled>
+                                                    <small id="emailTaken" class="form-text text-danger"></small>
+                                                </div>
+                                            </div>
 
                                             <!-- Business Owner FirstName -->
                                             <div class="form-group row">
@@ -43,28 +70,21 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Email -->
-                                            <!-- <div class="form-group row">
-                                                <label for="email" class="col-sm-3 col-form-label">Email:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="email" class="form-control" id="email" placeholder="INSERT SQL HERE" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
-                                                    <small id="emailTaken" class="form-text text-danger"></small>
-                                                </div>
-                                            </div> -->
                                             <!-- Phone Number -->
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-3 col-form-label">Phone Number:</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" id="phone" placeholder="111-222-3333" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                                                    <small id="phoneNumHelp" class="form-text text-muted">Please format as follows: xxx-xxx-xxxx</small>
                                                 </div>
                                             </div>
                                             <!-- Submit for Customer Profile-->
-                                            <input id="businessProfileChange" type="submit" class="btn btn-main float-right" value="Save Changes">
+                                            <input id="customerProfileChange" type="submit" class="btn btn-main float-right" value="Save Changes">
                                         </form>
 
                                         <br><br><hr><br>
                                         <!-- Update Password Form -->
-                                        <form id="passwordUpdate" action="/updateBusinessPassword" method="post">
+                                        <form id="passwordUpdate" action="/updatePassword" method="post">
                                             <h5>Update Password</h5>
                                             <br>
                                             <!-- New Password -->
@@ -84,7 +104,7 @@
                                                     <small id="divCheckPasswordMatchTrue" class="form-text text-success"></small>
                                                 </div>
                                             </div>
-                                            <input id="businessPasswordChange" type="submit" class="btn btn-main float-right" value="Update Password">
+                                            <input id="customerPasswordChange" type="submit" class="btn btn-main float-right" value="Update Password">
                                         </form>
                                     </div>
                                 </div>
@@ -96,6 +116,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    let urlParams = new URLSearchParams(window.location.search);
+    let success = urlParams.get('success');
+
+    if (success === "true") {
+        $('#updateFail').hide();
+        $('#updateSuccess').show();
+    }
+    else if (success === "false") {
+        $('#updateSuccess').hide();
+        $('#updateFail').show();
+    }
+</script>
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOG3EpPiavwq5xcbGYHnX9efVUwtPeDcw"></script>
 <script src="registration.js"></script>
 <script src="hours.js"></script>
