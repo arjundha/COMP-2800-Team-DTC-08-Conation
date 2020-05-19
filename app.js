@@ -837,8 +837,9 @@ app.post('/updateProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -846,8 +847,10 @@ app.post('/updateProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		}
@@ -866,8 +869,10 @@ app.post('/updatePassword', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -875,8 +880,11 @@ app.post('/updatePassword', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
+
 			});
 		}
 
@@ -898,8 +906,9 @@ app.post('/updateBusinessInfo', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			})
 		})
 	} else {
@@ -979,8 +988,9 @@ app.post("/updateBusinessHours", (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 		})
 	} else {
