@@ -534,7 +534,6 @@ app.post('/business_registration', upload.single("image"), (req, res) => {
 								
 								res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
 							});
-
 						});
 					}
 				});
@@ -1010,6 +1009,26 @@ app.post("/updateBusinesshours", (req, res) => {
 		})
 	} else {
 		res.redirect('/login');
+	}
+});
+
+app.post('/updateBusinessImage', upload.single("image"), (req, res) => {
+	if (req.session.user) {
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			let id = result[0].business_id;
+			const tempPath = req.file.path;
+			const targetPath = path.join(__dirname, "public/src/images/businesses/" + id + ".png");
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
+		res.redirect('/update_info');
+		});
 	}
 });
 
