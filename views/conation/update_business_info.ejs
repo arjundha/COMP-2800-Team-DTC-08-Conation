@@ -27,8 +27,18 @@
                                 <div class="tab-content" id="settingsTabsContent">
                                     <div class="tab-pane fade show active" id="profileSettings" role="tabpanel" aria-labelledby="profileTab">
                                         <h3>Profile Information</h3>
-                                        <form id="profileUpdate" action="/updateBusinessProfile" method="post">
+                                        <form id="profileUpdate" action="/updateProfile" method="post">
                                             <br>
+
+
+                                            <!-- Email -->
+                                             <div class="form-group row">
+                                                <label for="email" class="col-sm-3 col-form-label">Email:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" id="email" value="<%= email %>" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" disabled>
+                                                    <small id="emailTaken" class="form-text text-danger"></small>
+                                                </div>
+                                            </div>
 
                                             <!-- Business Owner FirstName -->
                                             <div class="form-group row">
@@ -49,14 +59,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Email -->
-                                            <!-- <div class="form-group row">
-                                                <label for="email" class="col-sm-3 col-form-label">Email:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="email" class="form-control" id="email" placeholder="INSERT SQL HERE" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
-                                                    <small id="emailTaken" class="form-text text-danger"></small>
-                                                </div>
-                                            </div> -->
                                             <!-- Phone Number -->
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-3 col-form-label">Phone Number:</label>
@@ -70,7 +72,7 @@
 
                                         <br><br><hr><br>
                                         <!-- Update Password Form -->
-                                        <form id="passwordUpdate" action="/updateBusinessPassword" method="post">
+                                        <form id="passwordUpdate" action="/updatePassword" method="post">
                                             <h5>Update Password</h5>
                                             <br>
                                             <!-- New Password -->
