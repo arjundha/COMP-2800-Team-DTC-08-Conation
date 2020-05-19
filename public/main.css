@@ -114,10 +114,6 @@ html {
   margin: 0;
 }
 
-body {
-  font-family: -apple-system,BlinkMacSystemFont,San Francisco,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Segoe UI,Arial,sans-serif;
-}
-
 .hidden {
   display: none;
 }
