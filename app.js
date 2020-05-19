@@ -760,14 +760,22 @@ app.get('/my_donations', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/my_donations", {
-				layout: 'layoutLoggedIn',
-				title: 'My Donations',
-				email: req.session.email,
-				donations: result
+			let sumQuery = `SELECT SUM(amount) AS sum FROM donations WHERE customer_id = '${req.session.customerId}';`;
+			pool.query(sumQuery, (error, sum) => {
+				if (error) {
+					console.log(error);
+				}
+				res.render("conation/my_donations", {
+					layout: 'layoutLoggedIn',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result,
+					total: sum[0]
+				});
 			});
 		});
 	}
+
 	else if (req.session.user && req.session.acct == "business") {
 		res.redirect('/track_donations');
 	}
@@ -779,14 +787,26 @@ app.get('/my_donations', (req, res) => {
 
 app.get('/track_donations', (req, res) => {
 	if (req.session.user && req.session.acct == "business") {
-		let businessDonationsQuery = `SELECT * FROM products WHERE business_id = '${req.session.businessId}';`;
+		let businessDonationsQuery = `SELECT *, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id = '${req.session.businessId}' GROUP BY products.id;`;
 		pool.query(businessDonationsQuery, (err, result) => {
-			res.render("conation/track_donations", {
-				layout: 'layoutBusinessOwner',
-				title: 'Track Donations',
-				email: req.session.email,
-				id: req.session.businessId,
-				products: result
+			if (err) {
+				console.log(err);
+			}
+
+			let totalDonationsQuery = `SELECT SUM(amount) AS sum FROM donations JOIN products ON products.id = donations.product_id WHERE products.business_id = '${req.session.businessId}';`;
+			pool.query(totalDonationsQuery, (error, totalDonations) => {
+				if (error) {
+					console.log(error)
+				}
+				console.log(result);
+				res.render("conation/track_donations", {
+					layout: 'layoutBusinessOwner',
+					title: 'Track Donations',
+					email: req.session.email,
+					id: req.session.businessId,
+					products: result,
+					total: totalDonations[0]
+				});
 			});
 		});
 	}
