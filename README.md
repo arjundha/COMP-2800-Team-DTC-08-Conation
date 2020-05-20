@@ -128,7 +128,7 @@ These are the most common and important colours used in our app. All of these ca
 | Secondary Buttons | #354F52 |
 | Header | #52796F |
 
-## Helful Links
+## Helpful Links
 
 These are some resources that will be useful while you are using Conation.
 
