@@ -37,8 +37,8 @@ article {
 
 .btn-main {
   color: #fff;
-  background-color: #354f52;
-  border-color: #354f52;
+  background-color: #343a40;
+  border-color: #343a40;
 }
 
 .btn-main:hover {
@@ -66,8 +66,8 @@ article {
   height: 50%;
 }
 
-#SarahBody {
-  background-color: #52796f
+#logoBanner {
+  background-image: url(src/images/Conation_logolonger.jpg);
 }
 
 .carousel-conation{

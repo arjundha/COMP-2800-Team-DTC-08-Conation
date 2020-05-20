@@ -146,6 +146,10 @@ app.get('/business_registration', (req, res) => {
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
 
+app.get('/license', (req, res) => {
+	res.render('conation/license', { layout: 'layoutLoggedOut', title: 'Business Registration' });
+});
+
 app.get('/about', (req, res) => {
 	if (req.session.acct == "customer") {
 		res.render("conation/about", {
@@ -723,29 +727,24 @@ app.get('/business/:id', (req, res) => {
 //        DONATIONS          //
 
 app.get('/donate/:productID', (req, res) => {
-	if (req.session.user) {
+	if (req.session.user && req.session.acct === "customer") {
 		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 			if (err) {
 				console.log(err);
 
-			} else if (req.session.acct == "customer") {
-				res.render("conation/donate", {
-					layout: 'layoutLoggedIn',
-					title: result[0].name,
-					product: result[0],
-					email: req.session.user
-				})
 			}
-			else {
-				res.render("conation/donate", {
-					layout: 'layoutBusinessOwner',
-					title: result[0].name,
-					product: result[0],
-					email: req.session.user,
-					id: req.session.businessId
-				})
-			}
+			res.render("conation/donate", {
+				layout: 'layoutLoggedIn',
+				title: result[0].name,
+				product: result[0],
+				email: req.session.user
+				});
+
 		});
+	}
+
+	else if (req.session.user && req.session.acct === "business") {
+		res.redirect('/error');
 	}
 
 	else {
