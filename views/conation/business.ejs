@@ -1,6 +1,6 @@
 <header>
     <div class="container" id="business-header">
-        <img id="business-image" src="<%= business.image %>" alt="Business Image">
+        <img id="business-image" src="/src/images/businesses/<%= business.id %>.png" alt="Business Image" onerror="this.style.display='none'">
         <h1 class="display-4 pl-3 pr-3" id="business-name"><%= business.name %></h1>
     </div>
 </header>
@@ -99,7 +99,7 @@
                 <% products.forEach((product) => { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3 justify-content-between">
                     <div class="card product-card" style="width: 18rem;">
-                        <img src="<%= product.image %>" class="card-img-top" alt="Product">
+                        <img src="/src/images/products/<%= product.id %>.png" class="card-img-top" alt="Product" onerror="this.style.display='none'">
                         <div class="card-body">
                             <h5 class="card-title"><%= product.name %></h5>
                             <p class="card-text">$<%= product.cost %></p>
