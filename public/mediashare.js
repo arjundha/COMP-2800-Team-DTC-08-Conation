@@ -6,8 +6,8 @@ shareButton.addEventListener('click', event => {
     console.log(shareButton)
   if (navigator.share) { 
    navigator.share({
-      title: 'WebShare API Demo',
-      url: 'https://codepen.io/ayoisaiah/pen/YbNazJ'
+      title: 'Conation',
+      url: 'https://co-nation.herokuapp.com/'
     }).then(() => {
       console.log('Thanks for sharing!');
     })
