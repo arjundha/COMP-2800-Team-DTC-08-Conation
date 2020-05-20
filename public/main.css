@@ -113,6 +113,10 @@ article {
 .product-card {
   margin: auto;
 }
+
+.product-card-image {
+  height: 250px;
+}
 /* ↑  Business Page ↑ */
 
 /* Share media btn */
@@ -230,4 +234,3 @@ header {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-

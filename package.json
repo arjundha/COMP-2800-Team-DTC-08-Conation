@@ -27,6 +27,7 @@
     "express-session": "^1.17.1",
     "favicon": "0.0.2",
     "i": "^0.3.6",
+    "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.3",

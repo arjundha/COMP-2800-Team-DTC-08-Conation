@@ -23,24 +23,28 @@
             <div class="card">
                 <h2 class="card-header">Add Product</h2>
                 <div class="card-body">
-                    <form action="/addProduct" method="post">
+                    <form action="/addProduct" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="productName">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="productName" placeholder="Hockey Stick" required>
+                            <input type="text" class="form-control" id="productName" name="productName"
+                                placeholder="Hockey Stick" required>
                         </div>
                         <div class="form-group">
                             <label for="productDesc">Description</label>
-                            <textarea class="form-control" id="productDesc" name="productDesc" rows="5" placeholder="Description" required></textarea>
+                            <textarea class="form-control" id="productDesc" name="productDesc" rows="5"
+                                placeholder="Description" required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="productCost">Price</label>
-                            <input type="text" class="form-control" id="productCost" name="productCost" placeholder="0.00" required>
-                            <small id="costHelp" class="form-text text-muted">Prices in CAD. Please Do not include a dollar sign ($).</small>
+                            <input type="text" class="form-control" id="productCost" name="productCost"
+                                placeholder="0.00" required>
+                            <small id="costHelp" class="form-text text-muted">Prices in CAD. Please Do not include a
+                                dollar sign ($).</small>
                         </div>
-                        <hr>
                         <div class="form-group">
                             <label for="productIMG">Upload Image</label>
-                            <input type="file" class="form-control-file" id="productIMG" name="productIMG" disabled>
+                            <small class="form-text text-muted mb-3">Upload an image for your product.<br>A square image is ideal.</small>
+                            <input type="file" class="form-control-file" id="productIMG" name="productIMG" required>
                         </div>
                         <input id="addProduct" type="submit" class="btn btn-main float-right" value="Add Product">
                     </form>

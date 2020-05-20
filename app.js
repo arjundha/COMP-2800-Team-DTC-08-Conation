@@ -11,6 +11,12 @@ const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
 const session = require("express-session");
+const multer = require("multer");
+const fs = require("fs");
+
+const upload = multer({
+	dest: "public/src/images/temp"
+  });
 
 const app = express();
 
@@ -419,7 +425,7 @@ app.post('/customer_registration', (req, res) => {
 
 // BUSINESS REGISTRATION //
 
-app.post('/business_registration', (req, res) => {
+app.post('/business_registration', upload.single("image"), (req, res) => {
 	let input = req.body;
 	let email = input.email;
 	let password1 = input.password;
@@ -516,7 +522,19 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+						let newBusinessIDQuery = `SELECT business_id FROM business_owners WHERE email = "${email}"`;
+						pool.query(newBusinessIDQuery, (err, idResult) => {
+							// Image Upload
+							const tempPath = req.file.path;
+							const targetPath = path.join(__dirname, "public/src/images/businesses/" + idResult[0].business_id + ".png");
+							fs.rename(tempPath, targetPath, err => {
+								if (err) {
+									console.log(err);
+								};
+								
+								res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+							});
+						});
 					}
 				});
 			}
@@ -528,12 +546,12 @@ app.post('/business_registration', (req, res) => {
 //    MAIN BUSINESS PAGES    //
 
 app.get('/main', (req, res) => {
-	console.log(req.session.cookie.maxAge);
-	console.log(req.session)
-	console.log(req.session.email);
-	console.log("on main");
+	// console.log(req.session.cookie.maxAge);
+	// console.log(req.session)
+	// console.log(req.session.email);
+	// console.log("on main");
 	if (req.session.user) {
-		let query = "SELECT businesses.id AS id, businesses.name AS name, businesses.description AS description, businesses.category AS category, COUNT(products.id) AS product_count FROM businesses LEFT JOIN products ON products.business_id = businesses.id GROUP BY products.business_id";
+		let query = "SELECT businesses.id AS id, businesses.name AS name, businesses.description AS description, businesses.category AS category, COUNT(products.id) AS product_count FROM businesses LEFT JOIN products ON products.business_id = businesses.id GROUP BY businesses.id";
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
@@ -546,7 +564,7 @@ app.get('/main', (req, res) => {
 					businesses: result
 				})
 			} else {
-				businesses = result;
+				let businesses = result;
 				let query = `SELECT business_id FROM business_owners WHERE email = '${req.session.email}'`;
 				pool.query(query, (err, result) => {
 					if (err) {
@@ -706,7 +724,6 @@ app.get('/business/:id', (req, res) => {
 //        DONATIONS          //
 
 app.get('/donate/:productID', (req, res) => {
-
 	if (req.session.user) {
 		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 			if (err) {
@@ -822,27 +839,34 @@ app.get('/track_donations', (req, res) => {
 // ========================= //
 //      LISTING PRODUCTS     //
 
-app.post('/addProduct', (req, res) => {
+app.post('/addProduct', upload.single("productIMG"), (req, res) => {
 	let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
-	pool.query(query, (err, result) => {
+	pool.query(query, (err, idResult) => {
 		if (err) {
 			console.log(err);
 		}
-		let id = result[0].business_id;
-		let query = `INSERT INTO products (name, description, cost, image, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 'https://via.placeholder.com/250', '${id}');`;
+
+		let id = idResult[0].business_id;
+		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
 				res.redirect('/add_product?success=false');
 			}
+
+			// Image Upload
+			const tempPath = req.file.path;
+			const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
+
 			res.redirect('/add_product?success=true');
 		});
 	});
 });
-
-
-
-
 
 // ========================= //
 //    UPDATE PROFILE INFO    //
@@ -1014,6 +1038,26 @@ app.post("/updateBusinessHours", (req, res) => {
 		})
 	} else {
 		res.redirect('/login');
+	}
+});
+
+app.post('/updateBusinessImage', upload.single("image"), (req, res) => {
+	if (req.session.user) {
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			let id = result[0].business_id;
+			const tempPath = req.file.path;
+			const targetPath = path.join(__dirname, "public/src/images/businesses/" + id + ".png");
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
+		res.redirect('/update_info');
+		});
 	}
 });
 
