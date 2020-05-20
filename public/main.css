@@ -72,6 +72,10 @@ body {
   min-height: 300px;
 }
 
+.productCardImage {
+  height: 250px;
+}
+
 /* ↓ Business Page ↓ */
 #business-header {
   margin-top: 3vw;
