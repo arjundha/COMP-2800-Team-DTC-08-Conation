@@ -73,12 +73,8 @@
     <!-- News -->
     <div class="tab-pane fade" id="pills-news" role="tabpanel" aria-labelledby="pills-news-tab">
         <div class="container">
-            <% if (news.length === 0) { %>
-                <div class="col-sm-12">
-                    <div class="card mb-3">
-                        <p class="card-text mt-5 mb-5 text-center">This business does not have any news posts.</p>
-                    </div>
-                </div>
+            <% if (!news) { %>
+            <p class="mt-5 mb-5 text-center">This business has not yet made any news posts.</p>
             <% } else { %>
             <% news.forEach((newsItem) => { %>
             <div class="card mb-3 mx-auto">
@@ -97,12 +93,8 @@
     <div class="tab-pane fade" id="pills-shop" role="tabpanel" aria-labelledby="pills-shop-tab">
         <div class="container">
             <div class="row">
-                <% if (products.length === 0) { %>
-                <div class="col-sm-12">
-                    <div class="card mb-3">
-                        <p class="card-text mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
-                    </div>
-                </div>
+                <% if (!products) { %>
+                <p class="mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
                 <% } else { %>
                 <% products.forEach((product) => { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3 justify-content-between">
@@ -112,9 +104,6 @@
                             <h5 class="card-title"><%= product.name %></h5>
                             <p class="card-text">$<%= product.cost %></p>
                         </div>
-                        <div class="card-footer">
-                            <a href="/donate/<%= product.id %>" class="btn btn-main float-right">Buy</a>
-                        </div>
                     </div>
                 </div>
                 <% }); %>
@@ -123,4 +112,3 @@
         </div>
     </div>
 </div>
-

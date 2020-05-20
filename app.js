@@ -638,13 +638,13 @@ app.post('/businessType', (req, res) => {
 // ========================= //
 // INDIVIDUAL BUSINESS PAGE  //
 
-app.get('/business', (req, res) => {
-	if (req.session.user) {
-		res.redirect('/main')
-	} else {
-		res.redirect('/login');
-	}
-});
+// app.get('/business', (req, res) => {
+// 	if (req.session.user) {
+// 		res.redirect('/main')
+// 	} else {
+// 		res.redirect('/login');
+// 	}
+// });
 
 app.get('/business/:id', (req, res) => {
 	if (req.session.user) {
@@ -682,7 +682,7 @@ app.get('/business/:id', (req, res) => {
 							});
 
 						} else {
-							res.render("conation/business", {
+							res.render("conation/business_purchase_disabled", {
 								layout: 'layoutBusinessOwner',
 								title: businessResult[0].name,
 								email: req.session.email,
@@ -738,7 +738,6 @@ app.get('/donate/:productID', (req, res) => {
 });
 
 app.post('/addDonation', (req, res) => {
-	console.log('i am adding');
 	console.log(req.body);
 
 	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.session.customerId}', '${req.body.product_id}', '${req.body.amount}');`;
@@ -760,14 +759,22 @@ app.get('/my_donations', (req, res) => {
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/my_donations", {
-				layout: 'layoutLoggedIn',
-				title: 'My Donations',
-				email: req.session.email,
-				donations: result
+			let sumQuery = `SELECT SUM(amount) AS sum FROM donations WHERE customer_id = '${req.session.customerId}';`;
+			pool.query(sumQuery, (error, sum) => {
+				if (error) {
+					console.log(error);
+				}
+				res.render("conation/my_donations", {
+					layout: 'layoutLoggedIn',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result,
+					total: sum[0]
+				});
 			});
 		});
 	}
+
 	else if (req.session.user && req.session.acct == "business") {
 		res.redirect('/track_donations');
 	}
@@ -779,14 +786,26 @@ app.get('/my_donations', (req, res) => {
 
 app.get('/track_donations', (req, res) => {
 	if (req.session.user && req.session.acct == "business") {
-		let businessDonationsQuery = `SELECT * FROM products WHERE business_id = '${req.session.businessId}';`;
+		let businessDonationsQuery = `SELECT *, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id = '${req.session.businessId}' GROUP BY products.id;`;
 		pool.query(businessDonationsQuery, (err, result) => {
-			res.render("conation/track_donations", {
-				layout: 'layoutBusinessOwner',
-				title: 'Track Donations',
-				email: req.session.email,
-				id: req.session.businessId,
-				products: result
+			if (err) {
+				console.log(err);
+			}
+
+			let totalDonationsQuery = `SELECT SUM(amount) AS sum FROM donations JOIN products ON products.id = donations.product_id WHERE products.business_id = '${req.session.businessId}';`;
+			pool.query(totalDonationsQuery, (error, totalDonations) => {
+				if (error) {
+					console.log(error)
+				}
+				console.log(result);
+				res.render("conation/track_donations", {
+					layout: 'layoutBusinessOwner',
+					title: 'Track Donations',
+					email: req.session.email,
+					id: req.session.businessId,
+					products: result,
+					total: totalDonations[0]
+				});
 			});
 		});
 	}
@@ -828,7 +847,7 @@ app.post('/addProduct', (req, res) => {
 // ========================= //
 //    UPDATE PROFILE INFO    //
 
-app.post('/updateBusinessProfile', (req, res) => {
+app.post('/updateProfile', (req, res) => {
 
 	if (req.session.user) {
 		console.log(req.body);
@@ -837,8 +856,9 @@ app.post('/updateBusinessProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -846,8 +866,10 @@ app.post('/updateBusinessProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		}
@@ -857,17 +879,19 @@ app.post('/updateBusinessProfile', (req, res) => {
 	}
 });
 
-app.post('/updateBusinessPassword', (req, res) => {
+app.post('/updatePassword', (req, res) => {
 	if (req.session.user) {
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct == "business") {
+		if (req.session.acct == "business") {
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -875,8 +899,11 @@ app.post('/updateBusinessPassword', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
+
 			});
 		}
 
@@ -898,8 +925,9 @@ app.post('/updateBusinessInfo', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			})
 		})
 	} else {
@@ -907,7 +935,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 	}
 });
 
-app.post("/updateBusinesshours", (req, res) => {
+app.post("/updateBusinessHours", (req, res) => {
 	let input = req.body;
 	let mon;
 	let tue;
@@ -979,8 +1007,9 @@ app.post("/updateBusinesshours", (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 		})
 	} else {
@@ -1003,19 +1032,37 @@ app.post("/addNewsPost", (req, res) => {
 			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
 			pool.query(query, (err, result) => {
 				if (err) {
-					console.log(err);
+					res.redirect("/news_form?success=false");
 				}
-				res.redirect("/main");
+				res.redirect("/news_form?success=true");
 			});
 		})
 	}
 	else {
 		res.redirect("/main")
 	}
-})
+});
 
 
+// 404 ERROR HANDLING //
+app.get('*', function(req, res){
+	if (req.session.acct == "customer") {
+		res.render("conation/error", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/error", {
+			layout: 'layoutBusinessOwner',
+			title: 'Conation',
+			email: req.session.user,
+			id: req.session.businessId
+		})
 
+	} else {
+		res.render("conation/error", { layout: 'layoutLoggedOut', title: 'Conation' });
+	}  });
 
 
 var port = process.env.PORT || 8080;
