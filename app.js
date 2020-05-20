@@ -638,13 +638,13 @@ app.post('/businessType', (req, res) => {
 // ========================= //
 // INDIVIDUAL BUSINESS PAGE  //
 
-app.get('/business', (req, res) => {
-	if (req.session.user) {
-		res.redirect('/main')
-	} else {
-		res.redirect('/login');
-	}
-});
+// app.get('/business', (req, res) => {
+// 	if (req.session.user) {
+// 		res.redirect('/main')
+// 	} else {
+// 		res.redirect('/login');
+// 	}
+// });
 
 app.get('/business/:id', (req, res) => {
 	if (req.session.user) {
@@ -682,7 +682,7 @@ app.get('/business/:id', (req, res) => {
 							});
 
 						} else {
-							res.render("conation/business", {
+							res.render("conation/business_purchase_disabled", {
 								layout: 'layoutBusinessOwner',
 								title: businessResult[0].name,
 								email: req.session.email,
@@ -738,7 +738,6 @@ app.get('/donate/:productID', (req, res) => {
 });
 
 app.post('/addDonation', (req, res) => {
-	console.log('i am adding');
 	console.log(req.body);
 
 	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.session.customerId}', '${req.body.product_id}', '${req.body.amount}');`;
@@ -1025,7 +1024,25 @@ app.post("/addNewsPost", (req, res) => {
 });
 
 
+// 404 ERROR HANDLING //
+app.get('*', function(req, res){
+	if (req.session.acct == "customer") {
+		res.render("conation/error", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/error", {
+			layout: 'layoutBusinessOwner',
+			title: 'Conation',
+			email: req.session.user,
+			id: req.session.businessId
+		})
 
+	} else {
+		res.render("conation/error", { layout: 'layoutLoggedOut', title: 'Conation' });
+	}  });
 
 
 var port = process.env.PORT || 8080;
