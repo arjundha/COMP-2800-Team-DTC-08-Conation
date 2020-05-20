@@ -99,7 +99,7 @@
                 <% products.forEach((product) => { %>
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-3 justify-content-between">
                     <div class="card product-card" style="width: 18rem;">
-                        <img src="/src/images/products/<%= product.id %>.png" class="card-img-top productCardImage" alt="Product" onerror="this.src='https://dummyimage.com/250x250/f7f7f7/354f52&text=<%= product.name[0] %>'">
+                        <img src="/src/images/products/<%= product.id %>.png" class="card-img-top product-card-image" alt="Product" onerror="this.src='https://dummyimage.com/250x250/f7f7f7/354f52&text=<%= product.name[0] %>'">
                         <div class="card-body">
                             <h5 class="card-title"><%= product.name %></h5>
                             <p class="card-text">$<%= product.cost %></p>
