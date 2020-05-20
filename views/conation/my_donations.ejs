@@ -1,14 +1,28 @@
+<br><br><br>
 <div class="container my-4">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <h2 class="card-header">My Donations</h2>
-                <div class="card-body">
-                    <div class="row">
+    <div class="card">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="card-header">My Donations <span style="float: right;" class="badge badge-success">
+                    <% if (donations.length === 0) { %>
+                        Total: $0.00 %>
+                    <% } else { %>
+                     Total: $<%= total['sum'] %>
+                    <% } %>
+                    </span></h2>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <% if (donations.length === 0) { %>
+                    <div class="col-sm-12">
+                        <p class="card-text mt-5 mb-5 text-center">You have not made any donations yet!</p>
+                    </div>
+                <% } else { %>
                         <% donations.forEach((donation) => { %>
                         <div class="col-sm-12 col-md-6 col-lg-4 my-3">
                             <div class="card">
-                                <h4 class="card-header"><%= donation.prodName%> <span style="float: right; color: green;">$<%= donation.amount %></span></h4>
+                                <h4 class="card-header"><%= donation.prodName%> <span style="float: right;" class="badge badge-secondary">$<%= donation.amount %></span></h4>
                                 <img class="card-img-top" src="<%= donation.prodImg %>" alt="image to go here">
                                 <div class="card-body">
                                     <p class="card-text"><%= donation.prodDesc %></p>
@@ -30,9 +44,7 @@
                                 </div>
                             </div>
                         </div>
-                        <% }); %>
-                    </div>
-                </div>
+                    <% }); } %>
             </div>
         </div>
     </div>
