@@ -67,7 +67,7 @@ Conation uses APIs to effectively run the application. The APIs used, as well as
 | Google Maps Geocoding API | https://developers.google.com/maps/documentation/geocoding/start | business_registration.ejs, update_business_info.ejs|
 | PayPal API | https://developer.paypal.com/docs/api/overview/ | donate.ejs |
 
-# External Libraries Used
+## External Libraries Used
 
 The following external libraries are used at various points in our application, listed here with links to their documentation.
 
@@ -100,7 +100,7 @@ The following is a list of all essential npm packages required for this applicat
 
 ## Database
 
-The external storage for the Conation application uses a MySQL Database. We use an application called MySQLWorkbench to work with the data and maintain the database itself. The following table can be used to initialize your database connection to MySQLWorkbench.
+The external storage for Conation is a MySQL database hosted on AWS. We use an application called MySQLWorkbench to work with the data and maintain the database itself. The following table can be used to initialize a connection to the database.
 
 | Variable | Value|
 | --- | --- |
