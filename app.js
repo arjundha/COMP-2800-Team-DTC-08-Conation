@@ -195,29 +195,42 @@ app.get('/map', (req, res) => {
 app.get('/update_info', (req, res) => {
 	if (req.session.user) {
 		if (req.session.acct == "business") {
-			pool.query(`SELECT * FROM businesses WHERE id = '${req.session.businessId}'`, function (err, result) {
-				console.log("The result is: " + result[0].description)
-				res.render('conation/update_business_info', {
-					layout: 'layoutBusinessOwner',
-					title: 'Update Profile',
-					email: req.session.email,
-					id: req.session.businessId,
-					address: result[0].address,
-					address_2: result[0].address_2,
-					city: result[0].city,
-					postal_code: result[0].postal_code,
-					description: result[0].description,
-					lat: result[0].lat,
-					lng: result[0].lng
-				});
+			pool.query(`SELECT * FROM business_owners WHERE business_id = '${req.session.businessId}'`, function (err, result) {
+				let firstName = result[0].first_name;
+				let lastName = result[0].last_name;
+				let phone = result[0].phone;
+				pool.query(`SELECT * FROM businesses WHERE id = '${req.session.businessId}'`, function (err, result) {
+					console.log("The result is: " + result[0].description)
+					res.render('conation/update_business_info', {
+						layout: 'layoutBusinessOwner',
+						title: 'Update Profile',
+						email: req.session.email,
+						id: req.session.businessId,
+						address: result[0].address,
+						address_2: result[0].address_2,
+						city: result[0].city,
+						postal_code: result[0].postal_code,
+						description: result[0].description,
+						lat: result[0].lat,
+						lng: result[0].lng,
+						firstName: firstName,
+						lastName: lastName,
+						phone: phone			
+					});
+				})
 			})
 
 		} else {
-			res.render('conation/update_customer_info', {
-				layout: 'layoutLoggedIn',
-				title: 'Update Profile',
-				email: req.session.email
-			});
+			pool.query(`SELECT * FROM customers WHERE id = '${req.session.customerId}'`, function (err, result) {
+				res.render('conation/update_customer_info', {
+					layout: 'layoutLoggedIn',
+					title: 'Update Profile',
+					email: req.session.email,
+					firstName: result[0].first_name,
+					lastName: result[0].last_name,
+					phone: result[0].phone
+				});
+			})
 		}
 
 	} else {

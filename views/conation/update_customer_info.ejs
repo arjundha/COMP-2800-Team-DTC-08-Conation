@@ -56,7 +56,7 @@
                                             <div class="form-group row">
                                                 <label for="firstName" class="col-sm-3 col-form-label">First Name:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" required>
+                                                    <input type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" value="<%= firstName %>" required>
                                                     <small id="fNameHelp" class="form-text text-muted">Your first name.</small>
                                                 </div>
                                             </div>
@@ -65,7 +65,7 @@
                                             <div class="form-group row">
                                                 <label for="lastName" class="col-sm-3 col-form-label">Last Name:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" required>
+                                                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" value="<%= lastName %>" required>
                                                     <small id="lNameHelp" class="form-text text-muted">Your last name.</small>
                                                 </div>
                                             </div>
@@ -74,7 +74,7 @@
                                             <div class="form-group row">
                                                 <label for="phone" class="col-sm-3 col-form-label">Phone Number:</label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="phone" placeholder="111-222-3333" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                                                    <input type="text" class="form-control" id="phone" placeholder="111-222-3333" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" value="<%= phone %>" required>
                                                     <small id="phoneNumHelp" class="form-text text-muted">Please format as follows: xxx-xxx-xxxx</small>
                                                 </div>
                                             </div>
