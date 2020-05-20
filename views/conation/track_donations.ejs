@@ -1,10 +1,9 @@
-<br><br><br>
 <div class="container my-4">
     <div class="card">
         <div class="row">
             <div class="col-sm-12">
                 <h2 class="card-header">Track Donations <span style="float: right;" class="badge badge-success">
-                        <% if (products.length === 0) { %>
+                        <% if (total['sum'] === null) { %>
                             Total: $0.00 %>
                         <% } else { %>
                             Total: $<%= total['sum'] %>
