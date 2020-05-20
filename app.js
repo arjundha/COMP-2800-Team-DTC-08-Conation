@@ -147,6 +147,10 @@ app.get('/business_registration', (req, res) => {
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
 });
 
+app.get('/license', (req, res) => {
+	res.render('conation/license', { layout: 'layoutLoggedOut', title: 'Business Registration' });
+})
+
 app.get('/about', (req, res) => {
 	if (req.session.acct == "customer") {
 		res.render("conation/about", {
