@@ -728,7 +728,7 @@ app.get('/business/:id', (req, res) => {
 //        DONATIONS          //
 
 app.get('/donate/:productID', (req, res) => {
-	if (req.session.user && req.session.acct == "customer") {
+	if (req.session.user && req.session.acct === "customer") {
 		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 			if (err) {
 				console.log(err);
