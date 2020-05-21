@@ -1,7 +1,7 @@
 <header>
     <div class="container" id="business-header">
         <img id="business-image" src="/src/images/businesses/<%= business.id %>.png" alt="Business Image" onerror="this.style.display='none'">
-        <h1 class="display-4 pl-3 pr-3" id="business-name"><%= business.name %></h1>
+        <h1 class="display-4 pl-3 pr-3 mt-1" id="business-name"><%= business.name %></h1>
     </div>
 </header>
 
@@ -36,7 +36,6 @@
                         <div class="card-body">
                             <p class="card-text">
                                 <%= business.description %>
-                                <hr><a href="#" class="btn btn-main float-right">Donate to <%= business.name %> Now</a>
                             </p>
                         </div>
                     </div>
