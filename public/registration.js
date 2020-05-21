@@ -97,7 +97,6 @@ function verifyPasswordsMatch(){
 $('document').ready(function(){
     $.ajax('/getEmails')
     .done(function(data) {
-        console.log(data[0].email);  
         let takenEmail = [];
         for (i = 0; i < data.length; i++){
             takenEmail.push(data[i].email)
