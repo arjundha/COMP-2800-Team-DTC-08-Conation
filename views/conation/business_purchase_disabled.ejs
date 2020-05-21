@@ -1,3 +1,4 @@
+
 <header>
     <div class="container" id="business-header">
         <img id="business-image" src="/src/images/businesses/<%= business.id %>.png" alt="Business Image"
@@ -112,6 +113,33 @@
                             <img src="/src/images/products/<%= product.id %>.png"
                                 class="card-img-top product-card-image" alt="Product"
                                 onerror="this.src='https://dummyimage.com/250x250/f7f7f7/354f52&text=<%= product.name[0] %>'">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= product.name %></h5>
+                                <p class="card-text">$<%= product.cost %></p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop -->
+        <div class="tab-pane fade" id="pills-shop" role="tabpanel" aria-labelledby="pills-shop-tab">
+            <div class="container">
+                <div class="row">
+                    <% if (products.length === 0) { %>
+                        <div class="col-sm-12">
+                            <div class="card mb-3">
+                                <p class="card-text mt-5 mb-5 text-center">This business does not have any products available for purchase.</p>
+                            </div>
+                        </div>
+                    <% } else { %>
+                    <% products.forEach((product) => { %>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3 justify-content-between">
+                        <div class="card product-card" style="width: 18rem;">
+                            <img src="/src/images/products/<%= product.id %>.png" class="card-img-top product-card-image" alt="Product" onerror="this.src='https://dummyimage.com/250x250/f7f7f7/354f52&text=<%= product.name[0] %>'">
                             <div class="card-body">
                                 <h5 class="card-title"><%= product.name %></h5>
                                 <p class="card-text">$<%= product.cost %></p>
