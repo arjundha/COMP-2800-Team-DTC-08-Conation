@@ -955,10 +955,9 @@ app.post('/updatePassword', (req, res) => {
 				if (err) {
 					console.log(err);
 					res.redirect("/update_info?success=false");
-
+				} else {
+					res.redirect("/update_info?success=true");
 				}
-				res.redirect("/update_info?success=true");
-
 			});
 		}
 
@@ -981,8 +980,9 @@ app.post('/updateBusinessInfo', (req, res) => {
 				if (err) {
 					console.log(err);
 					res.redirect("/update_info?success=false");
+				} else {
+					res.redirect("/update_info?success=true");
 				}
-				res.redirect("/update_info?success=true");
 			})
 		})
 	} else {
@@ -1063,8 +1063,9 @@ app.post("/updateBusinessHours", (req, res) => {
 				if (err) {
 					console.log(err);
 					res.redirect("/update_info?success=false");
+				} else {
+					res.redirect("/update_info?success=true");
 				}
-				res.redirect("/update_info?success=true");
 			});
 		})
 	} else {
