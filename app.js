@@ -148,7 +148,26 @@ app.get('/business_registration', (req, res) => {
 });
 
 app.get('/license', (req, res) => {
-	res.render('conation/license', { layout: 'layoutLoggedOut', title: 'Business Registration' });
+	if (req.session.user && req.session.acct === "customer") {
+		res.render("conation/license", {
+			layout: 'layoutLoggedIn',
+			title: 'Licensing',
+			email: req.session.user,
+		})
+	}
+
+	else if (req.session.user && req.session.acct === "business") {
+		res.render("conation/license", {
+			layout: 'layoutBusinessOwner',
+			title: 'Licensing',
+			email: req.session.user,
+			id: req.session.businessId
+		})
+	}
+
+	else {
+		res.render('conation/license', {layout: 'layoutLoggedOut', title: 'Licensing'});
+	}
 });
 
 app.get('/about', (req, res) => {
