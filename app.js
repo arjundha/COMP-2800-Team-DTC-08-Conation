@@ -12,6 +12,7 @@ const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
 const session = require("express-session");
 const multer = require("multer");
+const fs = require("fs");
 
 const upload = multer({
 	dest: "public/src/images/temp"
