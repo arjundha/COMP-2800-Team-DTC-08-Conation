@@ -1108,8 +1108,9 @@ app.post("/addNewsPost", (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					res.redirect("/news_form?success=false");
+				} else {
+					res.redirect("/news_form?success=true");
 				}
-				res.redirect("/news_form?success=true");
 			});
 		})
 	}
