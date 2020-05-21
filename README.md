@@ -27,13 +27,19 @@ These are the important files and folders of the app and how they are structured
   * **/public**
     * CSS and JS files used throughout our app for styling and functionality
     * **/src/images**
-      * Images used in our app, the businesses and products subfolders contain user-uploaded business and product images
+      * Images used in the app
+      * **/businesses**
+        * User-uploaded business images
+      * **/products**
+        * User-uploaded product images
   * **/views**
     * Layout templates that display depending on whether the user is logged in or not, and the type of their account
-      * **/conation**
-        * EJS files containing the HTML layout for all pages of the website
-      * **/partials**
-        * EJS files containing the HTML layout for headers, footers, and nav bars
+    * **/conation**
+      * EJS files containing the HTML layout for all pages of the website
+    * **/partials**
+      * EJS files containing the HTML layout for headers, footers, and nav bars
+  * **/sample_data**
+    * SQL statements to populate the database with sample data
 
 ## Languages
 
@@ -108,6 +114,9 @@ The external storage for Conation is a MySQL database hosted on AWS. We use an a
 | User | conationadmin |
 | Database | conation |
 | Password | secret1234 |
+
+Sample data was generated using https://mockaroo.com/.  
+Sample photos were sourced from https://unsplash.com/.
 
 ## Testing
 
