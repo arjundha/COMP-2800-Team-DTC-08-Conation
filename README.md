@@ -146,6 +146,13 @@ These are some resources that will be useful while you are using Conation.
 | Repository | https://github.com/arjundha/COMP-2800-Team-DTC-08-Conation |
 | Test Plan | https://docs.google.com/spreadsheets/d/1_-jIOHi42n0BxSDEPdQIkjsozleX9lD6Rdxo2vnHrqI/edit?usp=sharing |
 
+# Code Attributions
+
+| Author | References | Code Location |
+| --- | --- | --- |
+| Traversy Media | https://www.youtube.com/watch?v=Zxf1mnP5zcw | map.js 89-113 |
+| Media Share Button | https://codepen.io/ayoisaiah/pen/YbNaz | index.ejs |
+
 # Set-Up
 
 1. Read all the information in the README.md, and ensure that you are prepared to set up Conation on your computer.
@@ -159,8 +166,3 @@ These are some resources that will be useful while you are using Conation.
    - Alternatively, you can run "npm run dev" to execute Nodemon, which will automatically restart the server whenever you save a change.
 7. Visit localhost:8080 in your browser to use the application.
 8. Have fun!
-
-# Code Snippet Attributions
-
-Media Share Button
-Source: https://codepen.io/ayoisaiah/pen/YbNaz
