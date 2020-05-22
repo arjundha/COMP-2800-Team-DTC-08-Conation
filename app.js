@@ -441,7 +441,7 @@ app.post('/customer_registration', (req, res) => {
 				let hashedPassword = bcrypt.hashSync(password1, 10);
 
 				// SQL code goes here, using name values from the form
-				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ("${hashedPassword}", "${firstName}", "${lastName}", "${email}", "${phone}");`;
 				pool.query(query, (err, result) => {
 					if (err) {
 						console.log(err);
@@ -881,7 +881,7 @@ app.get('/track_donations', (req, res) => {
 
 app.post('/addProduct', upload.single("productIMG"), (req, res) => {
 	let id = req.session.businessId;
-	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
+	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ("${req.body.productName}", "${req.body.productDesc}", "${req.body.productCost}", "${id}");`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
@@ -1110,7 +1110,7 @@ app.post("/addNewsPost", (req, res) => {
 				console.log(err)
 			}
 			let id = result[0].business_id
-			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
+			let query = `INSERT INTO news (business_id, title, content) VALUES ("${id}", "${req.body.title}", "${req.body.description}")`;
 			pool.query(query, (err, result) => {
 				if (err) {
 					res.redirect("/news_form?success=false");
