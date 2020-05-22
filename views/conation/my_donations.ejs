@@ -25,7 +25,7 @@
                         <div class="col-sm-12 col-md-6 col-lg-4 my-3">
                             <div class="card">
                                 <h4 class="card-header"><%= donation.prodName%> <span style="float: right;" class="badge badge-secondary">$<%= donation.amount %></span></h4>
-                                <img class="card-img-top product-card-image" src="/src/images/products/<%= donation.id %>.png" alt="Product Image">
+                                <img class="card-img-top product-card-image" src="/src/images/products/<%= donation.id %>.png" alt="Product Image" onerror="this.src='https://dummyimage.com/250x250/f7f7f7/354f52&text=<%= product.name[0] %>'">
                                 <div class="card-body">
                                     <p class="card-text"><%= donation.prodDesc %></p>
                                     <hr>
