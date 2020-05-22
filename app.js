@@ -888,16 +888,19 @@ app.post('/addProduct', upload.single("productIMG"), (req, res) => {
 				console.log(err);
 				res.redirect('/add_product?success=false');
 			}
-
-			// Image Upload
-			const tempPath = req.file.path;
-			const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
-			fs.rename(tempPath, targetPath, err => {
-				if (err) {
-					console.log(err);
-				};
-			});
-
+			if (req.file) {
+				// Image upload start
+				// This image upload code was adapted from: https://stackoverflow.com/a/15773267/13577042
+				const tempPath = req.file.path;
+				const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
+				fs.rename(tempPath, targetPath, err => {
+					if (err) {
+						console.log(err);
+					};
+				});
+			}
+				// Image upload end
+				// Source: https://stackoverflow.com/a/15773267/13577042
 			res.redirect('/add_product?success=true');
 		});
 	});
