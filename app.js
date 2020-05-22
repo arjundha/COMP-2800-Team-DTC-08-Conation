@@ -875,34 +875,27 @@ app.get('/track_donations', (req, res) => {
 //      LISTING PRODUCTS     //
 
 app.post('/addProduct', upload.single("productIMG"), (req, res) => {
-	let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
-	pool.query(query, (err, idResult) => {
+	let id = req.session.businessId;
+	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
+	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
+			res.redirect('/add_product?success=false');
 		}
-
-		let id = idResult[0].business_id;
-		let query = `INSERT INTO products (name, description, cost, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', '${id}');`;
-		pool.query(query, (err, result) => {
-			if (err) {
-				console.log(err);
-				res.redirect('/add_product?success=false');
-			}
-			if (req.file) {
-				// Image upload start
-				// This image upload code was adapted from: https://stackoverflow.com/a/15773267/13577042
-				const tempPath = req.file.path;
-				const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
-				fs.rename(tempPath, targetPath, err => {
-					if (err) {
-						console.log(err);
-					};
-				});
-			}
-				// Image upload end
-				// Source: https://stackoverflow.com/a/15773267/13577042
-			res.redirect('/add_product?success=true');
-		});
+		if (req.file) {
+			// Image upload start
+			// This image upload code was adapted from: https://stackoverflow.com/a/15773267/13577042
+			const tempPath = req.file.path;
+			const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
+		}
+			// Image upload end
+			// Source: https://stackoverflow.com/a/15773267/13577042
+		res.redirect('/add_product?success=true');
 	});
 });
 
