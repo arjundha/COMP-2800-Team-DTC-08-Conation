@@ -159,3 +159,8 @@ These are some resources that will be useful while you are using Conation.
    - Alternatively, you can run "npm run dev" to execute Nodemon, which will automatically restart the server whenever you save a change.
 7. Visit localhost:8080 in your browser to use the application.
 8. Have fun!
+
+# Code Snippet Attributions
+
+Media Share Button
+Source: https://codepen.io/ayoisaiah/pen/YbNaz
