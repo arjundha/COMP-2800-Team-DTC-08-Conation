@@ -1,3 +1,5 @@
+/* CSS for Easter Egg hangman Game */
+
 body {
   padding-top: 56px;
   background-color: #e8e7e3;
@@ -24,10 +26,6 @@ body {
     margin-bottom: 10px;
     min-width: 0;
     word-wrap: break-word;
-    background-color: rgb(212, 232, 243);
-    background-clip: border-box;
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: .25rem;
   }
   
   .active, .btn-lg:hover {

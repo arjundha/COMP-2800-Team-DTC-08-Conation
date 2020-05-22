@@ -1,25 +1,46 @@
 <div class="container my-4">
+    <div class="card">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="card-header">Track Donations <span style="float: right;" class="badge badge-success">
+                        <% if (total['sum'] === null) { %>
+                            Total: $0.00 %>
+                        <% } else { %>
+                            Total: $<%= total['sum'] %>
+                        <% } %>
+                    </span></h2>
+            </div>
+        </div>
     <div class="row">
         <div class="col-sm-12">
-            <div class="card">
-                <h2 class="card-header">Business Donations</h2>
                 <div class="card-body">
                     <div class="row">
+                        <% if (!products) { %>
+                            <div class="col-sm-12">
+                                <p class="card-text mt-5 mb-5 text-center">You do not have any products for sale yet!</p>
+                            </div>
+                        <% } else { %>
                         <% products.forEach((product) => { %>
                             <div class="col-sm-12 col-md-6 col-lg-4 my-3">
                                 <div class="card">
-                                    <h4 class="card-header"><%= product.name%> <span style="float: right; color: green;">$ ADD AGGREGATE</span></h4>
-                                    <img class="card-img-top" src="<%= product.image %>" alt="image to go here">
+                                    <h4 class="card-header"><%= product.name%> <span class="badge badge-secondary" style="float: right;">
+                                            <% if (product['productSum'] === null) { %>
+                                                $0.00
+                                            <% } else { %>
+                                                $<%= product['productSum'] %>
+                                            <% } %> </span></h4>
+                                    <img class="card-img-top product-card-image" src="/src/images/products/<%= product.productID %>.png" alt="Product Image" onerror="this.src='https://dummyimage.com/250x250/f7f7f7/354f52&text=<%= product.name[0] %>'">
                                     <div class="card-body">
                                         <p class="card-text"><%= product.description %></p>
                                         <hr>
+                                        <p class="card-text" style="text-align: center">Price: $<%= product.cost %></p>
                                     </div>
                                     <div class="card-footer">
-                                        <a href="#" class="btn btn-main float-right">More Info</a>
+                                        <p style="text-align: center; margin: auto" class="text-muted">Total Buyers: <%= product['numSold'] %></p>
                                     </div>
                                 </div>
                             </div>
-                        <% }); %>
+                        <% }); } %>
                     </div>
                 </div>
             </div>

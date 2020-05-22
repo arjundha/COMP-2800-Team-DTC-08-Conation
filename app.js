@@ -11,6 +11,12 @@ const path = require('path');
 const ejsLayouts = require("express-ejs-layouts");
 const bcrypt = require('bcrypt');
 const session = require("express-session");
+const multer = require("multer");
+const fs = require("fs");
+
+const upload = multer({
+	dest: "public/src/images/temp"
+  });
 
 const app = express();
 
@@ -32,6 +38,7 @@ app.set('views', path.join(__dirname, 'views'));
 //    SESSIONS + COOKIES     //
 // ------------------------- //
 
+
 app.use(session({
 	name: "idk",
 	secret: "secret",
@@ -39,21 +46,11 @@ app.use(session({
 	saveUninitialized: true,
 }));
 
-// let session = expressSession({
-// 		name: "idk",
-// 		secret: "mysecret",
-// 		resave: true,
-// 		saveUninitialized: true,
-// 	})
-
-// app.use(session)
-
-
-
 
 // ------------------------- //
 //        CONNECTION         //
 // ------------------------- //
+
 
 const pool = mysql.createPool({
 	host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
@@ -91,8 +88,9 @@ app.get("/", function (req, res) {
 });
 
 app.get('/login', (req, res) => {
+	// Log User Out
 	req.session.destroy();
-	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
+	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log In' });
 });
 
 app.get('/easteregg', (req, res) => {
@@ -116,12 +114,14 @@ app.get('/easteregg', (req, res) => {
 });
 
 app.get('/logout', function (req, res) {
+	// Log User Out
 	req.session.destroy();
 	res.redirect('/login');
 });
 
 app.get('/registration', (req, res) => {
 	if (req.session.email) {
+		// Log User Out
 		req.session.destroy();
 	}
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
@@ -129,6 +129,7 @@ app.get('/registration', (req, res) => {
 
 app.get('/customer_registration', (req, res) => {
 	if (req.session.email) {
+		// Log User Out
 		req.session.destroy();
 	}
 	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
@@ -136,9 +137,33 @@ app.get('/customer_registration', (req, res) => {
 
 app.get('/business_registration', (req, res) => {
 	if (req.session.email) {
+		// Log User Out
 		req.session.destroy();
 	}
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
+});
+
+app.get('/license', (req, res) => {
+	if (req.session.user && req.session.acct === "customer") {
+		res.render("conation/license", {
+			layout: 'layoutLoggedIn',
+			title: 'Licensing',
+			email: req.session.user,
+		})
+	}
+
+	else if (req.session.user && req.session.acct === "business") {
+		res.render("conation/license", {
+			layout: 'layoutBusinessOwner',
+			title: 'Licensing',
+			email: req.session.user,
+			id: req.session.businessId
+		})
+	}
+
+	else {
+		res.render('conation/license', {layout: 'layoutLoggedOut', title: 'Licensing'});
+	}
 });
 
 app.get('/about', (req, res) => {
@@ -185,29 +210,42 @@ app.get('/map', (req, res) => {
 app.get('/update_info', (req, res) => {
 	if (req.session.user) {
 		if (req.session.acct == "business") {
-			pool.query(`SELECT * FROM businesses WHERE id = '${req.session.businessId}'`, function (err, result) {
-				console.log("The result is: " + result[0].description)
-				res.render('conation/update_business_info', {
-					layout: 'layoutBusinessOwner',
-					title: 'Update Profile',
-					email: req.session.email,
-					id: req.session.businessId,
-					address: result[0].address,
-					address_2: result[0].address_2,
-					city: result[0].city,
-					postal_code: result[0].postal_code,
-					description: result[0].description,
-					lat: result[0].lat,
-					lng: result[0].lng
-				});
+			pool.query(`SELECT * FROM business_owners WHERE business_id = "${req.session.businessId}"`, function (err, result) {
+				let firstName = result[0].first_name;
+				let lastName = result[0].last_name;
+				let phone = result[0].phone;
+				pool.query(`SELECT * FROM businesses WHERE id = "${req.session.businessId}"`, function (err, result) {
+					console.log("The result is: " + result[0].description)
+					res.render('conation/update_business_info', {
+						layout: 'layoutBusinessOwner',
+						title: 'Update Profile',
+						email: req.session.email,
+						id: req.session.businessId,
+						address: result[0].address,
+						address_2: result[0].address_2,
+						city: result[0].city,
+						postal_code: result[0].postal_code,
+						description: result[0].description,
+						lat: result[0].lat,
+						lng: result[0].lng,
+						firstName: firstName,
+						lastName: lastName,
+						phone: phone			
+					});
+				})
 			})
 
 		} else {
-			res.render('conation/update_customer_info', {
-				layout: 'layoutLoggedIn',
-				title: 'Update Profile',
-				email: req.session.email
-			});
+			pool.query(`SELECT * FROM customers WHERE id = "${req.session.customerId}"`, function (err, result) {
+				res.render('conation/update_customer_info', {
+					layout: 'layoutLoggedIn',
+					title: 'Update Profile',
+					email: req.session.email,
+					firstName: result[0].first_name,
+					lastName: result[0].last_name,
+					phone: result[0].phone
+				});
+			})
 		}
 
 	} else {
@@ -394,7 +432,7 @@ app.post('/customer_registration', (req, res) => {
 				let hashedPassword = bcrypt.hashSync(password1, 10);
 
 				// SQL code goes here, using name values from the form
-				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ('${hashedPassword}', '${firstName}', '${lastName}', '${email}', '${phone}');`;
+				let query = `INSERT INTO customers (password, first_name, last_name, email, phone) VALUES ("${hashedPassword}", "${firstName}", "${lastName}", "${email}", "${phone}");`;
 				pool.query(query, (err, result) => {
 					if (err) {
 						console.log(err);
@@ -419,7 +457,7 @@ app.post('/customer_registration', (req, res) => {
 
 // BUSINESS REGISTRATION //
 
-app.post('/business_registration', (req, res) => {
+app.post('/business_registration', upload.single("image"), (req, res) => {
 	let input = req.body;
 	let email = input.email;
 	let password1 = input.password;
@@ -516,7 +554,23 @@ app.post('/business_registration', (req, res) => {
 						console.log(err);
 						return res.status(500).send(err);
 					} else {
-						res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+						let newBusinessIDQuery = `SELECT business_id FROM business_owners WHERE email = "${email}"`;
+						pool.query(newBusinessIDQuery, (err, idResult) => {
+							if (req.file) {
+								// Image upload start
+								// This image upload code was adapted from: https://stackoverflow.com/a/15773267/13577042
+								const tempPath = req.file.path;
+								const targetPath = path.join(__dirname, "public/src/images/businesses/" + idResult[0].business_id + ".png");
+								fs.rename(tempPath, targetPath, err => {
+									if (err) {
+										console.log(err);
+									};
+								});
+							}
+								// Image upload end
+								// Source: https://stackoverflow.com/a/15773267/13577042
+							res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
+						});
 					}
 				});
 			}
@@ -528,12 +582,12 @@ app.post('/business_registration', (req, res) => {
 //    MAIN BUSINESS PAGES    //
 
 app.get('/main', (req, res) => {
-	console.log(req.session.cookie.maxAge);
-	console.log(req.session)
-	console.log(req.session.email);
-	console.log("on main");
+	// console.log(req.session.cookie.maxAge);
+	// console.log(req.session)
+	// console.log(req.session.email);
+	// console.log("on main");
 	if (req.session.user) {
-		let query = "SELECT businesses.name AS name, businesses.description AS description, businesses.category AS category, COUNT(products.id) AS product_count FROM businesses LEFT JOIN products ON products.business_id = businesses.id GROUP BY products.business_id";
+		let query = "SELECT businesses.id AS id, businesses.name AS name, businesses.description AS description, businesses.category AS category, COUNT(products.id) AS product_count FROM businesses LEFT JOIN products ON products.business_id = businesses.id GROUP BY businesses.id";
 		pool.query(query, (err, result) => {
 			if (err) {
 				console.log(err);
@@ -546,8 +600,8 @@ app.get('/main', (req, res) => {
 					businesses: result
 				})
 			} else {
-				businesses = result;
-				let query = `SELECT business_id FROM business_owners WHERE email = '${req.session.email}'`;
+				let businesses = result;
+				let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 				pool.query(query, (err, result) => {
 					if (err) {
 						console.log(err);
@@ -638,14 +692,6 @@ app.post('/businessType', (req, res) => {
 // ========================= //
 // INDIVIDUAL BUSINESS PAGE  //
 
-app.get('/business', (req, res) => {
-	if (req.session.user) {
-		res.redirect('/main')
-	} else {
-		res.redirect('/login');
-	}
-});
-
 app.get('/business/:id', (req, res) => {
 	if (req.session.user) {
 		let id = req.params.id;
@@ -682,7 +728,7 @@ app.get('/business/:id', (req, res) => {
 							});
 
 						} else {
-							res.render("conation/business", {
+							res.render("conation/business_purchase_disabled", {
 								layout: 'layoutBusinessOwner',
 								title: businessResult[0].name,
 								email: req.session.email,
@@ -706,30 +752,24 @@ app.get('/business/:id', (req, res) => {
 //        DONATIONS          //
 
 app.get('/donate/:productID', (req, res) => {
-
-	if (req.session.user) {
+	if (req.session.user && req.session.acct === "customer") {
 		pool.query(`SELECT * FROM products WHERE id = ${req.params.productID};`, (err, result) => {
 			if (err) {
 				console.log(err);
 
-			} else if (req.session.acct == "customer") {
-				res.render("conation/donate", {
-					layout: 'layoutLoggedIn',
-					title: result[0].name,
-					product: result[0],
-					email: req.session.user
-				})
 			}
-			else {
-				res.render("conation/donate", {
-					layout: 'layoutBusinessOwner',
-					title: result[0].name,
-					product: result[0],
-					email: req.session.user,
-					id: req.session.businessId
-				})
-			}
+			res.render("conation/donate", {
+				layout: 'layoutLoggedIn',
+				title: result[0].name,
+				product: result[0],
+				email: req.session.user
+				});
+
 		});
+	}
+
+	else if (req.session.user && req.session.acct === "business") {
+		res.redirect('/error');
 	}
 
 	else {
@@ -738,7 +778,6 @@ app.get('/donate/:productID', (req, res) => {
 });
 
 app.post('/addDonation', (req, res) => {
-	console.log('i am adding');
 	console.log(req.body);
 
 	let query = `INSERT INTO donations (customer_id, product_id, amount) VALUES ('${req.session.customerId}', '${req.body.product_id}', '${req.body.amount}');`;
@@ -755,19 +794,27 @@ app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
 	if (req.session.user && req.session.acct == "customer") {
 		// `SELECT * FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`
-		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.image AS prodImg, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = '${req.session.customerId}';`;
+		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.id AS id, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id "${req.session.customerId}";`;
 		pool.query(donationProductsQuery, (err, result) => { // Need customer id to be based on session
 			if (err) {
 				console.log(err);
 			}
-			res.render("conation/my_donations", {
-				layout: 'layoutLoggedIn',
-				title: 'My Donations',
-				email: req.session.email,
-				donations: result
+			let sumQuery = `SELECT SUM(amount) AS sum FROM donations WHERE customer_id = "${req.session.customerId}";`;
+			pool.query(sumQuery, (error, sum) => {
+				if (error) {
+					console.log(error);
+				}
+				res.render("conation/my_donations", {
+					layout: 'layoutLoggedIn',
+					title: 'My Donations',
+					email: req.session.email,
+					donations: result,
+					total: sum[0]
+				});
 			});
 		});
 	}
+
 	else if (req.session.user && req.session.acct == "business") {
 		res.redirect('/track_donations');
 	}
@@ -779,14 +826,26 @@ app.get('/my_donations', (req, res) => {
 
 app.get('/track_donations', (req, res) => {
 	if (req.session.user && req.session.acct == "business") {
-		let businessDonationsQuery = `SELECT * FROM products WHERE business_id = '${req.session.businessId}';`;
+		let businessDonationsQuery = `SELECT *, products.id AS productID, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id = "${req.session.businessId}" GROUP BY productID;`;
 		pool.query(businessDonationsQuery, (err, result) => {
-			res.render("conation/track_donations", {
-				layout: 'layoutBusinessOwner',
-				title: 'Track Donations',
-				email: req.session.email,
-				id: req.session.businessId,
-				products: result
+			if (err) {
+				console.log(err);
+			}
+
+			let totalDonationsQuery = `SELECT SUM(amount) AS sum FROM donations JOIN products ON products.id = donations.product_id WHERE products.business_id = "${req.session.businessId}";`;
+			pool.query(totalDonationsQuery, (error, totalDonations) => {
+				if (error) {
+					console.log(error)
+				}
+				console.log(result);
+				res.render("conation/track_donations", {
+					layout: 'layoutBusinessOwner',
+					title: 'Track Donations',
+					email: req.session.email,
+					id: req.session.businessId,
+					products: result,
+					total: totalDonations[0]
+				});
 			});
 		});
 	}
@@ -803,32 +862,35 @@ app.get('/track_donations', (req, res) => {
 // ========================= //
 //      LISTING PRODUCTS     //
 
-app.post('/addProduct', (req, res) => {
-	let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+app.post('/addProduct', upload.single("productIMG"), (req, res) => {
+	let id = req.session.businessId;
+	let query = `INSERT INTO products (name, description, cost, business_id) VALUES ("${req.body.productName}", "${req.body.productDesc}", "${req.body.productCost}", "${id}");`;
 	pool.query(query, (err, result) => {
 		if (err) {
 			console.log(err);
+			res.redirect('/add_product?success=false');
 		}
-		let id = result[0].business_id;
-		let query = `INSERT INTO products (name, description, cost, image, business_id) VALUES ('${req.body.productName}', '${req.body.productDesc}', '${req.body.productCost}', 'https://via.placeholder.com/250', '${id}');`;
-		pool.query(query, (err, result) => {
-			if (err) {
-				console.log(err);
-				res.redirect('/add_product?success=false');
-			}
-			res.redirect('/add_product?success=true');
-		});
+		if (req.file) {
+			// Image upload start
+			// This image upload code was adapted from: https://stackoverflow.com/a/15773267/13577042
+			const tempPath = req.file.path;
+			const targetPath = path.join(__dirname, "public/src/images/products/" + result.insertId + ".png");
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
+		}
+			// Image upload end
+			// Source: https://stackoverflow.com/a/15773267/13577042
+		res.redirect('/add_product?success=true');
 	});
 });
-
-
-
-
 
 // ========================= //
 //    UPDATE PROFILE INFO    //
 
-app.post('/updateBusinessProfile', (req, res) => {
+app.post('/updateProfile', (req, res) => {
 
 	if (req.session.user) {
 		console.log(req.body);
@@ -837,8 +899,9 @@ app.post('/updateBusinessProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -846,8 +909,10 @@ app.post('/updateBusinessProfile', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		}
@@ -857,17 +922,19 @@ app.post('/updateBusinessProfile', (req, res) => {
 	}
 });
 
-app.post('/updateBusinessPassword', (req, res) => {
+app.post('/updatePassword', (req, res) => {
 	if (req.session.user) {
 		let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
-		if (req.sesstion.acct == "business") {
+		if (req.session.acct == "business") {
 			let query = `UPDATE business_owners SET password = "${hashedPassword}" WHERE email = "${req.session.email}"`;
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+
 				}
-				res.redirect("/update_info");
+				res.redirect("/update_info?success=true");
 			});
 
 		} else {
@@ -875,8 +942,10 @@ app.post('/updateBusinessPassword', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+				} else {
+					res.redirect("/update_info?success=true");
 				}
-				res.redirect("/update_info");
 			});
 		}
 
@@ -898,8 +967,10 @@ app.post('/updateBusinessInfo', (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+				} else {
+					res.redirect("/update_info?success=true");
 				}
-				res.redirect("/update_info");
 			})
 		})
 	} else {
@@ -907,7 +978,7 @@ app.post('/updateBusinessInfo', (req, res) => {
 	}
 });
 
-app.post("/updateBusinesshours", (req, res) => {
+app.post("/updateBusinessHours", (req, res) => {
 	let input = req.body;
 	let mon;
 	let tue;
@@ -979,12 +1050,34 @@ app.post("/updateBusinesshours", (req, res) => {
 			pool.query(query, (err, result) => {
 				if (err) {
 					console.log(err);
+					res.redirect("/update_info?success=false");
+				} else {
+					res.redirect("/update_info?success=true");
 				}
-				res.redirect("/update_info");
 			});
 		})
 	} else {
 		res.redirect('/login');
+	}
+});
+
+app.post('/updateBusinessImage', upload.single("image"), (req, res) => {
+	if (req.session.user) {
+		let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
+		pool.query(query, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			let id = result[0].business_id;
+			const tempPath = req.file.path;
+			const targetPath = path.join(__dirname, "public/src/images/businesses/" + id + ".png");
+			fs.rename(tempPath, targetPath, err => {
+				if (err) {
+					console.log(err);
+				};
+			});
+		res.redirect('/update_info');
+		});
 	}
 });
 
@@ -1000,22 +1093,41 @@ app.post("/addNewsPost", (req, res) => {
 				console.log(err)
 			}
 			let id = result[0].business_id
-			let query = `INSERT INTO news (business_id, title, content) VALUES ('${id}', '${req.body.title}', '${req.body.description}')`;
+			let query = `INSERT INTO news (business_id, title, content) VALUES ("${id}", "${req.body.title}", "${req.body.description}")`;
 			pool.query(query, (err, result) => {
 				if (err) {
-					console.log(err);
+					res.redirect("/news_form?success=false");
+				} else {
+					res.redirect("/news_form?success=true");
 				}
-				res.redirect("/main");
 			});
 		})
 	}
 	else {
 		res.redirect("/main")
 	}
-})
+});
 
 
+// 404 ERROR HANDLING //
+app.get('*', function(req, res){
+	if (req.session.acct == "customer") {
+		res.render("conation/error", {
+			layout: 'layoutLoggedIn',
+			title: 'Conation',
+			email: req.session.user,
+		})
+	} else if (req.session.acct == "business") {
+		res.render("conation/error", {
+			layout: 'layoutBusinessOwner',
+			title: 'Conation',
+			email: req.session.user,
+			id: req.session.businessId
+		})
 
+	} else {
+		res.render("conation/error", { layout: 'layoutLoggedOut', title: 'Conation' });
+	}  });
 
 
 var port = process.env.PORT || 8080;

@@ -3,13 +3,16 @@
     <h2>The following information will be used to create and maintain your log-in:</h2>
     <br>
 
-    <form id="businessForm" action="/business_registration" method="POST"> <!-- should POST and the action should be to the database -->
+    <form id="businessForm" action="/business_registration" method="POST" enctype="multipart/form-data">
         <!-- Enter Email -->
         <div class="form-group row">
             <label for="email" class="col-sm-2 col-form-label">Email:</label>
             <div class="col-sm-10">
-                <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address. Ex. sample@email.com" required>
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <input type="email" class="form-control" id="emailInput" placeholder="Email" name="email"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                    title="Please enter a valid email address. Ex. sample@email.com" required>
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
                 <small id="emailTaken" class="form-text text-danger"></small>
             </div>
         </div>
@@ -17,32 +20,39 @@
         <div class="form-group row">
             <label for="password" class="col-sm-2 col-form-label">Password:</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="passwordInput" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password" title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
-                <small id="emailHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number and one special character (!?$%&@#).</small>
+                <input type="password" class="form-control" id="passwordInput" placeholder="Password"
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!?$%&@#]).{8,}" name="password"
+                    title="Does not meet requirements" onkeyup="checkPasswordMatch(); finalPasswordCheck()" required>
+                <small id="emailHelp" class="form-text text-muted">Passwords must be at least 8 characters long, contain
+                    one uppercase letter, one lowercase letter, one number, and one special character (!?$%&@#).</small>
             </div>
         </div>
-    
+
         <div class="form-group row">
             <label for="passwordConfirm" class="col-sm-2 col-form-label">Confirm Password:</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password" name="password2" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this); finalPasswordCheck()" required>
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="Confirm Password"
+                    name="password2" onkeyup="checkPasswordMatch(); checkPasswordIsValid(this); finalPasswordCheck()"
+                    required>
                 <small id="divCheckPasswordMatch" class="form-text text-danger"></small>
                 <small id="divCheckPasswordMatchTrue" class="form-text text-success"></small>
             </div>
         </div>
-    
+
         <!-- Business Owner Name -->
         <div class="form-group row">
             <label for="firstName" class="col-sm-2 col-form-label">First Name:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" name="firstName" required>
+                <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" name="firstName"
+                    required>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="lastName" class="col-sm-2 col-form-label">Last Name:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" name="lastName" required>
+                <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" name="lastName"
+                    required>
             </div>
         </div>
 
@@ -50,7 +60,9 @@
         <div class="form-group row">
             <label for="phone" class="col-sm-2 col-form-label">Phone number:</label>
             <div class="col-sm-10">
-                <input type="tel" class="form-control" id="phoneInput" placeholder="123-456-7890" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="Enter your phone number as follows: xxx-xxx-xxxx" required>
+                <input type="text" class="form-control" id="phoneInput" placeholder="123-456-7890" name="phone"
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="Enter your phone number as follows: xxx-xxx-xxxx"
+                    required>
             </div>
         </div>
 
@@ -62,30 +74,33 @@
         <div class="form-group row">
             <label for="businessName" class="col-sm-2 col-form-label">Business Name:</label>
             <div class="col-sm-10">
-                <input type="tel" class="form-control" id="nameInput" placeholder="McDonald's" name="businessName" required>
+                <input type="text" class="form-control" id="nameInput" placeholder="McDonald's" name="businessName"
+                    required>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="inputAddress">Address</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" required>
+            <label for="inputAddress">Address:</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address"
+                required>
         </div>
         <!-- THESE ARE HIDDEN -->
         <!-- lat -->
         <!-- style="display: none;" -->
-            <div class="form-group" style="display: none;">
-                <label for="lat">lat</label>
-                <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" required>
-            </div>
-            <!-- long -->
-            <div class="form-group" style="display: none;">
-                <label for="lat">long</label>
-                <input type="text" class="form-control" id="long" placeholder="long" name="long" required>
-            </div>
+        <div class="form-group" style="display: none;">
+            <label for="lat">lat</label>
+            <input type="text" class="form-control" id="lat" placeholder="lat" name="lat" required>
+        </div>
+        <!-- long -->
+        <div class="form-group" style="display: none;">
+            <label for="lat">long</label>
+            <input type="text" class="form-control" id="long" placeholder="long" name="long" required>
+        </div>
 
         <div class="form-group">
-            <label for="inputAddress2">Address 2</label>
-            <input type="text" class="form-control" id="inputAddress2" name="address2" placeholder="Apartment, studio, or floor">
+            <label for="inputAddress2">Address 2:</label>
+            <input type="text" class="form-control" id="inputAddress2" name="address2"
+                placeholder="Apartment, studio, or floor">
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -93,7 +108,7 @@
                 <input type="text" class="form-control" id="inputCity" name="city" required>
             </div>
             <div class="form-group col-md-4">
-                <label for="inputProvince">Province or Territory</label>
+                <label for="inputProvince">Province or Territory:</label>
                 <select id="inputProvince" class="form-control" required name="prov">
                     <option selected>BC</option>
                     <option>AB</option>
@@ -111,22 +126,27 @@
                 </select>
             </div>
             <div class="form-group col-md-2">
-                <label for="inputZip">Postal Code</label>
-                <input type="text" name="zip" class="form-control" id="inputZip" pattern="[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]" placeholder="A1A1A1" title="Please enter in the following format: A1B2C3" required>
+                <label for="inputZip">Postal Code:</label>
+                <input type="text" name="zip" class="form-control" id="inputZip"
+                    pattern="[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]" placeholder="A1A1A1"
+                    title="Please enter in the following format: A1B2C3" required>
             </div>
         </div>
 
-            <!-- Add a Description -->
+        <!-- Add a Description -->
         <div class="form-group">
-            <label for="description">Business Description</label>
-            <small id="emailHelp" class="form-text text-muted">Enter a few short sentences to describe your business.</small>
-            <textarea class="form-control" id="descriptionInput" rows="3" placeholder="Description" name="description"></textarea>
+            <label for="description">Business Description:</label>
+            <small id="emailHelp" class="form-text text-muted">Enter a few short sentences to describe your
+                business.</small>
+            <textarea class="form-control" id="descriptionInput" rows="3" placeholder="Description"
+                name="description"></textarea>
         </div>
 
         <div class="form-group">
-            <label for="businessTag">Business Category</label>
-            <small id="tagHelp" class="form-text text-muted">Choose the category that best describes your business.</small>
-            <select id="inputTag" class="form-control" name='tag'required>
+            <label for="businessTag">Business Category:</label>
+            <small id="tagHelp" class="form-text text-muted">Choose the category that best describes your
+                business.</small>
+            <select id="inputTag" class="form-control" name='tag' required>
                 <option value="" id="placeholderOption" value="Select" selected disabled>---</option>
                 <option>Bakery</option>
                 <option>Café</option>
@@ -141,9 +161,10 @@
                 <option>Other</option>
             </select>
         </div>
-        
+
         <label> Hours of Operation</label>
-        <small class="form-text text-muted mb-3">Select the time your business opens and closes each day.<br>Select "Closed" if your business is closed that day.<br>Select "24 hours" if your business is open all day.</small>
+        <small class="form-text text-muted mb-3">Select the time your business opens and closes each day.<br>Select
+            "Closed" if your business is closed that day.<br>Select "24 hours" if your business is open all day.</small>
         <div class="form-row">
             <div class="form-group col-sm-6 col-med-6 col-lg-2">
                 <label>Monday</label>
@@ -253,8 +274,16 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="image">Image</label>
+            <small class="form-text text-muted mb-3">Upload an image to represent your business.<br>A large rectangular
+                banner is ideal.</small>
+            <input type="file" name="image">
+        </div>
+
         <!-- Submit to the Database -->
-        <button id="submitBtn" type="submit" class="btn btn-dark float-right" onclick="finalPasswordCheck()">Submit</button>
+        <button id="submitBtn" type="submit" class="btn btn-dark float-right"
+            onclick="finalPasswordCheck()">Submit</button>
         <div id="error_msg"></div>
         <br>
     </form>

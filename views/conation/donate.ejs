@@ -1,5 +1,5 @@
-<div class="container mt-3">
-    <div id="donationFail" class="alert alert-danger alert-dismissible fade show mt-1" role="alert">
+<div id="donationFail" class="container mt-3" style="display: none">
+    <div class="alert alert-danger alert-dismissible fade show mt-1" role="alert">
         <strong>Sorry!</strong> Your donation was unsuccessful. Please try again.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -7,8 +7,8 @@
     </div>
 </div>
 
-<div class="container mt-3">
-    <div id="donationSuccess" class="alert alert-success alert-dismissible fade show mt-1" role="alert">
+<div id="donationSuccess" class="container mt-3" style="display: none">
+    <div class="alert alert-success alert-dismissible fade show mt-1" role="alert">
         <strong>Congratulations!</strong> Your donation was successful. <a href="/my_donations" class="alert-link">Click here to view your donations.</a>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -20,11 +20,11 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <h2 class="card-header"><%= product.name %> <span style="float:right;">$<%= product.cost %></span></h2>
+                <h2 class="card-header"><%= product.name %> <span style="float:right;" class="badge badge-secondary">$<%= product.cost %></span></h2>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="<%= product.image %>" class="img-fluid" alt="Product Image"/>
+                            <img src="/src/images/products/<%= product.id %>.png" class="img-fluid productCardImage" alt="Product Image" onerror="this.style.display='none'"/>
                         </div>
                         <div class="col-md-8">
                             <p> <%= product.description %></p>
@@ -44,9 +44,6 @@
 
 <script src="https://www.paypal.com/sdk/js?currency=CAD&client-id=AdCxqsvZVk8XNDLTjmt_tJ43ke7dKQFrPcG8_qpDe4fylQ9NRWyyFH3fF2DqV9QRz1iL-GxMzp8O8R07"></script>
 <script>
-    $('#donationFail').hide();
-    $('#donationSuccess').hide();
-
     paypal.Buttons({
         createOrder: function(data, actions) {
             // This function sets up the details of the transaction, including the amount and line item details.
@@ -73,7 +70,6 @@
                         amount: "<%= product.cost %>"
                     }
                 }).done(function(data) {
-                    // window.location.href = "/my_donations";
                     $('#donationSuccess').show();
                 }).fail(function(error) {
                     console.log(error);
@@ -89,14 +85,4 @@
         }
     }).render('#paypal-button-container');
     //This function displays Smart Payment Buttons on your web page.
-    //
-    // let urlParams = new URLSearchParams(window.location.search);
-    // let success = urlParams.get('success');
-    //
-    // if(success === "true") {
-    //     $('#donationSuccess').show();
-    // }
-    // else if (success === "false") {
-    //     $('#donationFail').show();
-    // }
 </script>

@@ -48,30 +48,6 @@ function initMap() {
       zoom: 15
       });
 
-    // Array of test markers
-    // let markers = [
-    // {
-    //   coords:{lat:48.4271342,lng:-123.3695606},
-    //   content:'<h3>Il Terrazo</h3>'
-    // },
-    // {
-    //     coords:{lat:48.4263023,lng:-123.3631996,},
-    //     content: `
-    //     <h3>Fan Favourites</h3>
-    //     <p>We are a local used game store</p>
-    //     <p>We are open for pick-up on weekends</p>
-    //     <p>Our website is www.google.ca</p>
-    //     `
-
-    // },
-    // ];
-
-    // // Loop through markers
-    // for(var i = 0;i < markers.length;i++){
-    //   // Add marker
-    //   addMarker(markers[i]);
-    // }
-
     // Browser asks for location
     let infoWindow = new google.maps.InfoWindow;
 
@@ -104,7 +80,12 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
+
 // Add Marker Function
+
+// The code for constructing an appMarker utilzed some code from https://www.youtube.com
+// @author Traversy Media
+// @source https://www.youtube.com/watch?v=Zxf1mnP5zcw
 function addMarker(props){
   let marker = new google.maps.Marker({
     position:props.coords,
@@ -130,6 +111,8 @@ function addMarker(props){
     });
   }
 }
+// @source https://www.youtube.com/watch?v=Zxf1mnP5zcw
+// End of Add Marker function
 
 // Function for creating descriptive markers for each business
 function codeAddress(obj) {
@@ -138,6 +121,7 @@ function codeAddress(obj) {
   addMarker({coords: {lat: obj.lat, lng: obj.lng}, content: description});
 }
 
+// Super constructor for creating 
 // Create tag contents from business info
 function contentMaker(obj){
   // Business Info

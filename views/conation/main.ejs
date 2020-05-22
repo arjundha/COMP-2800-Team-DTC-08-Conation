@@ -1,130 +1,71 @@
 <!-- Donation Carousel -->
-<div class="container">
-    <div id="donationSlides" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-            <li data-target="#donationSlides" data-slide-to="0" class="active"></li>
-            <li data-target="#donationSlides" data-slide-to="1"></li>
-            <li data-target="#donationSlides" data-slide-to="2"></li>
-            <li data-target="#donationSlides" data-slide-to="3"></li>
-            <li data-target="#donationSlides" data-slide-to="4"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item carousel-two active">
-                <img class="d-block w-100 item-img"
-                    src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-                    alt="First slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Example Thing</h5>
-                    <p>More Info</p>
-                </div>
-            </div>
-            <div class="carousel-item carousel-two">
-                <img class="d-block w-100 item-img"
-                    src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-                    alt="Second slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Example Thing</h5>
-                    <p>More Info</p>
-                </div>
-            </div>
-            <div class="carousel-item carousel-two">
-                <img class="d-block w-100 item-img" src="src/images/sarahInGhana.jpg" alt="Third slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Example Thing</h5>
-                    <p>More Info</p>
-                </div>
-            </div>
-            <div class="carousel-item carousel-two">
-                <img class="d-block w-100 item-img"
-                    src="https://images.pexels.com/photos/972995/pexels-photo-972995.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-                    alt="Fourth slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Example Thing</h5>
-                    <p>More Info</p>
-                </div>
-            </div>
-            <div class="carousel-item carousel-two">
-                <img class="d-block w-100 item-img"
-                    src="https://images.pexels.com/photos/826349/pexels-photo-826349.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-                    alt="Fifth slide">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Example Thing</h5>
-                    <p>More Info</p>
-                </div>
-            </div>
+<div class="carousel-inner">
+    <!-- Slide One - Set the background image for this slide in the line below -->
+    <div class="carousel-item active carousel-conation" id="logoBanner">
+        <div class="col-lg-12 text-center">
         </div>
-        <a class="carousel-control-prev" href="#donationSlides" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#donationSlides" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
     </div>
 </div>
-
 <!-- Filter and Sort -->
-<div class="container p-3">
-    <form>
-        <!-- <div class="col-sm-2 col-lg-3"></div> -->
-        <div class="form-group row">
-            <label for="search" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10 col-lg-6">
-                <input class="form-control form-control-sm" id="searchText" type="search" placeholder="Search">
+<div class="container mt-4">
+    <div class="card">
+        <form>
+            <div class="form-group row mt-3 mx-1">
+                <label for="search" class="col-md-2 offset-lg-1 col-form-label">Search by...</label>
+                <div class="col-sm-10 col-md-8 col-lg-6">
+                    <input class="form-control form-control-sm" id="searchText" type="search" placeholder="Search">
+                </div>
             </div>
-        </div>
-        <div class="col-sm-2 col-lg-3"></div>
-        <div class="form-group row">
-            <label for="sort" class="col-sm-2 col-form-label">Sort By...</label>
-            <div class="col-sm-10 col-lg-6">
-                <select class="form-control form-control-sm" id="searchSort">
-                    <option selected>Name &darr;</option>
-                    <option>Name &uarr;</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="filter" class="col-sm-2 col-form-label">Filter By...</label>
-            <div class="col-sm-10 col-lg-6">
-                <select class="form-control form-control-sm" id="searchFilter">
-                    <option selected>None</option>
-                    <option>Bakery</option>
-                    <option>Café</option>
-                    <option>Clothing</option>
-                    <option>Floral</option>
-                    <option>Electronics</option>
-                    <option>Gifts</option>
-                    <option>Grocery</option>
-                    <option>Medical</option>
-                    <option>Restaurant</option>
-                    <option>Services</option>
-                    <option>Other</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-10 col-lg-6">
-                <div class="form-check">
-                    <input class="form-check-input" id="searchOnlineStore" type="checkbox">
-                    <label class="form-check-label" for="searchOnlineStore">
-                        Online Store Available
-                    </label>
+            <div class="form-group row mx-1">
+                <label for="filter" class="col-md-2 offset-lg-1 col-form-label">Filter by...</label>
+                <div class="col-sm-10 col-md-8 col-lg-6">
+                    <select class="form-control form-control-sm" id="searchFilter">
+                        <option selected>None</option>
+                        <option>Bakery</option>
+                        <option>Café</option>
+                        <option>Clothing</option>
+                        <option>Floral</option>
+                        <option>Electronics</option>
+                        <option>Gifts</option>
+                        <option>Grocery</option>
+                        <option>Medical</option>
+                        <option>Restaurant</option>
+                        <option>Services</option>
+                        <option>Other</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-sm-10">
-                    <button id="searchSubmit" type="button" class="btn btn-dark mt-3 ml-3">Search</button>
+                <div class="col-sm-6 offset-sm-3 col-form-label text-center">
+                    <div class="form-check">
+                        <input class="form-check-input" id="searchOnlineStore" type="checkbox">
+                        <label class="form-check-label" for="searchOnlineStore">
+                            Online Store Available
+                        </label>
+                    </div>
                 </div>
             </div>
-    </form>
-    <div class="alert alert-light mx-5" id="searchBanner" role="alert">
-        <span id="searchBannerText"></span> <span id="searchBannerFilter"></span> <span
-            id="searchBannerOnlineStore"></span>
+            <div class="card-footer">
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button class="btn btn-dark offset-lg-1 float-right mb-0 mt-2" id="searchSubmit" type="button">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
-
+    <!-- Display Search Results -->
+<div class="container justify-content-between">
+    <div class="row my-2">
+        <div class="col-sm-4 col-md-3"></div>
+            <div class="alert alert-light mt-3 col-sm-4 col-md-6 text-center" id="searchBanner" role="alert">
+                <span id="searchBannerText"></span> <span id="searchBannerFilter"></span> <span
+                        id="searchBannerOnlineStore"></span>
+            </div>
+        <div class="col-sm-4 col-md-3"></div>
+    </div>
+</div>
 <!-- Business Listings -->
 <div class="container">
     <% businesses.forEach((business) => { %>
@@ -147,43 +88,4 @@
     <% }); %>
 </div>
 
-<script>
-    $("#searchBanner").hide();
-
-    $("#searchSubmit").on("click", () => {
-        $(".businessCard").show();
-        $("#searchBanner").hide();
-
-        let text = $("#searchText").val();
-        if (text) {
-            console.log("Searching by " + text);
-            $(".businessCard:not(:contains(" + text + "))").hide();
-            $("#searchBanner").show();
-            $("#searchBannerText").html("Showing results for \"" + text + "\".");
-        }
-
-        let filter = $("#searchFilter").val();
-        if (filter !== "None") {
-            console.log("Filtering by " + filter);
-            $(".businessCard:not(." + filter + "):visible").hide();
-            $("#searchBanner").show();
-            if (text) {
-                $("#searchBannerFilter").html("<br>Showing " + filter + "s.");
-            } else {
-                $("#searchBannerFilter").html("Showing " + filter + "s.");
-            }
-        }
-
-        let onlineStore = $("#searchOnlineStore").is(":checked");
-        if (onlineStore) {
-            console.log("Filtering by online store");
-            $(".businessCard.productCount0:visible").hide();
-            $("#searchBanner").show();
-            if (text || filter !== "None") {
-                $("#searchBannerOnlineStore").html("<br>Showing businesses with an online store.");
-            } else {
-                $("#searchBannerOnlineStore").html("Showing businesses with an online store.");
-            }
-        }
-    });
-</script>
+<script src="main.js"></script>

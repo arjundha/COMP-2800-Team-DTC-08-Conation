@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><%= title %></title>
 
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -13,6 +14,7 @@
     <link href="/main.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Karla:400,700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/login.css" type="text/css">
+
 
     <!-- CSS Animations -->
     <link href="/animate.css" rel="stylesheet" type="text/css">
@@ -31,9 +33,11 @@
     <script src="/animations.js"></script>
   </head>
   <body>
+    <article>
       <%- include('partials/navbar-user') %>
       <%- body %>
-      <%- include('partials/footer') %>      
-  </body>
+    </article>
+    <%- include('partials/footer') %>  
 
+  </body>
 </html>

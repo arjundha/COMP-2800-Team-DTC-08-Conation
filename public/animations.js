@@ -1,3 +1,4 @@
+// On-Scroll Animations, a bit buggy so they are currently commented out
 // window.sr = ScrollReveal();
 //       sr.reveal('.welcome', {
 //         duration: 2000,
