@@ -38,6 +38,7 @@ app.set('views', path.join(__dirname, 'views'));
 //    SESSIONS + COOKIES     //
 // ------------------------- //
 
+
 app.use(session({
 	name: "idk",
 	secret: "secret",
@@ -45,21 +46,11 @@ app.use(session({
 	saveUninitialized: true,
 }));
 
-// let session = expressSession({
-// 		name: "idk",
-// 		secret: "mysecret",
-// 		resave: true,
-// 		saveUninitialized: true,
-// 	})
-
-// app.use(session)
-
-
-
 
 // ------------------------- //
 //        CONNECTION         //
 // ------------------------- //
+
 
 const pool = mysql.createPool({
 	host: 'conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com',
@@ -99,7 +90,7 @@ app.get("/", function (req, res) {
 app.get('/login', (req, res) => {
 	// Log User Out
 	req.session.destroy();
-	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
+	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log In' });
 });
 
 app.get('/easteregg', (req, res) => {
@@ -700,14 +691,6 @@ app.post('/businessType', (req, res) => {
 
 // ========================= //
 // INDIVIDUAL BUSINESS PAGE  //
-
-// app.get('/business', (req, res) => {
-// 	if (req.session.user) {
-// 		res.redirect('/main')
-// 	} else {
-// 		res.redirect('/login');
-// 	}
-// });
 
 app.get('/business/:id', (req, res) => {
 	if (req.session.user) {
