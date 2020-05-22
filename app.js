@@ -560,16 +560,20 @@ app.post('/business_registration', upload.single("image"), (req, res) => {
 					} else {
 						let newBusinessIDQuery = `SELECT business_id FROM business_owners WHERE email = "${email}"`;
 						pool.query(newBusinessIDQuery, (err, idResult) => {
-							// Image Upload
-							const tempPath = req.file.path;
-							const targetPath = path.join(__dirname, "public/src/images/businesses/" + idResult[0].business_id + ".png");
-							fs.rename(tempPath, targetPath, err => {
-								if (err) {
-									console.log(err);
-								};
-								
-								res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
-							});
+							if (req.file) {
+								// Image upload start
+								// This image upload code was adapted from: https://stackoverflow.com/a/15773267/13577042
+								const tempPath = req.file.path;
+								const targetPath = path.join(__dirname, "public/src/images/businesses/" + idResult[0].business_id + ".png");
+								fs.rename(tempPath, targetPath, err => {
+									if (err) {
+										console.log(err);
+									};
+								});
+							}
+								// Image upload end
+								// Source: https://stackoverflow.com/a/15773267/13577042
+							res.render("conation/login", { layout: "layoutLoggedOut", title: "Conation" });
 						});
 					}
 				});
