@@ -150,8 +150,9 @@ These are some resources that will be useful while you are using Conation.
 
 | Author | References | Code Location |
 | --- | --- | --- |
-| Traversy Media | https://www.youtube.com/watch?v=Zxf1mnP5zcw | map.js 89-113 |
+| fardjad | https://stackoverflow.com/a/15773267/13577042 | app.js 569-580, 891-902 |
 | Media Share Button | https://codepen.io/ayoisaiah/pen/YbNaz | index.ejs |
+| Traversy Media | https://www.youtube.com/watch?v=Zxf1mnP5zcw | map.js 89-113 |
 
 # Set-Up
 
