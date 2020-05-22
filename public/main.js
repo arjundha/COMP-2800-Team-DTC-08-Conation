@@ -10,7 +10,7 @@ $("#searchSubmit").on("click", () => {
     let text = $("#searchText").val();
     if (text) {
         console.log("Searching by " + text);
-        $(".businessCard:not(:contains(" + text.toLowerCase() + "))").hide();
+        $(".businessCard:not(:contains(" + text + "))").hide();
         $("#searchBanner").show();
         $("#searchBannerText").html("Showing results for: \"" + text + "\".");
     }
