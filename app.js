@@ -219,11 +219,11 @@ app.get('/map', (req, res) => {
 app.get('/update_info', (req, res) => {
 	if (req.session.user) {
 		if (req.session.acct == "business") {
-			pool.query(`SELECT * FROM business_owners WHERE business_id = '${req.session.businessId}'`, function (err, result) {
+			pool.query(`SELECT * FROM business_owners WHERE business_id = "${req.session.businessId}"`, function (err, result) {
 				let firstName = result[0].first_name;
 				let lastName = result[0].last_name;
 				let phone = result[0].phone;
-				pool.query(`SELECT * FROM businesses WHERE id = '${req.session.businessId}'`, function (err, result) {
+				pool.query(`SELECT * FROM businesses WHERE id = "${req.session.businessId}"`, function (err, result) {
 					console.log("The result is: " + result[0].description)
 					res.render('conation/update_business_info', {
 						layout: 'layoutBusinessOwner',
@@ -245,7 +245,7 @@ app.get('/update_info', (req, res) => {
 			})
 
 		} else {
-			pool.query(`SELECT * FROM customers WHERE id = '${req.session.customerId}'`, function (err, result) {
+			pool.query(`SELECT * FROM customers WHERE id = "${req.session.customerId}"`, function (err, result) {
 				res.render('conation/update_customer_info', {
 					layout: 'layoutLoggedIn',
 					title: 'Update Profile',
@@ -610,7 +610,7 @@ app.get('/main', (req, res) => {
 				})
 			} else {
 				let businesses = result;
-				let query = `SELECT business_id FROM business_owners WHERE email = '${req.session.email}'`;
+				let query = `SELECT business_id FROM business_owners WHERE email = "${req.session.email}"`;
 				pool.query(query, (err, result) => {
 					if (err) {
 						console.log(err);
@@ -811,12 +811,12 @@ app.get('/my_donations', (req, res) => {
 	//Need to add something to get total sum of all donations by user
 	if (req.session.user && req.session.acct == "customer") {
 		// `SELECT * FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = 1;`
-		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.id AS id, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id = '${req.session.customerId}';`;
+		let donationProductsQuery = `SELECT DATE_FORMAT(donations.date, "%y-%m-%d") AS date, donations.amount AS amount, products.description AS prodDesc, products.name AS prodName, products.id AS id, businesses.name AS busName, businesses.description as busDesc, businesses.address, businesses.address_2, businesses.city, businesses.province, businesses.postal_code FROM donations JOIN products ON products.id = donations.product_id JOIN businesses ON businesses.id = products.business_id WHERE customer_id "${req.session.customerId}";`;
 		pool.query(donationProductsQuery, (err, result) => { // Need customer id to be based on session
 			if (err) {
 				console.log(err);
 			}
-			let sumQuery = `SELECT SUM(amount) AS sum FROM donations WHERE customer_id = '${req.session.customerId}';`;
+			let sumQuery = `SELECT SUM(amount) AS sum FROM donations WHERE customer_id = "${req.session.customerId}";`;
 			pool.query(sumQuery, (error, sum) => {
 				if (error) {
 					console.log(error);
@@ -843,13 +843,13 @@ app.get('/my_donations', (req, res) => {
 
 app.get('/track_donations', (req, res) => {
 	if (req.session.user && req.session.acct == "business") {
-		let businessDonationsQuery = `SELECT *, products.id AS productID, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id = '${req.session.businessId}' GROUP BY products.id;`;
+		let businessDonationsQuery = `SELECT *, products.id AS productID, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id "${req.session.businessId}" GROUP BY products.id;`;
 		pool.query(businessDonationsQuery, (err, result) => {
 			if (err) {
 				console.log(err);
 			}
 
-			let totalDonationsQuery = `SELECT SUM(amount) AS sum FROM donations JOIN products ON products.id = donations.product_id WHERE products.business_id = '${req.session.businessId}';`;
+			let totalDonationsQuery = `SELECT SUM(amount) AS sum FROM donations JOIN products ON products.id = donations.product_id WHERE products.business_id = "${req.session.businessId}";`;
 			pool.query(totalDonationsQuery, (error, totalDonations) => {
 				if (error) {
 					console.log(error)
