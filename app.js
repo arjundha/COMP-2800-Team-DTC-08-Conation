@@ -97,6 +97,7 @@ app.get("/", function (req, res) {
 });
 
 app.get('/login', (req, res) => {
+	// Log User Out
 	req.session.destroy();
 	res.render('conation/login', { layout: 'layoutLoggedOut', title: 'Log-In' });
 });
@@ -122,12 +123,14 @@ app.get('/easteregg', (req, res) => {
 });
 
 app.get('/logout', function (req, res) {
+	// Log User Out
 	req.session.destroy();
 	res.redirect('/login');
 });
 
 app.get('/registration', (req, res) => {
 	if (req.session.email) {
+		// Log User Out
 		req.session.destroy();
 	}
 	res.render('conation/registration', { layout: 'layoutLoggedOut', title: 'Registration' });
@@ -135,6 +138,7 @@ app.get('/registration', (req, res) => {
 
 app.get('/customer_registration', (req, res) => {
 	if (req.session.email) {
+		// Log User Out
 		req.session.destroy();
 	}
 	res.render('conation/customer_registration', { layout: 'layoutLoggedOut', title: 'Customer Registration' });
@@ -142,6 +146,7 @@ app.get('/customer_registration', (req, res) => {
 
 app.get('/business_registration', (req, res) => {
 	if (req.session.email) {
+		// Log User Out
 		req.session.destroy();
 	}
 	res.render('conation/business_registration', { layout: 'layoutLoggedOut', title: 'Business Registration' });
