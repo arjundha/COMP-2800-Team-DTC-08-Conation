@@ -843,7 +843,7 @@ app.get('/my_donations', (req, res) => {
 
 app.get('/track_donations', (req, res) => {
 	if (req.session.user && req.session.acct == "business") {
-		let businessDonationsQuery = `SELECT *, products.id AS productID, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id "${req.session.businessId}" GROUP BY products.id;`;
+		let businessDonationsQuery = `SELECT *, products.id AS productID, SUM(amount) AS productSum, COUNT(amount) AS numSold FROM products LEFT JOIN donations ON products.id = donations.product_id WHERE business_id "${req.session.businessId}" GROUP BY productID;`;
 		pool.query(businessDonationsQuery, (err, result) => {
 			if (err) {
 				console.log(err);
