@@ -108,13 +108,6 @@ The following is a list of all essential npm packages required for this applicat
 
 The external storage for Conation is a MySQL database hosted on AWS. We use an application called MySQLWorkbench to work with the data and maintain the database itself. The following table can be used to initialize a connection to the database.
 
-| Variable | Value|
-| --- | --- |
-| Host | conation.cxw3qdgdl2eg.us-west-2.rds.amazonaws.com |
-| User | conationadmin |
-| Database | conation |
-| Password | secret1234 |
-
 Sample data was generated using https://mockaroo.com/.  
 Sample photos were sourced from https://unsplash.com/.
 
